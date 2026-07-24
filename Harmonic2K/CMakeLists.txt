@@ -21,11 +21,13 @@ file(GLOB_RECURSE UI_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/ui/*)
     file(GLOB_RECURSE ASSET_FILES "BinaryData/*.png")
     juce_add_binary_data(Harmonic2KAssets SOURCES ${UI_FILES} ${ASSET_FILES})
 
-target_sources(Harmonic2K PRIVATE Source/PluginProcessor.cpp)
+target_sources(Harmonic2K PRIVATE Source/PluginProcessor.cpp
+    Source/WoManusAnalyzer.cpp)
 
 # offline render test — the agent's ears (build with: cmake --build build --target Harmonic2KTest)
 juce_add_console_app(Harmonic2KTest PRODUCT_NAME "Harmonic2KTest")
-target_sources(Harmonic2KTest PRIVATE Test/RenderTest.cpp Source/PluginProcessor.cpp)
+target_sources(Harmonic2KTest PRIVATE Test/RenderTest.cpp Source/PluginProcessor.cpp
+    Source/WoManusAnalyzer.cpp)
 target_link_libraries(Harmonic2KTest PRIVATE Harmonic2KAssets juce::juce_audio_utils juce::juce_dsp juce::juce_cryptography)
 target_compile_definitions(Harmonic2K PRIVATE
     JUCE_WEB_BROWSER=1
