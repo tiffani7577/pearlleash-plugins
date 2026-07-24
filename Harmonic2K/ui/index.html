@@ -17,10 +17,26 @@
     --pf-font-value:'JetBrains Mono',ui-monospace,monospace;
   }
   html,body{margin:0;overflow:hidden;user-select:none;-webkit-user-select:none;}
-  body{width:600px;height:400px;background:linear-gradient(var(--pf-bg-60,#2D1B69),var(--pf-bg-60-2,#0D0D0D));position:relative;font-family:var(--pf-font-label);color:var(--pf-text);}
+  body{width:600px;height:636px;background:linear-gradient(var(--pf-bg-60,#2D1B69),var(--pf-bg-60-2,#0D0D0D));position:relative;font-family:var(--pf-font-label);color:var(--pf-text);}
   .pf-label{position:absolute;white-space:nowrap;pointer-events:none;}
   .pf-plugin-header{font-family:var(--pf-font-header);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
-  .pf-knob-wrap,.pf-slider-wrap,.pf-button{position:absolute;touch-action:none;}
+  .pf-knob-wrap,.pf-slider-wrap,.pf-button,.pf-select-wrap,.pf-toggle-wrap{position:absolute;touch-action:none;}
+  .pf-select-wrap{display:flex;flex-direction:column;align-items:stretch;gap:4px;}
+  .pf-select-wrap label{font-family:var(--pf-font-label);font-weight:500;font-size:10px;color:var(--pf-text-muted);letter-spacing:0.08em;}
+  .pf-select-wrap select{width:100%;appearance:none;-webkit-appearance:none;background:linear-gradient(180deg,var(--pf-surface-30-hi),var(--pf-surface-30));
+    color:var(--pf-text);border:1px solid var(--pf-border);border-radius:8px;padding:8px 28px 8px 10px;font-family:var(--pf-font-value);font-size:12px;
+    background-image:linear-gradient(45deg,transparent 50%,var(--pf-accent-10) 50%),linear-gradient(135deg,var(--pf-accent-10) 50%,transparent 50%);
+    background-position:calc(100% - 14px) calc(50% - 2px),calc(100% - 8px) calc(50% - 2px);background-size:6px 6px,6px 6px;background-repeat:no-repeat;cursor:pointer;}
+  .pf-select-wrap select:focus{outline:none;border-color:var(--pf-accent-glow);box-shadow:0 0 0 1px var(--pf-accent-10);}
+  .pf-toggle-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;}
+  .pf-toggle-wrap .pf-toggle-label{font-family:var(--pf-font-label);font-weight:500;font-size:10px;color:var(--pf-text-muted);letter-spacing:0.08em;}
+  .pf-toggle-track{width:52px;height:28px;border-radius:999px;background:var(--pf-surface-30);border:1px solid var(--pf-border);position:relative;transition:background 0.12s,border-color 0.12s;}
+  .pf-toggle-track.on{background:color-mix(in srgb,var(--accent,var(--pf-accent-10)) 35%,var(--pf-surface-30));border-color:var(--accent,var(--pf-accent-10));}
+  .pf-toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.45);transition:transform 0.12s;}
+  .pf-toggle-track.on .pf-toggle-thumb{transform:translateX(24px);}
+  .pf-piano-strip{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:stretch;z-index:25;padding:0 8px 8px;box-sizing:border-box;}
+  .pf-piano-key{flex:1;margin:0 1px;border-radius:0 0 4px 4px;background:linear-gradient(180deg,#f8fafc,#e2e8f0);border:1px solid #94a3b8;position:relative;}
+  .pf-piano-key.black{flex:0.65;background:linear-gradient(180deg,#334155,#0f172a);border-color:#020617;margin:0 -8px;z-index:1;height:62%;}
   .pf-knob-wrap{display:flex;flex-direction:column;align-items:center;cursor:ns-resize;}
   .pf-knob-wrap>.pf-knob-body{flex:1 1 auto;width:100%;min-height:0;max-height:calc(100% - 30px);}
   .pf-knob-body{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--pf-surface-30-hi,#3a3a3a),#111111);
@@ -92,7 +108,7 @@
 </style></head>
 <body class="pf-archetype-eq">
 <div class="pf-presets"><select id="pfPreset"><option value="0">Init</option><option value="1">Daily Driver</option><option value="2">Studio Safe</option><option value="3">Gentle Push</option><option value="4">Mix Ready</option><option value="5">Clean Lift</option><option value="6">Techno</option><option value="7">Ambient</option><option value="8">Hip-Hop</option><option value="9">Cinematic</option><option value="10">Experimental</option><option value="11">Edge of Stability</option><option value="12">Total Commitment</option><option value="13">The Deep End</option></select></div>
-<canvas id="eqCanvas" style="width:100%;height:220px;display:block;background:#1a1a1a;border-radius:6px;margin-bottom:12px;"></canvas>
+
 <div class="pf-macro-bar" aria-label="Macro controls"><div class="pf-knob-wrap pf-macro-knob" data-param="gain" style="width:96px;height:96px;--accent:hsl(210 78% 56%);">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -108,7 +124,16 @@
   <span class="pf-knob-value">0</span>
 </div></div>
 <div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:560px;height:32px;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">HARMONIC2K</div>
-<div class="pf-knob-wrap" data-param="rootnote" style="left:30px;top:80px;width:100px;height:100px;--accent:#C084FC;">
+<canvas id="eqCanvas" class="pf-eq-canvas-el" style="left:0px;top:52px;width:600px;height:172px;display:block;background:#1a1a1a;border-radius:6px;"></canvas>
+<div class="pf-select-wrap" data-param="key" data-ui="select" style="left:30px;top:280px;width:120px;height:56px;">
+  <label>KEY</label>
+  <select class="pf-select"><option value="C">C</option><option value="C#">C#</option><option value="D">D</option><option value="D#">D#</option><option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option></select>
+</div>
+<div class="pf-select-wrap" data-param="scale" data-ui="select" style="left:170px;top:280px;width:120px;height:56px;">
+  <label>SCALE</label>
+  <select class="pf-select"><option value="Major">Major</option><option value="Minor">Minor</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Phrygian Dom">Phrygian Dom</option></select>
+</div>
+<div class="pf-knob-wrap" data-param="strength" data-ui="knob" style="left:310px;top:260px;width:100px;height:100px;--accent:#8b5cf6;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -119,10 +144,10 @@
       <div class="pf-knob-pointer"></div>
     </div>
   </div>
-  <span class="pf-knob-label">ROOT NOTE</span>
+  <span class="pf-knob-label">STRENGTH</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="scaletype" style="left:170px;top:80px;width:100px;height:100px;--accent:#F5F0FF;">
+<div class="pf-knob-wrap" data-param="tune" data-ui="knob" style="left:450px;top:260px;width:100px;height:100px;--accent:#a78bfa;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -133,38 +158,10 @@
       <div class="pf-knob-pointer"></div>
     </div>
   </div>
-  <span class="pf-knob-label">SCALE TYPE</span>
+  <span class="pf-knob-label">TUNE</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="tune" style="left:310px;top:80px;width:100px;height:100px;--accent:#8b5cf6;">
-  <div class="pf-knob-body">
-    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
-    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
-  </svg>
-    <div class="pf-knob-dial">
-      <div class="pf-knob-highlight"></div>
-      <div class="pf-knob-pointer"></div>
-    </div>
-  </div>
-  <span class="pf-knob-label">MASTER TUN</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="strength" style="left:450px;top:80px;width:100px;height:100px;--accent:#a78bfa;">
-  <div class="pf-knob-body">
-    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
-    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
-  </svg>
-    <div class="pf-knob-dial">
-      <div class="pf-knob-highlight"></div>
-      <div class="pf-knob-pointer"></div>
-    </div>
-  </div>
-  <span class="pf-knob-label">HARMONIC S</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="mix" style="left:30px;top:220px;width:100px;height:100px;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="mix" data-ui="knob" style="left:30px;top:400px;width:100px;height:100px;--accent:#C084FC;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -178,6 +175,8 @@
   <span class="pf-knob-label">MIX</span>
   <span class="pf-knob-value">0</span>
 </div>
+
+<div class="pf-piano-strip" style="left:0px;top:572px;width:600px;height:56px;" aria-hidden="true"><div class="pf-piano-key" data-note="C"></div><div class="pf-piano-key black" data-note="C#"></div><div class="pf-piano-key" data-note="D"></div><div class="pf-piano-key black" data-note="D#"></div><div class="pf-piano-key" data-note="E"></div><div class="pf-piano-key" data-note="F"></div><div class="pf-piano-key black" data-note="F#"></div><div class="pf-piano-key" data-note="G"></div><div class="pf-piano-key black" data-note="G#"></div><div class="pf-piano-key" data-note="A"></div><div class="pf-piano-key black" data-note="A#"></div><div class="pf-piano-key" data-note="B"></div></div>
 
 <div class="pf-meter-container" aria-hidden="true"><div class="pf-meter-bar"></div></div>
 <svg class="pf-eq-curve" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
@@ -332,7 +331,7 @@ window.addEventListener('message', (e) => {
 setMeterLevel(-100);
 updateEQCurve([]);
 
-const PARAMS = [{"id":"rootnote","name":"Root Note","min":0,"max":11,"unit":""},{"id":"scaletype","name":"Scale Type","min":0,"max":6,"unit":""},{"id":"tune","name":"Master Tune","min":432,"max":444,"unit":"Hz"},{"id":"strength","name":"Harmonic Strength","min":0,"max":100,"unit":"%"},{"id":"mix","name":"Mix","min":0,"max":100,"unit":"%"},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB"}];
+const PARAMS = [{"id":"key","name":"Key","min":0,"max":11,"unit":"","ui":{"type":"select","options":["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]}},{"id":"scale","name":"Scale","min":0,"max":6,"unit":"index","ui":{"type":"select","options":["Major","Minor","Dorian","Phrygian","Lydian","Mixolydian","Phrygian Dom"]}},{"id":"strength","name":"Strength","min":0,"max":100,"unit":"%","ui":{"type":"knob"}},{"id":"tune","name":"Tune","min":432,"max":444,"unit":"Hz","ui":{"type":"knob"}},{"id":"mix","name":"Mix","min":0,"max":1,"unit":"%","ui":{"type":"knob"}},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB","ui":{"type":"knob"}}];
 const RATE_PARAM_IDS = new Set([]);
 const KNOB_ARC_R = 46;
 const KNOB_ARC_C = 2 * Math.PI * KNOB_ARC_R;
@@ -617,6 +616,59 @@ function bindKnob(wrap) {
 }
 document.querySelectorAll('.pf-knob-wrap').forEach(bindKnob);
 
+function bindSelect(wrap) {
+  const paramId = wrap.dataset.param;
+  const select = wrap.querySelector('select');
+  if (!select) return;
+  const p = PARAMS.find(x => x.id === paramId);
+  const options = [...select.options].map(o => o.value);
+  let state = null, norm = 0;
+  if (juceLib && paramId) {
+    state = juceLib.getSliderState(paramId);
+    norm = state.getNormalisedValue();
+    state.valueChangedEvent.addListener(() => { norm = state.getNormalisedValue(); sync(); });
+  }
+  function sync() {
+    if (!options.length) return;
+    const idx = Math.round(norm * Math.max(0, options.length - 1));
+    select.selectedIndex = Math.max(0, Math.min(options.length - 1, idx));
+  }
+  sync();
+  select.addEventListener('change', () => {
+    const idx = select.selectedIndex;
+    const n = options.length <= 1 ? 0 : idx / (options.length - 1);
+    norm = n;
+    if (state) state.setNormalisedValue(n);
+    else setParameterValue(paramId, n);
+  });
+}
+document.querySelectorAll('.pf-select-wrap').forEach(bindSelect);
+
+function bindToggle(wrap) {
+  const paramId = wrap.dataset.param;
+  const track = wrap.querySelector('.pf-toggle-track');
+  if (!track) return;
+  let state = null, norm = 0;
+  if (juceLib && paramId) {
+    state = juceLib.getSliderState(paramId);
+    norm = state.getNormalisedValue();
+    state.valueChangedEvent.addListener(() => { norm = state.getNormalisedValue(); draw(); });
+  }
+  function draw() {
+    const on = norm >= 0.5;
+    track.classList.toggle('on', on);
+    track.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  draw();
+  wrap.addEventListener('click', () => {
+    norm = norm >= 0.5 ? 0 : 1;
+    if (state) state.setNormalisedValue(norm);
+    else setParameterValue(paramId, norm);
+    draw();
+  });
+}
+document.querySelectorAll('.pf-toggle-wrap').forEach(bindToggle);
+
 function bindSlider(wrap) {
   const paramId = wrap.dataset.param;
   const track = wrap.querySelector('.pf-slider-track');
@@ -691,13 +743,13 @@ window.__setVuLevel = (level) => {
   }, 33);
 })();
 
-const PRESETS = [{"rootnote":0,"scaletype":0,"tune":440,"strength":100,"mix":100,"gain":0},{"rootnote":3.3,"scaletype":1.8,"tune":439.6055,"strength":70,"mix":70,"gain":-3.5219},{"rootnote":3.3,"scaletype":1.8,"tune":439.1044,"strength":70,"mix":70,"gain":0.6312},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-1.1823},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-3.8842},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-3.7392},{"rootnote":11,"scaletype":2.3654,"tune":438.7921,"strength":15.5797,"mix":96.0019,"gain":-5.5015},{"rootnote":1.8482,"scaletype":2.5671,"tune":439.5823,"strength":69.2187,"mix":53.4258,"gain":6.7301},{"rootnote":0.992,"scaletype":4.4675,"tune":433.0236,"strength":67.3214,"mix":16.5204,"gain":-20.615},{"rootnote":7.5692,"scaletype":2.1236,"tune":439.5608,"strength":62.2135,"mix":46.4434,"gain":8.6574},{"rootnote":6.2493,"scaletype":5.9601,"tune":437.7464,"strength":50.9839,"mix":96.3835,"gain":18.9485},{"rootnote":0.2216,"scaletype":0.1999,"tune":443.945,"strength":95.104,"mix":3.0723,"gain":-20.7609},{"rootnote":10.9123,"scaletype":0.0939,"tune":432.3347,"strength":2.7985,"mix":0.0586,"gain":21.5135},{"rootnote":10.7764,"scaletype":5.5654,"tune":443.3085,"strength":6.7908,"mix":98.6913,"gain":-20.6398}];
+const PRESETS = [{"key":0,"scale":0,"strength":50,"tune":440,"mix":1,"gain":0},{"key":3.3,"scale":1.8,"strength":46.7127,"tune":440.4,"mix":0.7,"gain":-3.5219},{"key":3.3,"scale":1.8,"strength":42.5364,"tune":439.4517,"mix":0.7,"gain":0.6312},{"key":3.3,"scale":1.8,"strength":59.4785,"tune":438.8392,"mix":0.7,"gain":-1.1823},{"key":3.3,"scale":1.8,"strength":55.1238,"tune":439.255,"mix":0.7,"gain":-3.8842},{"key":3.3,"scale":1.8,"strength":53.7804,"tune":439.4464,"mix":0.7,"gain":-3.7392},{"key":11,"scale":2.3654,"strength":56.6011,"tune":433.8696,"mix":0.96,"gain":-5.5015},{"key":1.8482,"scale":2.5671,"strength":63.1862,"tune":440.3062,"mix":0.5343,"gain":6.7301},{"key":0.992,"scale":4.4675,"strength":8.5303,"tune":440.0786,"mix":0.1652,"gain":-20.615},{"key":7.5692,"scale":2.1236,"strength":63.007,"tune":439.4656,"mix":0.4644,"gain":8.6574},{"key":6.2493,"scale":5.9601,"strength":47.8869,"tune":438.1181,"mix":0.9638,"gain":18.9485},{"key":0.2216,"scale":0.1999,"strength":99.5417,"tune":443.4125,"mix":0.0307,"gain":-20.7609},{"key":10.9123,"scale":0.0939,"strength":2.789,"tune":432.3358,"mix":0.0006,"gain":21.5135},{"key":10.7764,"scale":5.5654,"strength":94.2378,"tune":432.8149,"mix":0.9869,"gain":-20.6398}];
 const presetSel = document.getElementById('pfPreset');
 if (presetSel) presetSel.addEventListener('change', () => {
   const vals = PRESETS[+presetSel.value] || {};
   Object.entries(vals).forEach(([id, val]) => {
     if (!juceLib) return;
-    const p = [{"id":"rootnote","min":0,"max":11},{"id":"scaletype","min":0,"max":6},{"id":"tune","min":432,"max":444},{"id":"strength","min":0,"max":100},{"id":"mix","min":0,"max":100},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
+    const p = [{"id":"key","min":0,"max":11},{"id":"scale","min":0,"max":6},{"id":"strength","min":0,"max":100},{"id":"tune","min":432,"max":444},{"id":"mix","min":0,"max":1},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
     if (!p) return;
     const norm = (val - p.min) / (p.max - p.min);
     try { juceLib.getSliderState(id).setNormalisedValue(Math.min(1,Math.max(0,norm))); } catch(e){}
