@@ -1,0 +1,147 @@
+{
+  "plugin": "HarmonicEQ",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "root": 0,
+        "scale": 0,
+        "strength": 100,
+        "tune": 440,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "root": 3.3,
+        "scale": 1.8,
+        "strength": 70,
+        "tune": 439.9752,
+        "gain": -0.0239
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "root": 3.3,
+        "scale": 1.8,
+        "strength": 70,
+        "tune": 439.7212,
+        "gain": 3.4771
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "root": 3.3,
+        "scale": 1.8,
+        "strength": 70,
+        "tune": 440.1216,
+        "gain": -0.7881
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "root": 3.3,
+        "scale": 1.8,
+        "strength": 70,
+        "tune": 439.136,
+        "gain": -3.3221
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "root": 3.3,
+        "scale": 1.8,
+        "strength": 70,
+        "tune": 440.36,
+        "gain": 2.9451
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "root": 3.2849,
+        "scale": 1.3953,
+        "strength": 18.698,
+        "tune": 443.1447,
+        "gain": 24
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "root": 6.899,
+        "scale": 3.7681,
+        "strength": 23.4861,
+        "tune": 437.1318,
+        "gain": -3.4682
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "root": 4.9995,
+        "scale": 1.3343,
+        "strength": 18.6004,
+        "tune": 433.391,
+        "gain": -15.5743
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "root": 5.9713,
+        "scale": 3.5898,
+        "strength": 33.8566,
+        "tune": 436.0633,
+        "gain": 5.7222
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "root": 6.1411,
+        "scale": 4.189,
+        "strength": 94.4775,
+        "tune": 440.6161,
+        "gain": -14.54
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "root": 10.6558,
+        "scale": 0.2681,
+        "strength": 0.5789,
+        "tune": 432.5087,
+        "gain": -20.524
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "root": 0.614,
+        "scale": 5.6454,
+        "strength": 1.9296,
+        "tune": 432.6809,
+        "gain": 23.1962
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "root": 10.7732,
+        "scale": 0.0706,
+        "strength": 5.0296,
+        "tune": 432.3261,
+        "gain": 21.1059
+      }
+    }
+  ]
+}
