@@ -53,10 +53,10 @@ public:
     explicit Harmonic2KEditor (Harmonic2KProcessor& p) : AudioProcessorEditor (p), proc (p)
     {
         loadAssets();
-        rootnoteAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("rootnote"), rootnoteRelay, nullptr);
-        scaletypeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("scaletype"), scaletypeRelay, nullptr);
-        tuneAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("tune"), tuneRelay, nullptr);
+        keyAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("key"), keyRelay, nullptr);
+        scaleAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("scale"), scaleRelay, nullptr);
         strengthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("strength"), strengthRelay, nullptr);
+        tuneAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("tune"), tuneRelay, nullptr);
         mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
@@ -64,7 +64,7 @@ public:
 
 
 
-        setSize (600, 400);
+        setSize (600, 636);
         startTimerHz (30);
     }
 
@@ -113,10 +113,10 @@ private:
     Harmonic2KProcessor& proc;
     Harmonic2KLookAndFeel lnf;
     SpriteAtlas bgAtlas;
-    juce::WebSliderRelay rootnoteRelay { "rootnote" };
-    juce::WebSliderRelay scaletypeRelay { "scaletype" };
-    juce::WebSliderRelay tuneRelay { "tune" };
+    juce::WebSliderRelay keyRelay { "key" };
+    juce::WebSliderRelay scaleRelay { "scale" };
     juce::WebSliderRelay strengthRelay { "strength" };
+    juce::WebSliderRelay tuneRelay { "tune" };
     juce::WebSliderRelay mixRelay { "mix" };
     juce::WebSliderRelay gainRelay { "gain" };
 
@@ -147,19 +147,19 @@ private:
         juce::WebBrowserComponent::Options{}
             .withBackend (juce::WebBrowserComponent::Options::Backend::defaultBackend)
             .withNativeIntegrationEnabled()
-            .withOptionsFrom (rootnoteRelay)
-            .withOptionsFrom (scaletypeRelay)
-            .withOptionsFrom (tuneRelay)
+            .withOptionsFrom (keyRelay)
+            .withOptionsFrom (scaleRelay)
             .withOptionsFrom (strengthRelay)
+            .withOptionsFrom (tuneRelay)
             .withOptionsFrom (mixRelay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
 
-    std::unique_ptr<juce::WebSliderParameterAttachment> rootnoteAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> scaletypeAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> tuneAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> keyAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> scaleAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> strengthAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> tuneAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Harmonic2KEditor)
