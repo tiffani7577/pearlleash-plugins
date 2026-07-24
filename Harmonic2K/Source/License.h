@@ -8,7 +8,7 @@
 
 namespace Harmonic2KLicense
 {
-    static const char* kProductSecret = "8d60a96662c242f261348c6bc6cc0d294d3b1e0760f73b897537c146e659fff7";
+    static const char* kProductSecret = "3acd8e0f614d8c94692416eaf7377ab4bde1f9fc8acea846e2d8142c573f39af";
     static const char* kMode = "notice";
 
     inline juce::MemoryBlock hmacSha256 (const juce::MemoryBlock& key, const juce::MemoryBlock& msg)
