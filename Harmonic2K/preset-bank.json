@@ -6,154 +6,154 @@
     {
       "name": "Init",
       "values": {
-        "rootnote": 0,
-        "scaletype": 0,
+        "key": 0,
+        "scale": 0,
+        "strength": 50,
         "tune": 440,
-        "strength": 100,
-        "mix": 100,
+        "mix": 1,
         "gain": 0
       }
     },
     {
       "name": "Daily Driver",
       "values": {
-        "rootnote": 3.3,
-        "scaletype": 1.8,
-        "tune": 439.6055,
-        "strength": 70,
-        "mix": 70,
+        "key": 3.3,
+        "scale": 1.8,
+        "strength": 46.7127,
+        "tune": 440.4,
+        "mix": 0.7,
         "gain": -3.5219
       }
     },
     {
       "name": "Studio Safe",
       "values": {
-        "rootnote": 3.3,
-        "scaletype": 1.8,
-        "tune": 439.1044,
-        "strength": 70,
-        "mix": 70,
+        "key": 3.3,
+        "scale": 1.8,
+        "strength": 42.5364,
+        "tune": 439.4517,
+        "mix": 0.7,
         "gain": 0.6312
       }
     },
     {
       "name": "Gentle Push",
       "values": {
-        "rootnote": 3.3,
-        "scaletype": 1.8,
-        "tune": 440.4,
-        "strength": 70,
-        "mix": 70,
+        "key": 3.3,
+        "scale": 1.8,
+        "strength": 59.4785,
+        "tune": 438.8392,
+        "mix": 0.7,
         "gain": -1.1823
       }
     },
     {
       "name": "Mix Ready",
       "values": {
-        "rootnote": 3.3,
-        "scaletype": 1.8,
-        "tune": 440.4,
-        "strength": 70,
-        "mix": 70,
+        "key": 3.3,
+        "scale": 1.8,
+        "strength": 55.1238,
+        "tune": 439.255,
+        "mix": 0.7,
         "gain": -3.8842
       }
     },
     {
       "name": "Clean Lift",
       "values": {
-        "rootnote": 3.3,
-        "scaletype": 1.8,
-        "tune": 440.4,
-        "strength": 70,
-        "mix": 70,
+        "key": 3.3,
+        "scale": 1.8,
+        "strength": 53.7804,
+        "tune": 439.4464,
+        "mix": 0.7,
         "gain": -3.7392
       }
     },
     {
       "name": "Techno",
       "values": {
-        "rootnote": 11,
-        "scaletype": 2.3654,
-        "tune": 438.7921,
-        "strength": 15.5797,
-        "mix": 96.0019,
+        "key": 11,
+        "scale": 2.3654,
+        "strength": 56.6011,
+        "tune": 433.8696,
+        "mix": 0.96,
         "gain": -5.5015
       }
     },
     {
       "name": "Ambient",
       "values": {
-        "rootnote": 1.8482,
-        "scaletype": 2.5671,
-        "tune": 439.5823,
-        "strength": 69.2187,
-        "mix": 53.4258,
+        "key": 1.8482,
+        "scale": 2.5671,
+        "strength": 63.1862,
+        "tune": 440.3062,
+        "mix": 0.5343,
         "gain": 6.7301
       }
     },
     {
       "name": "Hip-Hop",
       "values": {
-        "rootnote": 0.992,
-        "scaletype": 4.4675,
-        "tune": 433.0236,
-        "strength": 67.3214,
-        "mix": 16.5204,
+        "key": 0.992,
+        "scale": 4.4675,
+        "strength": 8.5303,
+        "tune": 440.0786,
+        "mix": 0.1652,
         "gain": -20.615
       }
     },
     {
       "name": "Cinematic",
       "values": {
-        "rootnote": 7.5692,
-        "scaletype": 2.1236,
-        "tune": 439.5608,
-        "strength": 62.2135,
-        "mix": 46.4434,
+        "key": 7.5692,
+        "scale": 2.1236,
+        "strength": 63.007,
+        "tune": 439.4656,
+        "mix": 0.4644,
         "gain": 8.6574
       }
     },
     {
       "name": "Experimental",
       "values": {
-        "rootnote": 6.2493,
-        "scaletype": 5.9601,
-        "tune": 437.7464,
-        "strength": 50.9839,
-        "mix": 96.3835,
+        "key": 6.2493,
+        "scale": 5.9601,
+        "strength": 47.8869,
+        "tune": 438.1181,
+        "mix": 0.9638,
         "gain": 18.9485
       }
     },
     {
       "name": "Edge of Stability",
       "values": {
-        "rootnote": 0.2216,
-        "scaletype": 0.1999,
-        "tune": 443.945,
-        "strength": 95.104,
-        "mix": 3.0723,
+        "key": 0.2216,
+        "scale": 0.1999,
+        "strength": 99.5417,
+        "tune": 443.4125,
+        "mix": 0.0307,
         "gain": -20.7609
       }
     },
     {
       "name": "Total Commitment",
       "values": {
-        "rootnote": 10.9123,
-        "scaletype": 0.0939,
-        "tune": 432.3347,
-        "strength": 2.7985,
-        "mix": 0.0586,
+        "key": 10.9123,
+        "scale": 0.0939,
+        "strength": 2.789,
+        "tune": 432.3358,
+        "mix": 0.0006,
         "gain": 21.5135
       }
     },
     {
       "name": "The Deep End",
       "values": {
-        "rootnote": 10.7764,
-        "scaletype": 5.5654,
-        "tune": 443.3085,
-        "strength": 6.7908,
-        "mix": 98.6913,
+        "key": 10.7764,
+        "scale": 5.5654,
+        "strength": 94.2378,
+        "tune": 432.8149,
+        "mix": 0.9869,
         "gain": -20.6398
       }
     }
