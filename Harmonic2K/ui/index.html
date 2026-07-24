@@ -85,23 +85,15 @@
 <div class="pf-presets"><select id="pfPreset"><option value="0">Init</option><option value="1">Daily Driver</option><option value="2">Studio Safe</option><option value="3">Gentle Push</option><option value="4">Mix Ready</option><option value="5">Clean Lift</option><option value="6">Techno</option><option value="7">Ambient</option><option value="8">Hip-Hop</option><option value="9">Cinematic</option><option value="10">Experimental</option><option value="11">Edge of Stability</option><option value="12">Total Commitment</option><option value="13">The Deep End</option></select></div>
 <canvas id="eqCanvas" style="width:100%;height:220px;display:block;background:#1a1a1a;border-radius:6px;margin-bottom:12px;"></canvas>
 <div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:560px;height:32px;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">HARMONIC2K</div>
-<div class="pf-knob-wrap" data-param="key" style="left:30px;top:80px;width:100px;height:100px;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="strength" style="left:30px;top:80px;width:100px;height:100px;--accent:#C084FC;">
   <div class="pf-knob-body">
     <div class="pf-knob-highlight"></div>
     <div class="pf-knob-pointer"></div>
   </div>
-  <span class="pf-knob-label">KEY</span>
+  <span class="pf-knob-label">STRENGTH</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="scaleType" style="left:170px;top:80px;width:100px;height:100px;--accent:#F5F0FF;">
-  <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
-  </div>
-  <span class="pf-knob-label">SCALE TYPE</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="masterTune" style="left:310px;top:80px;width:100px;height:100px;--accent:#8b5cf6;">
+<div class="pf-knob-wrap" data-param="tune" style="left:170px;top:80px;width:100px;height:100px;--accent:#F5F0FF;">
   <div class="pf-knob-body">
     <div class="pf-knob-highlight"></div>
     <div class="pf-knob-pointer"></div>
@@ -109,12 +101,20 @@
   <span class="pf-knob-label">MASTER TUN</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="harmonicStrength" style="left:450px;top:80px;width:100px;height:100px;--accent:#a78bfa;">
+<div class="pf-knob-wrap" data-param="rootNote" style="left:310px;top:80px;width:100px;height:100px;--accent:#8b5cf6;">
   <div class="pf-knob-body">
     <div class="pf-knob-highlight"></div>
     <div class="pf-knob-pointer"></div>
   </div>
-  <span class="pf-knob-label">HARMONIC S</span>
+  <span class="pf-knob-label">ROOT NOTE</span>
+  <span class="pf-knob-value">0</span>
+</div>
+<div class="pf-knob-wrap" data-param="scaleType" style="left:450px;top:80px;width:100px;height:100px;--accent:#a78bfa;">
+  <div class="pf-knob-body">
+    <div class="pf-knob-highlight"></div>
+    <div class="pf-knob-pointer"></div>
+  </div>
+  <span class="pf-knob-label">SCALE TYPE</span>
   <span class="pf-knob-value">0</span>
 </div>
 <div class="pf-knob-wrap" data-param="gain" style="left:30px;top:220px;width:100px;height:100px;--accent:#C084FC;">
@@ -278,7 +278,7 @@ window.addEventListener('message', (e) => {
 setMeterLevel(-100);
 updateEQCurve([]);
 
-const PARAMS = [{"id":"key","min":0,"max":11,"unit":"Note"},{"id":"scaleType","min":0,"max":6,"unit":"Type"},{"id":"masterTune","min":432,"max":444,"unit":"Hz"},{"id":"harmonicStrength","min":0,"max":1,"unit":"%"},{"id":"gain","min":-24,"max":24,"unit":"dB"}];
+const PARAMS = [{"id":"strength","min":0,"max":100,"unit":"%"},{"id":"tune","min":432,"max":444,"unit":"Hz"},{"id":"rootNote","min":0,"max":11,"unit":""},{"id":"scaleType","min":0,"max":6,"unit":""},{"id":"gain","min":-24,"max":24,"unit":"dB"}];
 const RATE_PARAM_IDS = new Set([]);
 
 function paramValueFromNorm(paramId, norm) {
@@ -578,13 +578,13 @@ window.__setVuLevel = (level) => {
   }, 33);
 })();
 
-const PRESETS = [{"key":0,"scaleType":0,"masterTune":440,"harmonicStrength":1,"gain":0},{"key":3.3,"scaleType":1.8,"masterTune":439.6055,"harmonicStrength":0.7,"gain":1.0076},{"key":3.3,"scaleType":1.8,"masterTune":439.7708,"harmonicStrength":0.7,"gain":-2.1931},{"key":3.3,"scaleType":1.8,"masterTune":439.0821,"harmonicStrength":0.7,"gain":4.5497},{"key":3.3,"scaleType":1.8,"masterTune":439.7044,"harmonicStrength":0.7,"gain":0.8492},{"key":3.3,"scaleType":1.8,"masterTune":439.3732,"harmonicStrength":0.7,"gain":-0.5516},{"key":6.597,"scaleType":5.0341,"masterTune":437.0321,"harmonicStrength":0.8947,"gain":-11.4959},{"key":6.7247,"scaleType":1.4792,"masterTune":436.1953,"harmonicStrength":0.1035,"gain":4.1286},{"key":2.6214,"scaleType":0.8441,"masterTune":437.8457,"harmonicStrength":0.7591,"gain":16.3},{"key":7.2807,"scaleType":4.5011,"masterTune":435.9014,"harmonicStrength":0.7341,"gain":-8.5409},{"key":7.9308,"scaleType":1.3824,"masterTune":432.4925,"harmonicStrength":0.7238,"gain":-15.7168},{"key":10.687,"scaleType":0.3651,"masterTune":432.4864,"harmonicStrength":0.0792,"gain":22.4841},{"key":0.2216,"scaleType":0.1999,"masterTune":443.945,"harmonicStrength":0.951,"gain":-22.5253},{"key":0.7423,"scaleType":5.9522,"masterTune":432.1878,"harmonicStrength":0.0279,"gain":-22.6567}];
+const PRESETS = [{"strength":50,"tune":440,"rootNote":0,"scaleType":0,"gain":0},{"strength":48.8075,"tune":440.4,"rootNote":3.3,"scaleType":1.8,"gain":1.0076},{"strength":42.6627,"tune":440.4,"rootNote":3.3,"scaleType":1.8,"gain":-2.1931},{"strength":51.4246,"tune":440.1578,"rootNote":3.3,"scaleType":1.8,"gain":4.5497},{"strength":40.3269,"tune":438.8806,"rootNote":3.3,"scaleType":1.8,"gain":0.8492},{"strength":55.1238,"tune":439.255,"rootNote":3.3,"scaleType":1.8,"gain":-0.5516},{"strength":59.9724,"tune":442.0682,"rootNote":4.6127,"scaleType":5.3682,"gain":-11.4959},{"strength":61.134,"tune":434.9585,"rootNote":3.8457,"scaleType":0.6209,"gain":4.1286},{"strength":23.8309,"tune":433.6883,"rootNote":5.3585,"scaleType":4.5549,"gain":16.3},{"strength":66.1882,"tune":441.0021,"rootNote":3.5762,"scaleType":4.4047,"gain":-8.5409},{"strength":72.0983,"tune":434.7649,"rootNote":0.4515,"scaleType":4.3427,"gain":-15.7168},{"strength":97.1542,"tune":432.7303,"rootNote":0.4459,"scaleType":0.4753,"gain":22.4841},{"strength":2.0145,"tune":432.3997,"rootNote":10.9496,"scaleType":5.7062,"gain":-22.5253},{"strength":6.7482,"tune":443.9043,"rootNote":0.1721,"scaleType":0.1673,"gain":-22.6567}];
 const presetSel = document.getElementById('pfPreset');
 if (presetSel) presetSel.addEventListener('change', () => {
   const vals = PRESETS[+presetSel.value] || {};
   Object.entries(vals).forEach(([id, val]) => {
     if (!juceLib) return;
-    const p = [{"id":"key","min":0,"max":11},{"id":"scaleType","min":0,"max":6},{"id":"masterTune","min":432,"max":444},{"id":"harmonicStrength","min":0,"max":1},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
+    const p = [{"id":"strength","min":0,"max":100},{"id":"tune","min":432,"max":444},{"id":"rootNote","min":0,"max":11},{"id":"scaleType","min":0,"max":6},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
     if (!p) return;
     const norm = (val - p.min) / (p.max - p.min);
     try { juceLib.getSliderState(id).setNormalisedValue(Math.min(1,Math.max(0,norm))); } catch(e){}
