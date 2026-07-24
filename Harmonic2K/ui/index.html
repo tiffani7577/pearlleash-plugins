@@ -24,8 +24,10 @@
   .pf-knob-wrap{display:flex;flex-direction:column;align-items:center;cursor:ns-resize;}
   .pf-knob-wrap>.pf-knob-body{flex:1 1 auto;width:100%;min-height:0;max-height:calc(100% - 30px);}
   .pf-knob-body{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--pf-surface-30-hi,#3a3a3a),#111111);
-    box-shadow:0 4px 12px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12);position:relative;transform:rotate(-135deg);
-    transition:transform 0.05s linear;}
+    box-shadow:0 4px 12px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.12);position:relative;overflow:visible;}
+  .pf-knob-arc-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;}
+  .pf-knob-arc-overlay .pf-knob-arc-value{transition:stroke-dashoffset 0.05s linear;}
+  .pf-knob-dial{position:absolute;inset:0;width:100%;height:100%;transform:rotate(-135deg);transform-origin:50% 50%;transition:transform 0.05s linear;}
   .pf-knob-highlight{position:absolute;top:4px;left:4px;width:40%;height:40%;border-radius:50%;
     background:radial-gradient(circle,rgba(255,255,255,0.18),transparent);pointer-events:none;}
   .pf-knob-pointer{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:2px;height:30%;
@@ -80,51 +82,103 @@
   .pf-eq-curve .pf-eq-line{fill:none;stroke:var(--pf-accent-10,#ff4d8d);stroke-width:2;}
   .pf-eq-curve .pf-eq-band-line{fill:none;stroke-width:1;stroke-opacity:0.4;}
   .pf-eq-curve .pf-eq-grid{stroke:rgba(148,163,184,0.15);stroke-width:1;}
+  .pf-macro-bar{position:absolute;left:0;right:0;top:48px;height:108px;display:flex;align-items:flex-end;justify-content:center;gap:28px;z-index:20;padding:0 24px;pointer-events:none;}
+  .pf-macro-knob{pointer-events:auto;width:96px;height:96px;flex:0 0 auto;}
+  .pf-macro-knob .pf-knob-label{font-size:11px;font-weight:700;letter-spacing:0.12em;color:var(--pf-accent-10);}
+  .pf-archetype-reverb .pf-eq-curve,.pf-archetype-reverb #eqCanvas{display:none!important;}
+  .pf-archetype-dynamics .pf-meter-container{bottom:48px;}
+  .pf-archetype-eq #eqCanvas{height:260px!important;margin-bottom:8px;}
+  .pf-archetype-eq .pf-macro-bar{top:280px;}
 </style></head>
-<body>
+<body class="pf-archetype-eq">
 <div class="pf-presets"><select id="pfPreset"><option value="0">Init</option><option value="1">Daily Driver</option><option value="2">Studio Safe</option><option value="3">Gentle Push</option><option value="4">Mix Ready</option><option value="5">Clean Lift</option><option value="6">Techno</option><option value="7">Ambient</option><option value="8">Hip-Hop</option><option value="9">Cinematic</option><option value="10">Experimental</option><option value="11">Edge of Stability</option><option value="12">Total Commitment</option><option value="13">The Deep End</option></select></div>
 <canvas id="eqCanvas" style="width:100%;height:220px;display:block;background:#1a1a1a;border-radius:6px;margin-bottom:12px;"></canvas>
+<div class="pf-macro-bar" aria-label="Macro controls"><div class="pf-knob-wrap pf-macro-knob" data-param="gain" style="width:96px;height:96px;--accent:hsl(210 78% 56%);">
+  <div class="pf-knob-body">
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
+  </div>
+  <span class="pf-knob-label">GAIN</span>
+  <span class="pf-knob-value">0</span>
+</div></div>
 <div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:560px;height:32px;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">HARMONIC2K</div>
-<div class="pf-knob-wrap" data-param="strength" style="left:30px;top:80px;width:100px;height:100px;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="rootnote" style="left:30px;top:80px;width:100px;height:100px;--accent:#C084FC;">
   <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
-  </div>
-  <span class="pf-knob-label">STRENGTH</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="tune" style="left:170px;top:80px;width:100px;height:100px;--accent:#F5F0FF;">
-  <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
-  </div>
-  <span class="pf-knob-label">MASTER TUN</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="rootNote" style="left:310px;top:80px;width:100px;height:100px;--accent:#8b5cf6;">
-  <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
   </div>
   <span class="pf-knob-label">ROOT NOTE</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="scaleType" style="left:450px;top:80px;width:100px;height:100px;--accent:#a78bfa;">
+<div class="pf-knob-wrap" data-param="scaletype" style="left:170px;top:80px;width:100px;height:100px;--accent:#F5F0FF;">
   <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
   </div>
   <span class="pf-knob-label">SCALE TYPE</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="gain" style="left:30px;top:220px;width:100px;height:100px;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="tune" style="left:310px;top:80px;width:100px;height:100px;--accent:#8b5cf6;">
   <div class="pf-knob-body">
-    <div class="pf-knob-highlight"></div>
-    <div class="pf-knob-pointer"></div>
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
   </div>
-  <span class="pf-knob-label">OUTPUT</span>
+  <span class="pf-knob-label">MASTER TUN</span>
   <span class="pf-knob-value">0</span>
 </div>
+<div class="pf-knob-wrap" data-param="strength" style="left:450px;top:80px;width:100px;height:100px;--accent:#a78bfa;">
+  <div class="pf-knob-body">
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
+  </div>
+  <span class="pf-knob-label">HARMONIC S</span>
+  <span class="pf-knob-value">0</span>
+</div>
+<div class="pf-knob-wrap" data-param="mix" style="left:30px;top:220px;width:100px;height:100px;--accent:#C084FC;">
+  <div class="pf-knob-body">
+    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
+    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
+  </svg>
+    <div class="pf-knob-dial">
+      <div class="pf-knob-highlight"></div>
+      <div class="pf-knob-pointer"></div>
+    </div>
+  </div>
+  <span class="pf-knob-label">MIX</span>
+  <span class="pf-knob-value">0</span>
+</div>
+
 <div class="pf-meter-container" aria-hidden="true"><div class="pf-meter-bar"></div></div>
 <svg class="pf-eq-curve" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
   <line class="pf-eq-grid" x1="0" y1="40" x2="600" y2="40"/>
@@ -278,8 +332,11 @@ window.addEventListener('message', (e) => {
 setMeterLevel(-100);
 updateEQCurve([]);
 
-const PARAMS = [{"id":"strength","min":0,"max":100,"unit":"%"},{"id":"tune","min":432,"max":444,"unit":"Hz"},{"id":"rootNote","min":0,"max":11,"unit":""},{"id":"scaleType","min":0,"max":6,"unit":""},{"id":"gain","min":-24,"max":24,"unit":"dB"}];
+const PARAMS = [{"id":"rootnote","name":"Root Note","min":0,"max":11,"unit":""},{"id":"scaletype","name":"Scale Type","min":0,"max":6,"unit":""},{"id":"tune","name":"Master Tune","min":432,"max":444,"unit":"Hz"},{"id":"strength","name":"Harmonic Strength","min":0,"max":100,"unit":"%"},{"id":"mix","name":"Mix","min":0,"max":100,"unit":"%"},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB"}];
 const RATE_PARAM_IDS = new Set([]);
+const KNOB_ARC_R = 46;
+const KNOB_ARC_C = 2 * Math.PI * KNOB_ARC_R;
+const KNOB_ARC_LEN = KNOB_ARC_C * (270 / 360);
 
 function paramValueFromNorm(paramId, norm) {
   const p = PARAMS.find(x => x.id === paramId);
@@ -431,30 +488,85 @@ function setParameterValue (paramId, norm) {
   } catch (e) { /* param not relayed */ }
 }
 
+function formatParamValue(value, param) {
+  const unit = param.unit || '';
+  const name = (param.name || param.id || '').toLowerCase();
+  if (unit === 'Hz' || unit === 'hz') return value >= 1000 ? (value / 1000).toFixed(1) + 'kHz' : value.toFixed(0) + 'Hz';
+  if (unit === '%') return value.toFixed(0) + '%';
+  if (unit === 'ms') return value.toFixed(0) + 'ms';
+  if (unit === 'dB' || unit === 'db') return value.toFixed(1) + 'dB';
+  if (unit === 's') return value.toFixed(2) + 's';
+  if (name.includes('key') || name.includes('root') || name.includes('note')) {
+    return ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][Math.round(value) % 12];
+  }
+  if (name.includes('scale') || name.includes('scaletype')) {
+    return ['Major','Minor','Dorian','Phrygian','Lydian','Mixolydian','Phryg.Dom'][Math.round(value) % 7];
+  }
+  if (name.includes('ratio')) return ['1:1','2:1','4:1','8:1','16:1','∞:1'][Math.min(Math.round(value), 5)];
+  return value.toFixed(1);
+}
+
 function formatKnobValue(paramId, norm) {
   const p = PARAMS.find(x => x.id === paramId);
-  if (!p) return norm.toFixed(2);
+  if (!p) return norm.toFixed(1);
   const val = p.min + norm * (p.max - p.min);
-  const unit = p.unit || '';
-  let text = Math.abs(p.max - p.min) >= 100 ? String(Math.round(val)) : val.toFixed(2);
-  return unit ? text + ' ' + unit : text;
+  return formatParamValue(val, p);
+}
+
+function updateKnobArc(arcEl, norm) {
+  if (!arcEl) return;
+  arcEl.style.strokeDashoffset = String(KNOB_ARC_LEN * (1 - norm));
 }
 
 function bindKnob(wrap) {
   const paramId = wrap.dataset.param;
   const body = wrap.querySelector('.pf-knob-body');
   const dial = wrap.querySelector('.pf-knob-dial');
-  const arcValue = wrap.querySelector('.pf-knob-arc-value');
+  let arcValue = wrap.querySelector('.pf-knob-arc-value');
   const svgRoot = wrap.querySelector('.pf-knob-svg');
   const valueEl = wrap.querySelector('.pf-knob-value');
-  const rotateTarget = dial || body;
-  if (!rotateTarget) return;
+  if (!body && !svgRoot) return;
 
   if (body && body.dataset.skin) {
     body.style.backgroundImage = 'url("' + body.dataset.skin + '")';
     body.style.backgroundSize = 'cover';
     body.style.backgroundPosition = 'center';
     body.style.backgroundRepeat = 'no-repeat';
+  }
+
+  if (!arcValue && body) {
+    const arcSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    arcSvg.setAttribute('class', 'pf-knob-arc-overlay');
+    arcSvg.setAttribute('viewBox', '0 0 100 100');
+    arcSvg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+    arcSvg.setAttribute('aria-hidden', 'true');
+    const track = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    track.setAttribute('class', 'pf-knob-arc-track');
+    track.setAttribute('cx', '50');
+    track.setAttribute('cy', '50');
+    track.setAttribute('r', String(KNOB_ARC_R));
+    track.setAttribute('fill', 'none');
+    track.setAttribute('stroke', 'rgba(255,255,255,0.1)');
+    track.setAttribute('stroke-width', '3');
+    track.setAttribute('stroke-linecap', 'round');
+    track.setAttribute('transform', 'rotate(135 50 50)');
+    track.setAttribute('stroke-dasharray', KNOB_ARC_LEN + ' ' + KNOB_ARC_C);
+    arcValue = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    arcValue.setAttribute('class', 'pf-knob-arc-value');
+    arcValue.setAttribute('cx', '50');
+    arcValue.setAttribute('cy', '50');
+    arcValue.setAttribute('r', String(KNOB_ARC_R));
+    arcValue.setAttribute('fill', 'none');
+    arcValue.setAttribute('stroke', 'var(--accent,var(--pf-accent-10,#ff2d78))');
+    arcValue.setAttribute('stroke-opacity', '0.6');
+    arcValue.setAttribute('stroke-width', '3');
+    arcValue.setAttribute('stroke-linecap', 'round');
+    arcValue.setAttribute('transform', 'rotate(135 50 50)');
+    arcValue.setAttribute('stroke-dasharray', KNOB_ARC_LEN + ' ' + KNOB_ARC_C);
+    arcValue.style.strokeDashoffset = String(KNOB_ARC_LEN);
+    arcSvg.appendChild(track);
+    arcSvg.appendChild(arcValue);
+    body.insertBefore(arcSvg, body.firstChild);
   }
 
   let state = null, norm = 0.5;
@@ -467,17 +579,18 @@ function bindKnob(wrap) {
   function draw() {
     const angle = -135 + norm * 270;
     if (dial) {
-      dial.setAttribute('transform', 'rotate(' + angle + ' 50 50)');
-      if (arcValue) arcValue.style.strokeDashoffset = String(1 - norm);
+      if (dial.closest('.pf-knob-svg')) dial.setAttribute('transform', 'rotate(' + angle + ' 50 50)');
+      else dial.style.transform = 'rotate(' + angle + 'deg)';
     } else if (body) {
       body.style.transform = 'rotate(' + angle + 'deg)';
     }
+    updateKnobArc(arcValue, norm);
     if (valueEl) valueEl.textContent = formatKnobValue(paramId, norm);
   }
   draw();
 
   let dragging = false, startY = 0, startNorm = 0;
-  const dragSurface = svgRoot || body;
+  const dragSurface = svgRoot || body || wrap;
   dragSurface.addEventListener('pointerdown', (e) => {
     dragging = true;
     startY = e.clientY;
@@ -578,13 +691,13 @@ window.__setVuLevel = (level) => {
   }, 33);
 })();
 
-const PRESETS = [{"strength":50,"tune":440,"rootNote":0,"scaleType":0,"gain":0},{"strength":48.8075,"tune":440.4,"rootNote":3.3,"scaleType":1.8,"gain":1.0076},{"strength":42.6627,"tune":440.4,"rootNote":3.3,"scaleType":1.8,"gain":-2.1931},{"strength":51.4246,"tune":440.1578,"rootNote":3.3,"scaleType":1.8,"gain":4.5497},{"strength":40.3269,"tune":438.8806,"rootNote":3.3,"scaleType":1.8,"gain":0.8492},{"strength":55.1238,"tune":439.255,"rootNote":3.3,"scaleType":1.8,"gain":-0.5516},{"strength":59.9724,"tune":442.0682,"rootNote":4.6127,"scaleType":5.3682,"gain":-11.4959},{"strength":61.134,"tune":434.9585,"rootNote":3.8457,"scaleType":0.6209,"gain":4.1286},{"strength":23.8309,"tune":433.6883,"rootNote":5.3585,"scaleType":4.5549,"gain":16.3},{"strength":66.1882,"tune":441.0021,"rootNote":3.5762,"scaleType":4.4047,"gain":-8.5409},{"strength":72.0983,"tune":434.7649,"rootNote":0.4515,"scaleType":4.3427,"gain":-15.7168},{"strength":97.1542,"tune":432.7303,"rootNote":0.4459,"scaleType":0.4753,"gain":22.4841},{"strength":2.0145,"tune":432.3997,"rootNote":10.9496,"scaleType":5.7062,"gain":-22.5253},{"strength":6.7482,"tune":443.9043,"rootNote":0.1721,"scaleType":0.1673,"gain":-22.6567}];
+const PRESETS = [{"rootnote":0,"scaletype":0,"tune":440,"strength":100,"mix":100,"gain":0},{"rootnote":3.3,"scaletype":1.8,"tune":439.6055,"strength":70,"mix":70,"gain":-3.5219},{"rootnote":3.3,"scaletype":1.8,"tune":439.1044,"strength":70,"mix":70,"gain":0.6312},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-1.1823},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-3.8842},{"rootnote":3.3,"scaletype":1.8,"tune":440.4,"strength":70,"mix":70,"gain":-3.7392},{"rootnote":11,"scaletype":2.3654,"tune":438.7921,"strength":15.5797,"mix":96.0019,"gain":-5.5015},{"rootnote":1.8482,"scaletype":2.5671,"tune":439.5823,"strength":69.2187,"mix":53.4258,"gain":6.7301},{"rootnote":0.992,"scaletype":4.4675,"tune":433.0236,"strength":67.3214,"mix":16.5204,"gain":-20.615},{"rootnote":7.5692,"scaletype":2.1236,"tune":439.5608,"strength":62.2135,"mix":46.4434,"gain":8.6574},{"rootnote":6.2493,"scaletype":5.9601,"tune":437.7464,"strength":50.9839,"mix":96.3835,"gain":18.9485},{"rootnote":0.2216,"scaletype":0.1999,"tune":443.945,"strength":95.104,"mix":3.0723,"gain":-20.7609},{"rootnote":10.9123,"scaletype":0.0939,"tune":432.3347,"strength":2.7985,"mix":0.0586,"gain":21.5135},{"rootnote":10.7764,"scaletype":5.5654,"tune":443.3085,"strength":6.7908,"mix":98.6913,"gain":-20.6398}];
 const presetSel = document.getElementById('pfPreset');
 if (presetSel) presetSel.addEventListener('change', () => {
   const vals = PRESETS[+presetSel.value] || {};
   Object.entries(vals).forEach(([id, val]) => {
     if (!juceLib) return;
-    const p = [{"id":"strength","min":0,"max":100},{"id":"tune","min":432,"max":444},{"id":"rootNote","min":0,"max":11},{"id":"scaleType","min":0,"max":6},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
+    const p = [{"id":"rootnote","min":0,"max":11},{"id":"scaletype","min":0,"max":6},{"id":"tune","min":432,"max":444},{"id":"strength","min":0,"max":100},{"id":"mix","min":0,"max":100},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
     if (!p) return;
     const norm = (val - p.min) / (p.max - p.min);
     try { juceLib.getSliderState(id).setNormalisedValue(Math.min(1,Math.max(0,norm))); } catch(e){}
@@ -1635,6 +1748,8 @@ const WOmanusEQ = (function () {
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const eqCanvas = document.getElementById('eqCanvas');
+  if (!eqCanvas) return;
   const hasHarmonic = document.querySelector(
     '[data-param="rootNote"], [data-param="scaleType"], [data-param="harmonicStrength"], [data-param="root"], [data-param="scale"], [data-param="strength"]',
   );
