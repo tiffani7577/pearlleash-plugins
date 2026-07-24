@@ -6,140 +6,140 @@
     {
       "name": "Init",
       "values": {
-        "key": 0,
+        "strength": 50,
+        "tune": 440,
+        "rootNote": 0,
         "scaleType": 0,
-        "masterTune": 440,
-        "harmonicStrength": 1,
         "gain": 0
       }
     },
     {
       "name": "Daily Driver",
       "values": {
-        "key": 3.3,
+        "strength": 48.8075,
+        "tune": 440.4,
+        "rootNote": 3.3,
         "scaleType": 1.8,
-        "masterTune": 439.6055,
-        "harmonicStrength": 0.7,
         "gain": 1.0076
       }
     },
     {
       "name": "Studio Safe",
       "values": {
-        "key": 3.3,
+        "strength": 42.6627,
+        "tune": 440.4,
+        "rootNote": 3.3,
         "scaleType": 1.8,
-        "masterTune": 439.7708,
-        "harmonicStrength": 0.7,
         "gain": -2.1931
       }
     },
     {
       "name": "Gentle Push",
       "values": {
-        "key": 3.3,
+        "strength": 51.4246,
+        "tune": 440.1578,
+        "rootNote": 3.3,
         "scaleType": 1.8,
-        "masterTune": 439.0821,
-        "harmonicStrength": 0.7,
         "gain": 4.5497
       }
     },
     {
       "name": "Mix Ready",
       "values": {
-        "key": 3.3,
+        "strength": 40.3269,
+        "tune": 438.8806,
+        "rootNote": 3.3,
         "scaleType": 1.8,
-        "masterTune": 439.7044,
-        "harmonicStrength": 0.7,
         "gain": 0.8492
       }
     },
     {
       "name": "Clean Lift",
       "values": {
-        "key": 3.3,
+        "strength": 55.1238,
+        "tune": 439.255,
+        "rootNote": 3.3,
         "scaleType": 1.8,
-        "masterTune": 439.3732,
-        "harmonicStrength": 0.7,
         "gain": -0.5516
       }
     },
     {
       "name": "Techno",
       "values": {
-        "key": 6.597,
-        "scaleType": 5.0341,
-        "masterTune": 437.0321,
-        "harmonicStrength": 0.8947,
+        "strength": 59.9724,
+        "tune": 442.0682,
+        "rootNote": 4.6127,
+        "scaleType": 5.3682,
         "gain": -11.4959
       }
     },
     {
       "name": "Ambient",
       "values": {
-        "key": 6.7247,
-        "scaleType": 1.4792,
-        "masterTune": 436.1953,
-        "harmonicStrength": 0.1035,
+        "strength": 61.134,
+        "tune": 434.9585,
+        "rootNote": 3.8457,
+        "scaleType": 0.6209,
         "gain": 4.1286
       }
     },
     {
       "name": "Hip-Hop",
       "values": {
-        "key": 2.6214,
-        "scaleType": 0.8441,
-        "masterTune": 437.8457,
-        "harmonicStrength": 0.7591,
+        "strength": 23.8309,
+        "tune": 433.6883,
+        "rootNote": 5.3585,
+        "scaleType": 4.5549,
         "gain": 16.3
       }
     },
     {
       "name": "Cinematic",
       "values": {
-        "key": 7.2807,
-        "scaleType": 4.5011,
-        "masterTune": 435.9014,
-        "harmonicStrength": 0.7341,
+        "strength": 66.1882,
+        "tune": 441.0021,
+        "rootNote": 3.5762,
+        "scaleType": 4.4047,
         "gain": -8.5409
       }
     },
     {
       "name": "Experimental",
       "values": {
-        "key": 7.9308,
-        "scaleType": 1.3824,
-        "masterTune": 432.4925,
-        "harmonicStrength": 0.7238,
+        "strength": 72.0983,
+        "tune": 434.7649,
+        "rootNote": 0.4515,
+        "scaleType": 4.3427,
         "gain": -15.7168
       }
     },
     {
       "name": "Edge of Stability",
       "values": {
-        "key": 10.687,
-        "scaleType": 0.3651,
-        "masterTune": 432.4864,
-        "harmonicStrength": 0.0792,
+        "strength": 97.1542,
+        "tune": 432.7303,
+        "rootNote": 0.4459,
+        "scaleType": 0.4753,
         "gain": 22.4841
       }
     },
     {
       "name": "Total Commitment",
       "values": {
-        "key": 0.2216,
-        "scaleType": 0.1999,
-        "masterTune": 443.945,
-        "harmonicStrength": 0.951,
+        "strength": 2.0145,
+        "tune": 432.3997,
+        "rootNote": 10.9496,
+        "scaleType": 5.7062,
         "gain": -22.5253
       }
     },
     {
       "name": "The Deep End",
       "values": {
-        "key": 0.7423,
-        "scaleType": 5.9522,
-        "masterTune": 432.1878,
-        "harmonicStrength": 0.0279,
+        "strength": 6.7482,
+        "tune": 443.9043,
+        "rootNote": 0.1721,
+        "scaleType": 0.1673,
         "gain": -22.6567
       }
     }
