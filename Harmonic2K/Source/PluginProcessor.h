@@ -43,7 +43,8 @@ private:
 };
 
 
-class Harmonic2KProcessor : public juce::AudioProcessor
+class Harmonic2KProcessor : public juce::AudioProcessor,
+                              private juce::AudioProcessorValueTreeState::Listener
 {
 public:
     Harmonic2KProcessor()
@@ -57,22 +58,69 @@ public:
         licensed = Harmonic2KLicense::checkLicense();
         if (! licensed)
             juce::Logger::writeToLog ("Harmonic2K: unlicensed copy — enter your serial to activate.");
-        versionManager.registerParameter ("key", 0.0f, 1);
-        versionManager.registerParameter ("scale", 0.0f, 1);
-        versionManager.registerParameter ("strength", 50.0f, 1);
-        versionManager.registerParameter ("tune", 440.0f, 1);
-        versionManager.registerParameter ("mix", 1.0f, 1);
+        versionManager.registerParameter ("rootNote", 0.0f, 1);
+        versionManager.registerParameter ("scaleType", 0.0f, 1);
+        versionManager.registerParameter ("masterTune", 440.0f, 1);
+        versionManager.registerParameter ("harmonicStrength", 100.0f, 1);
         versionManager.registerParameter ("gain", 0.0f, 1);
+        apvts.addParameterListener ("rootNote", this);
+        apvts.addParameterListener ("scaleType", this);
+        keyScaleCoeffsDirty.store (true);
     }
+
+    ~Harmonic2KProcessor() override
+    {
+        apvts.removeParameterListener ("rootNote", this);
+        apvts.removeParameterListener ("scaleType", this);
+    }
+
+    void parameterChanged (const juce::String& parameterID, float newValue) override
+    {
+        juce::ignoreUnused (newValue);
+        if (parameterID == "rootNote" || parameterID == "scaleType")
+            keyScaleCoeffsDirty.store (true);
+    }
+
+    void maybeRecalculateKeyScaleCoefficients()
+    {
+        if (! keyScaleCoeffsDirty.exchange (false))
+            return;
+        recalculateKeyScaleCoefficients();
+    }
+
+    void recalculateKeyScaleCoefficients()
+    {
+        // Key/Scale choice changes must refresh IIR / harmonic filter coefficients.
+        // Custom blocks without updateCoeffs: re-run prepare snippets that touch coefficients.
+        currentSampleRate = (float) getSampleRate();
+for (auto& filter : filters)
+    filter.reset();
+
+// Initialize filter coefficients to bypass to avoid NaNs before first update
+for (int i = 0; i < maxActiveFilters; ++i)
+{
+    filterCoefficients[i] = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, 1000.0f, 0.707f, 1.0f);
+    filters[i].setCoefficients(filterCoefficients[i]);
+}
+
+// Initialize pre-allocated UI message objects
+eqDataMessage = juce::DynamicObject::fromJSON("{}");
+eqDataMessage.getDynamicObject()->setProperty("type", "eqBandsUpdate");
+pianoDataMessage = juce::DynamicObject::fromJSON("{}");
+pianoDataMessage.getDynamicObject()->setProperty("type", "pianoUpdate");
+
+updateFilterCoefficients();
+            gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
+    }
+
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     {
         juce::AudioProcessorValueTreeState::ParameterLayout layout;
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "key", 1 }, "Key", juce::NormalisableRange<float> (0.0f, 11.0f), 0.0f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "scale", 1 }, "Scale", juce::NormalisableRange<float> (0.0f, 6.0f), 0.0f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "strength", 1 }, "Strength", juce::NormalisableRange<float> (0.0f, 100.0f), 50.0f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "tune", 1 }, "Tune", juce::NormalisableRange<float> (432.0f, 444.0f), 440.0f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f), 1.0f));
+        layout.add (std::make_unique<juce::AudioParameterChoice> (juce::ParameterID { "rootNote", 1 }, "Key", juce::StringArray { "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B" }, 0));
+        layout.add (std::make_unique<juce::AudioParameterChoice> (juce::ParameterID { "scaleType", 1 }, "Scale", juce::StringArray { "Major", "Minor", "Dorian", "Phrygian", "Lydian", "Mixolydian", "Phrygian Dom" }, 0));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "masterTune", 1 }, "Tune", juce::NormalisableRange<float> (432.0f, 444.0f), 440.0f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "harmonicStrength", 1 }, "Strength", juce::NormalisableRange<float> (0.0f, 100.0f), 100.0f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "gain", 1 }, "Output", juce::NormalisableRange<float> (-24.0f, 24.0f), 0.0f));
         return layout;
     }
@@ -84,25 +132,31 @@ public:
 
 
 
-        sm_key.reset (apvts.getRawParameterValue ("key")->load(), 10.0f, sampleRate);
-        sm_scale.reset (apvts.getRawParameterValue ("scale")->load(), 10.0f, sampleRate);
-        sm_strength.reset (apvts.getRawParameterValue ("strength")->load(), 10.0f, sampleRate);
-        sm_tune.reset (apvts.getRawParameterValue ("tune")->load(), 10.0f, sampleRate);
-        sm_mix.reset (apvts.getRawParameterValue ("mix")->load(), 10.0f, sampleRate);
+        sm_rootNote.reset (apvts.getRawParameterValue ("rootNote")->load(), 10.0f, sampleRate);
+        sm_scaleType.reset (apvts.getRawParameterValue ("scaleType")->load(), 10.0f, sampleRate);
+        sm_masterTune.reset (apvts.getRawParameterValue ("masterTune")->load(), 10.0f, sampleRate);
+        sm_harmonicStrength.reset (apvts.getRawParameterValue ("harmonicStrength")->load(), 10.0f, sampleRate);
         sm_gain.reset (apvts.getRawParameterValue ("gain")->load(), 10.0f, sampleRate);
 
         juce::dsp::ProcessSpec dspSpec { sampleRate, (juce::uint32) samplesPerBlock, 2 };
-        for (int i = 0; i < num_bands; ++i)
+        currentSampleRate = (float) getSampleRate();
+for (auto& filter : filters)
+    filter.reset();
+
+// Initialize filter coefficients to bypass to avoid NaNs before first update
+for (int i = 0; i < maxActiveFilters; ++i)
 {
-    filters[i].reset();
-    current_coeffs[i] = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(getSampleRate(), 1000.0f, 1.0f, 0.0f);
-    filters[i].setCoefficients(current_coeffs[i]);
+    filterCoefficients[i] = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, 1000.0f, 0.707f, 1.0f);
+    filters[i].setCoefficients(filterCoefficients[i]);
 }
-active_midi_notes.fill(false);
 
-updateFilterCoefficients(getSampleRate(), 0, 0, 440.0f, 0.0f);
+// Initialize pre-allocated UI message objects
+eqDataMessage = juce::DynamicObject::fromJSON("{}");
+eqDataMessage.getDynamicObject()->setProperty("type", "eqBandsUpdate");
+pianoDataMessage = juce::DynamicObject::fromJSON("{}");
+pianoDataMessage.getDynamicObject()->setProperty("type", "pianoUpdate");
 
-smooth_mix = 0.0f;
+updateFilterCoefficients();
             gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         truePeakLeft.prepare ((float) sampleRate);
         truePeakRight.prepare ((float) sampleRate);
@@ -119,55 +173,53 @@ smooth_mix = 0.0f;
     {
         juce::dsp::ProcessContextReplacing<float> ctx (block);
         juce::ignoreUnused (ctx);
+        maybeRecalculateKeyScaleCoefficients();
         // ---- custom block: Harmonic2K (AI-generated) ----
-const float key_param = apvts.getRawParameterValue("key")->load();
-const float scale_param = apvts.getRawParameterValue("scale")->load();
-const float tune_param = apvts.getRawParameterValue("tune")->load();
-const float strength_param = apvts.getRawParameterValue("strength")->load();
-const float mix_param = apvts.getRawParameterValue("mix")->load();
-
-const float smoothing_factor = 0.01f;
-smooth_mix += smoothing_factor * (mix_param - smooth_mix);
-
-if (key_param != last_key || scale_param != last_scale || tune_param != last_tune || strength_param != last_strength)
+if (sm_rootNote != (int)smoothedParam("rootNote").skip(1) ||
+    sm_scaleType != (int)smoothedParam("scaleType").skip(1) ||
+    sm_masterTune != smoothedParam("masterTune").skip(1) ||
+    sm_harmonicStrength != smoothedParam("harmonicStrength").skip(1))
 {
-    updateFilterCoefficients(getSampleRate(), static_cast<int>(key_param), static_cast<int>(scale_param), tune_param, strength_param);
-    last_key = key_param;
-    last_scale = scale_param;
-    last_tune = tune_param;
-    last_strength = strength_param;
-
-    // Send updated band data to UI
-    juce::var::Array band_data;
-    for (int i = 0; i < num_bands; ++i)
-    {
-        juce::var::Array coeffs;
-        for (int c = 0; c < 6; ++c) coeffs.add(current_coeffs[i].coefficients[c]);
-        band_data.add(coeffs);
-    }
-    juce::var::Array active_notes_var;
-    for (int i = 0; i < 128; ++i) active_notes_var.add(active_midi_notes[i]);
-
-    juce::var message;
-    message.getDynamicObject()->setProperty("type", "updateHarmonic2K");
-    message.getDynamicObject()->setProperty("bands", band_data);
-    message.getDynamicObject()->setProperty("activeNotes", active_notes_var);
-    postMessage(message);
+    sm_rootNote = (int)smoothedParam("rootNote").skip(1);
+    sm_scaleType = (int)smoothedParam("scaleType").skip(1);
+    sm_masterTune = smoothedParam("masterTune").skip(1);
+    sm_harmonicStrength = smoothedParam("harmonicStrength").skip(1);
+    updateFilterCoefficients();
 }
 
-for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
+// UI update logic - moved to a separate flag to ensure data is prepared once
+if (needsUiUpdate)
 {
-    auto* channel_data = block.getChannelPointer((int)ch);
-    for (size_t i = 0; i < block.getNumSamples(); ++i)
+    eqFrequenciesArray.clear();
+    eqGainsArray.clear();
+    for(int i = 0; i < uiActiveFilterCount; ++i)
     {
-        float dry_sample = channel_data[i];
-        float wet_sample = dry_sample;
+        eqFrequenciesArray.add(uiFreqs[i]);
+        eqGainsArray.add(uiGains[i]);
+    }
+    eqDataMessage.getDynamicObject()->setProperty("frequencies", eqFrequenciesArray);
+    eqDataMessage.getDynamicObject()->setProperty("gains", eqGainsArray);
+    postMessage(eqDataMessage);
 
-        for (int band = 0; band < num_bands; ++band)
-        {
-            wet_sample = filters[band].processSample(wet_sample);
+    pianoInKeyNotesArray.clear();
+    for(int i = 0; i < uiInKeyNotesCount; ++i)
+    {
+        pianoInKeyNotesArray.add(uiInKeyMidiNotes[i]);
+    }
+    pianoDataMessage.getDynamicObject()->setProperty("inKeyMidiNotes", pianoInKeyNotesArray);
+    postMessage(pianoDataMessage);
+
+    needsUiUpdate = false;
+}
+
+for (size_t ch = 0; ch < block.getNumChannels(); ++ch) {
+    auto* d = block.getChannelPointer ((int) ch);
+    for (size_t i = 0; i < block.getNumSamples(); ++i) {
+        float sample = d[i];
+        for (int f = 0; f < maxActiveFilters; ++f) {
+            sample = filters[f].processSample(sample);
         }
-        channel_data[i] = dry_sample * (1.0f - smooth_mix) + wet_sample * smooth_mix;
+        d[i] = sample;
     }
 }
         gainDsp.setGainDecibels (smoothedParam ("gain"));
@@ -177,16 +229,14 @@ for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
     void processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages) override
     {
         juce::ScopedNoDenormals noDenormals;
-        sm_key.setTarget (apvts.getRawParameterValue ("key")->load());
-        sm_key.update (getSampleRate());
-        sm_scale.setTarget (apvts.getRawParameterValue ("scale")->load());
-        sm_scale.update (getSampleRate());
-        sm_strength.setTarget (apvts.getRawParameterValue ("strength")->load());
-        sm_strength.update (getSampleRate());
-        sm_tune.setTarget (apvts.getRawParameterValue ("tune")->load());
-        sm_tune.update (getSampleRate());
-        sm_mix.setTarget (apvts.getRawParameterValue ("mix")->load());
-        sm_mix.update (getSampleRate());
+        sm_rootNote.setTarget (apvts.getRawParameterValue ("rootNote")->load());
+        sm_rootNote.update (getSampleRate());
+        sm_scaleType.setTarget (apvts.getRawParameterValue ("scaleType")->load());
+        sm_scaleType.update (getSampleRate());
+        sm_masterTune.setTarget (apvts.getRawParameterValue ("masterTune")->load());
+        sm_masterTune.update (getSampleRate());
+        sm_harmonicStrength.setTarget (apvts.getRawParameterValue ("harmonicStrength")->load());
+        sm_harmonicStrength.update (getSampleRate());
         sm_gain.setTarget (apvts.getRawParameterValue ("gain")->load());
         sm_gain.update (getSampleRate());
         analyzer.pushBuffer (buffer);
@@ -290,22 +340,20 @@ public:
     // Seed-locked deterministic RNG (xorshift32). All stochastic DSP must use
     // nextRandom() so identical input + identical automation = identical output.
     // Reset in prepareToPlay, so every render from the top is bit-reproducible.
-    WoManusSmoothedParameter<float> sm_key;
-    WoManusSmoothedParameter<float> sm_scale;
-    WoManusSmoothedParameter<float> sm_strength;
-    WoManusSmoothedParameter<float> sm_tune;
-    WoManusSmoothedParameter<float> sm_mix;
+    WoManusSmoothedParameter<float> sm_rootNote;
+    WoManusSmoothedParameter<float> sm_scaleType;
+    WoManusSmoothedParameter<float> sm_masterTune;
+    WoManusSmoothedParameter<float> sm_harmonicStrength;
     WoManusSmoothedParameter<float> sm_gain;
 
     // Zipper-noise-free parameter access. Prefer smoothedParam("id") over raw
     // apvts loads inside audio code; advances one smoothing step per call site.
     inline float smoothedParam (const char* id) noexcept
     {
-        if (strcmp (id, "key") == 0) return sm_key.getNextValue();
-        if (strcmp (id, "scale") == 0) return sm_scale.getNextValue();
-        if (strcmp (id, "strength") == 0) return sm_strength.getNextValue();
-        if (strcmp (id, "tune") == 0) return sm_tune.getNextValue();
-        if (strcmp (id, "mix") == 0) return sm_mix.getNextValue();
+        if (strcmp (id, "rootNote") == 0) return sm_rootNote.getNextValue();
+        if (strcmp (id, "scaleType") == 0) return sm_scaleType.getNextValue();
+        if (strcmp (id, "masterTune") == 0) return sm_masterTune.getNextValue();
+        if (strcmp (id, "harmonicStrength") == 0) return sm_harmonicStrength.getNextValue();
         if (strcmp (id, "gain") == 0) return sm_gain.getNextValue();
         return 0.0f;
     }
@@ -336,116 +384,102 @@ private:
         switch (index)
         {
     case 0:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (50.0f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (440.0f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (1.0f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (440.0f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (100.0f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 1:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (46.7127f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (440.4f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-3.5219f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (439.6055f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (70.0f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.0076f));
         break;
     case 2:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (42.5364f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (439.4517f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.6312f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (439.7708f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (70.0f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-2.1931f));
         break;
     case 3:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (59.4785f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (438.8392f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-1.1823f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (439.0821f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (70.0f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (4.5497f));
         break;
     case 4:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (55.1238f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (439.255f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-3.8842f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (439.7044f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (70.0f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.8492f));
         break;
     case 5:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (53.7804f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (439.4464f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-3.7392f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (3.3f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (439.3732f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (70.0f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-0.5516f));
         break;
     case 6:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (11.0f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (2.3654f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (56.6011f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (433.8696f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.96f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-5.5015f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (6.597f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (5.0341f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (437.0321f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (89.4697f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-11.4959f));
         break;
     case 7:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (1.8482f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (2.5671f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (63.1862f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (440.3062f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5343f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (6.7301f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (6.7247f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.4792f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (436.1953f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (10.3478f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (4.1286f));
         break;
     case 8:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (0.992f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (4.4675f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (8.5303f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (440.0786f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.1652f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-20.615f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (2.6214f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (0.8441f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (437.8457f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (75.9149f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (16.3f));
         break;
     case 9:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (7.5692f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (2.1236f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (63.007f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (439.4656f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4644f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (8.6574f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (7.2807f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (4.5011f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (435.9014f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (73.4119f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-8.5409f));
         break;
     case 10:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (6.2493f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (5.9601f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (47.8869f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (438.1181f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9638f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (18.9485f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (7.9308f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (1.3824f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (432.4925f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (72.3782f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-15.7168f));
         break;
     case 11:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (0.2216f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (0.1999f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (99.5417f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (443.4125f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0307f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-20.7609f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (10.687f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (0.3651f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (432.4864f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (7.9213f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (22.4841f));
         break;
     case 12:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (10.9123f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (0.0939f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (2.789f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (432.3358f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0006f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (21.5135f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (0.2216f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (0.1999f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (443.945f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (95.104f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-22.5253f));
         break;
     case 13:
-        if (auto* param = apvts.getParameter ("key")) param->setValueNotifyingHost (param->convertTo0to1 (10.7764f));
-        if (auto* param = apvts.getParameter ("scale")) param->setValueNotifyingHost (param->convertTo0to1 (5.5654f));
-        if (auto* param = apvts.getParameter ("strength")) param->setValueNotifyingHost (param->convertTo0to1 (94.2378f));
-        if (auto* param = apvts.getParameter ("tune")) param->setValueNotifyingHost (param->convertTo0to1 (432.8149f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9869f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-20.6398f));
+        if (auto* param = apvts.getParameter ("rootNote")) param->setValueNotifyingHost (param->convertTo0to1 (0.7423f));
+        if (auto* param = apvts.getParameter ("scaleType")) param->setValueNotifyingHost (param->convertTo0to1 (5.9522f));
+        if (auto* param = apvts.getParameter ("masterTune")) param->setValueNotifyingHost (param->convertTo0to1 (432.1878f));
+        if (auto* param = apvts.getParameter ("harmonicStrength")) param->setValueNotifyingHost (param->convertTo0to1 (2.789f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-22.6567f));
         break;
         default: break;
         }
@@ -454,89 +488,135 @@ private:
     }
 
 
-static constexpr int num_bands = 12; // Reduced number of bands
-std::array<juce::dsp::IIR::Coefficients<float>, num_bands> current_coeffs;
-std::array<juce::dsp::IIR::Filter<float>, num_bands> filters;
+static constexpr int maxActiveFilters = 12; // Reduced for simplicity and member size
+std::array<juce::dsp::IIR::Coefficients<float>::Ptr, maxActiveFilters> filterCoefficients;
+std::array<juce::dsp::IIR::Filter<float>, maxActiveFilters> filters;
 
-float last_key = 0.0f;
-float last_scale = 0.0f;
-float last_tune = 440.0f;
-float last_strength = 0.0f;
+float currentSampleRate = 44100.0f;
 
-float smooth_mix = 0.0f;
+int sm_rootNote = 0;
+int sm_scaleType = 0;
+float sm_masterTune = 440.0f;
+float sm_harmonicStrength = 0.0f;
 
-std::array<float, 7> major_scale_intervals = {0.0f, 2.0f, 4.0f, 5.0f, 7.0f, 9.0f, 11.0f};
-std::array<float, 7> minor_scale_intervals = {0.0f, 2.0f, 3.0f, 5.0f, 7.0f, 8.0f, 10.0f};
-std::array<float, 7> dorian_scale_intervals = {0.0f, 2.0f, 3.0f, 5.0f, 7.0f, 9.0f, 10.0f};
-std::array<float, 7> phrygian_scale_intervals = {0.0f, 1.0f, 3.0f, 5.0f, 7.0f, 8.0f, 10.0f};
-std::array<float, 7> lydian_scale_intervals = {0.0f, 2.0f, 4.0f, 6.0f, 7.0f, 9.0f, 11.0f};
-std::array<float, 7> mixolydian_scale_intervals = {0.0f, 2.0f, 4.0f, 5.0f, 7.0f, 9.0f, 10.0f};
-std::array<float, 7> phrygian_dom_scale_intervals = {0.0f, 1.0f, 4.0f, 5.0f, 7.0f, 8.0f, 10.0f};
+// Buffers for UI updates - fixed size to avoid heap alloc
+std::array<float, maxActiveFilters> uiFreqs;
+std::array<float, maxActiveFilters> uiGains;
+std::array<int, 97> uiInKeyMidiNotes; // Max MIDI notes C0-C8 (12-108)
+int uiInKeyNotesCount = 0;
+int uiActiveFilterCount = 0;
+bool needsUiUpdate = false;
 
-std::array<bool, 128> active_midi_notes; // For UI piano strip
+// Pre-calculate scale intervals once
+std::array<std::array<int, 7>, 7> scales = {
+    {{0, 2, 4, 5, 7, 9, 11}}, // Major
+    {{0, 2, 3, 5, 7, 9, 10}}, // Minor
+    {{0, 2, 3, 5, 7, 9, 10}}, // Dorian
+    {{0, 1, 3, 5, 7, 8, 10}}, // Phrygian
+    {{0, 2, 4, 6, 7, 9, 11}}, // Lydian
+    {{0, 2, 4, 5, 7, 9, 10}}, // Mixolydian
+    {{0, 1, 4, 5, 7, 8, 10}}  // Phrygian Dominant
+};
 
-void updateFilterCoefficients(float sampleRate, int key_idx, int scale_idx, float tune_freq, float strength_param)
+// Pre-allocated DynamicObjects for UI messages to avoid heap allocation on audio thread
+juce::var eqDataMessage;
+juce::var pianoDataMessage;
+juce::Array<juce::var> eqFrequenciesArray;
+juce::Array<juce::var> eqGainsArray;
+juce::Array<juce::var> pianoInKeyNotesArray;
+
+float midiNoteToFrequency(int midiNote, float masterTuneHz)
 {
-    active_midi_notes.fill(false);
+    return masterTuneHz * std::pow(2.0f, (midiNote - 69.0f) / 12.0f);
+}
 
-    const std::array<float, 7>* current_scale_ptr;
-    switch (scale_idx)
+void updateFilterCoefficients()
+{
+    uiActiveFilterCount = 0;
+    uiInKeyNotesCount = 0;
+
+    float strength = sm_harmonicStrength / 100.0f; // 0 to 1
+
+    // Collect in-key and out-of-key MIDI notes
+    std::array<int, 97> inKeyMidiNotes;
+    std::array<int, 97> outOfKeyMidiNotes;
+    int currentInKeyCount = 0;
+    int currentOutOfKeyCount = 0;
+
+    for (int midiNote = 12; midiNote <= 108; ++midiNote)
     {
-        case 0: current_scale_ptr = &major_scale_intervals; break;
-        case 1: current_scale_ptr = &minor_scale_intervals; break;
-        case 2: current_scale_ptr = &dorian_scale_intervals; break;
-        case 3: current_scale_ptr = &phrygian_scale_intervals; break;
-        case 4: current_scale_ptr = &lydian_scale_intervals; break;
-        case 5: current_scale_ptr = &mixolydian_scale_intervals; break;
-        case 6: current_scale_ptr = &phrygian_dom_scale_intervals; break;
-        default: current_scale_ptr = &major_scale_intervals; break;
-    }
-    const auto& current_scale_intervals = *current_scale_ptr;
+        int noteInOctave = (midiNote - sm_rootNote) % 12;
+        if (noteInOctave < 0) noteInOctave += 12;
 
-    int band_count = 0;
-    // Focus on notes around middle C for the 12 bands
-    for (int midi_note = 48; midi_note <= 72; ++midi_note) // C3 to C5 (25 notes, will pick 12)
-    {
-        if (band_count >= num_bands) break;
-
-        float freq = tune_freq * std::pow(2.0f, (midi_note - 69) / 12.0f);
-        if (freq < 20.0f || freq > 20000.0f) continue;
-
-        int note_in_octave = midi_note % 12;
-        bool in_scale = false;
-        for (float interval : current_scale_intervals)
+        bool isInKey = false;
+        for (int i = 0; i < 7; ++i)
         {
-            if (static_cast<int>(fmodf(note_in_octave - key_idx + 12, 12)) == static_cast<int>(interval))
+            if (noteInOctave == scales[sm_scaleType][i])
             {
-                in_scale = true;
+                isInKey = true;
                 break;
             }
         }
 
-        if (in_scale)
+        if (isInKey)
         {
-            current_coeffs[band_count] = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, freq, 2.0f, juce::Decibels::decibelsToGain(1.5f * strength_param / 100.0f));
-            active_midi_notes[midi_note] = true;
+            if (currentInKeyCount < inKeyMidiNotes.size())
+                inKeyMidiNotes[currentInKeyCount++] = midiNote;
         }
         else
         {
-            current_coeffs[band_count] = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, freq, 1.5f, juce::Decibels::decibelsToGain(-0.8f * strength_param / 100.0f));
+            if (currentOutOfKeyCount < outOfKeyMidiNotes.size())
+                outOfKeyMidiNotes[currentOutOfKeyCount++] = midiNote;
         }
-        filters[band_count].setCoefficients(current_coeffs[band_count]);
-        band_count++;
     }
 
-    // Fill remaining bands with bypass or neutral filters if not all 12 were used
-    for (int i = band_count; i < num_bands; ++i)
+    int filterIdx = 0;
+
+    // Apply boosts for in-key notes
+    for (int i = 0; i < currentInKeyCount && filterIdx < maxActiveFilters; ++i)
     {
-        current_coeffs[i] = *juce::dsp::IIR::Coefficients<float>::makePeakFilter(sampleRate, 1000.0f, 1.0f, 0.0f);
-        filters[i].setCoefficients(current_coeffs[i]);
+        float freq = midiNoteToFrequency(inKeyMidiNotes[i], sm_masterTune);
+        if (freq >= 20.0f && freq <= 20000.0f)
+        {
+            filterCoefficients[filterIdx] = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, freq, 2.0f, 1.0f + (1.5f * strength));
+            filters[filterIdx].setCoefficients(filterCoefficients[filterIdx]);
+            uiFreqs[uiActiveFilterCount] = freq;
+            uiGains[uiActiveFilterCount] = juce::Decibels::toDecibels(1.0f + (1.5f * strength));
+            uiActiveFilterCount++;
+            uiInKeyMidiNotes[uiInKeyNotesCount++] = inKeyMidiNotes[i]; // Store for pianoStrip
+            filterIdx++;
+        }
     }
+
+    // Apply cuts for out-of-key notes, filling remaining filter slots
+    for (int i = 0; i < currentOutOfKeyCount && filterIdx < maxActiveFilters; ++i)
+    {
+        float freq = midiNoteToFrequency(outOfKeyMidiNotes[i], sm_masterTune);
+        if (freq >= 20.0f && freq <= 20000.0f)
+        {
+            filterCoefficients[filterIdx] = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, freq, 1.5f, 1.0f - (0.8f * strength));
+            filters[filterIdx].setCoefficients(filterCoefficients[filterIdx]);
+            uiFreqs[uiActiveFilterCount] = freq;
+            uiGains[uiActiveFilterCount] = juce::Decibels::toDecibels(1.0f - (0.8f * strength));
+            uiActiveFilterCount++;
+            filterIdx++;
+        }
+    }
+
+    // Bypass unused filters
+    for (; filterIdx < maxActiveFilters; ++filterIdx)
+    {
+        filterCoefficients[filterIdx] = juce::dsp::IIR::Coefficients<float>::makePeakFilter(currentSampleRate, 1000.0f, 0.707f, 1.0f);
+        filters[filterIdx].setCoefficients(filterCoefficients[filterIdx]);
+    }
+
+    needsUiUpdate = true;
 }
     juce::dsp::Gain<float> gainDsp;
     TruePeakLimiter truePeakLeft;
     TruePeakLimiter truePeakRight;
     int demoSampleCounter = 0;
     bool demoSilenceActive = false;
+    std::atomic<bool> keyScaleCoeffsDirty { true };
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Harmonic2KProcessor)
 };
