@@ -34,9 +34,16 @@
   .pf-toggle-track.on{background:color-mix(in srgb,var(--accent,var(--pf-accent-10)) 35%,var(--pf-surface-30));border-color:var(--accent,var(--pf-accent-10));}
   .pf-toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,0.45);transition:transform 0.12s;}
   .pf-toggle-track.on .pf-toggle-thumb{transform:translateX(24px);}
-  .pf-piano-strip{position:absolute;left:0;right:0;bottom:0;height:56px;display:flex;align-items:stretch;z-index:25;padding:0 8px 8px;box-sizing:border-box;}
-  .pf-piano-key{flex:1;margin:0 1px;border-radius:0 0 4px 4px;background:linear-gradient(180deg,#f8fafc,#e2e8f0);border:1px solid #94a3b8;position:relative;}
-  .pf-piano-key.black{flex:0.65;background:linear-gradient(180deg,#334155,#0f172a);border-color:#020617;margin:0 -8px;z-index:1;height:62%;}
+  .pf-piano-strip{position:absolute;left:0;right:0;bottom:0;height:72px;z-index:25;padding:4px 8px 8px;box-sizing:border-box;
+    background:linear-gradient(180deg,rgba(10,15,24,0.2),rgba(10,15,24,0.85));}
+  .pf-piano-strip-inner{position:relative;width:100%;height:100%;}
+  .pf-piano-key{position:absolute;top:0;border-radius:0 0 3px 3px;box-sizing:border-box;cursor:pointer;
+    transition:background 0.08s ease,box-shadow 0.08s ease;}
+  .pf-piano-key.white{height:100%;background:linear-gradient(180deg,#ffffff,#e2e8f0);border:1px solid #000;z-index:0;}
+  .pf-piano-key.black{height:62%;background:#000;border:1px solid #000;z-index:1;}
+  .pf-piano-key.white.in-key{background:linear-gradient(180deg,var(--pf-accent-glow,var(--pf-accent-10,#C084FC)),var(--pf-accent-10,#A855F7));border-color:#000;box-shadow:inset 0 -2px 0 rgba(0,0,0,0.25);}
+  .pf-piano-key.black.in-key{background:var(--pf-accent-10,#C084FC);box-shadow:0 0 8px var(--pf-accent-glow,#C084FC);}
+  .pf-piano-key:active{filter:brightness(0.92);}
   .pf-knob-wrap{display:flex;flex-direction:column;align-items:center;cursor:ns-resize;}
   .pf-knob-wrap>.pf-knob-body{flex:1 1 auto;width:100%;min-height:0;max-height:calc(100% - 30px);}
   .pf-knob-body{width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--pf-surface-30-hi,#3a3a3a),#111111);
@@ -125,29 +132,15 @@
 </div></div>
 <div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:560px;height:32px;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">HARMONIC2K</div>
 <canvas id="eqCanvas" class="pf-eq-canvas-el" style="left:0px;top:52px;width:600px;height:172px;display:block;background:#1a1a1a;border-radius:6px;"></canvas>
-<div class="pf-select-wrap" data-param="key" data-ui="select" style="left:30px;top:280px;width:120px;height:56px;">
+<div class="pf-select-wrap" data-param="rootNote" data-ui="select" style="left:30px;top:280px;width:120px;height:56px;">
   <label>KEY</label>
   <select class="pf-select"><option value="C">C</option><option value="C#">C#</option><option value="D">D</option><option value="D#">D#</option><option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option></select>
 </div>
-<div class="pf-select-wrap" data-param="scale" data-ui="select" style="left:170px;top:280px;width:120px;height:56px;">
+<div class="pf-select-wrap" data-param="scaleType" data-ui="select" style="left:170px;top:280px;width:120px;height:56px;">
   <label>SCALE</label>
   <select class="pf-select"><option value="Major">Major</option><option value="Minor">Minor</option><option value="Dorian">Dorian</option><option value="Phrygian">Phrygian</option><option value="Lydian">Lydian</option><option value="Mixolydian">Mixolydian</option><option value="Phrygian Dom">Phrygian Dom</option></select>
 </div>
-<div class="pf-knob-wrap" data-param="strength" data-ui="knob" style="left:310px;top:260px;width:100px;height:100px;--accent:#8b5cf6;">
-  <div class="pf-knob-body">
-    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
-    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
-  </svg>
-    <div class="pf-knob-dial">
-      <div class="pf-knob-highlight"></div>
-      <div class="pf-knob-pointer"></div>
-    </div>
-  </div>
-  <span class="pf-knob-label">STRENGTH</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-knob-wrap" data-param="tune" data-ui="knob" style="left:450px;top:260px;width:100px;height:100px;--accent:#a78bfa;">
+<div class="pf-knob-wrap" data-param="masterTune" data-ui="knob" style="left:310px;top:260px;width:100px;height:100px;--accent:#8b5cf6;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -161,7 +154,7 @@
   <span class="pf-knob-label">TUNE</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="mix" data-ui="knob" style="left:30px;top:400px;width:100px;height:100px;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="harmonicStrength" data-ui="knob" style="left:450px;top:260px;width:100px;height:100px;--accent:#a78bfa;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -172,11 +165,13 @@
       <div class="pf-knob-pointer"></div>
     </div>
   </div>
-  <span class="pf-knob-label">MIX</span>
+  <span class="pf-knob-label">STRENGTH</span>
   <span class="pf-knob-value">0</span>
 </div>
 
-<div class="pf-piano-strip" style="left:0px;top:572px;width:600px;height:56px;" aria-hidden="true"><div class="pf-piano-key" data-note="C"></div><div class="pf-piano-key black" data-note="C#"></div><div class="pf-piano-key" data-note="D"></div><div class="pf-piano-key black" data-note="D#"></div><div class="pf-piano-key" data-note="E"></div><div class="pf-piano-key" data-note="F"></div><div class="pf-piano-key black" data-note="F#"></div><div class="pf-piano-key" data-note="G"></div><div class="pf-piano-key black" data-note="G#"></div><div class="pf-piano-key" data-note="A"></div><div class="pf-piano-key black" data-note="A#"></div><div class="pf-piano-key" data-note="B"></div></div>
+<div class="pf-piano-strip pf-interactive-piano" id="piano_strip" style="left:0px;top:572px;width:600px;height:56px;" data-octaves="2" data-start-octave="3" role="img" aria-label="Piano keyboard">
+  <div class="pf-piano-strip-inner"><div class="pf-piano-key white" data-midi="36" data-pc="0" style="left:0%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="38" data-pc="2" style="left:7.142857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="40" data-pc="4" style="left:14.285714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="41" data-pc="5" style="left:21.42857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="43" data-pc="7" style="left:28.571428571428573%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="45" data-pc="9" style="left:35.714285714285715%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="47" data-pc="11" style="left:42.85714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="48" data-pc="0" style="left:50%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="50" data-pc="2" style="left:57.142857142857146%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="52" data-pc="4" style="left:64.28571428571429%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="53" data-pc="5" style="left:71.42857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="55" data-pc="7" style="left:78.57142857142857%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="57" data-pc="9" style="left:85.71428571428572%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="59" data-pc="11" style="left:92.85714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key black" data-midi="37" data-pc="1" style="left:5%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="39" data-pc="3" style="left:12.142857142857144%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="42" data-pc="6" style="left:26.42857142857143%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="44" data-pc="8" style="left:33.57142857142857%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="46" data-pc="10" style="left:40.714285714285715%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="49" data-pc="1" style="left:55%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="51" data-pc="3" style="left:62.142857142857146%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="54" data-pc="6" style="left:76.42857142857143%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="56" data-pc="8" style="left:83.57142857142858%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="58" data-pc="10" style="left:90.71428571428572%;width:4.285714285714286%;"></div></div>
+</div>
 
 <div class="pf-meter-container" aria-hidden="true"><div class="pf-meter-bar"></div></div>
 <svg class="pf-eq-curve" viewBox="0 0 600 80" preserveAspectRatio="none" aria-hidden="true">
@@ -331,7 +326,7 @@ window.addEventListener('message', (e) => {
 setMeterLevel(-100);
 updateEQCurve([]);
 
-const PARAMS = [{"id":"key","name":"Key","min":0,"max":11,"unit":"","ui":{"type":"select","options":["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]}},{"id":"scale","name":"Scale","min":0,"max":6,"unit":"index","ui":{"type":"select","options":["Major","Minor","Dorian","Phrygian","Lydian","Mixolydian","Phrygian Dom"]}},{"id":"strength","name":"Strength","min":0,"max":100,"unit":"%","ui":{"type":"knob"}},{"id":"tune","name":"Tune","min":432,"max":444,"unit":"Hz","ui":{"type":"knob"}},{"id":"mix","name":"Mix","min":0,"max":1,"unit":"%","ui":{"type":"knob"}},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB","ui":{"type":"knob"}}];
+const PARAMS = [{"id":"rootNote","name":"Key","min":0,"max":11,"unit":"","ui":{"type":"select","options":["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]}},{"id":"scaleType","name":"Scale","min":0,"max":6,"unit":"index","ui":{"type":"select","options":["Major","Minor","Dorian","Phrygian","Lydian","Mixolydian","Phrygian Dom"]}},{"id":"masterTune","name":"Tune","min":432,"max":444,"unit":"Hz","ui":{"type":"knob"}},{"id":"harmonicStrength","name":"Strength","min":0,"max":100,"unit":"%","ui":{"type":"knob"}},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB","ui":{"type":"knob"}}];
 const RATE_PARAM_IDS = new Set([]);
 const KNOB_ARC_R = 46;
 const KNOB_ARC_C = 2 * Math.PI * KNOB_ARC_R;
@@ -743,13 +738,13 @@ window.__setVuLevel = (level) => {
   }, 33);
 })();
 
-const PRESETS = [{"key":0,"scale":0,"strength":50,"tune":440,"mix":1,"gain":0},{"key":3.3,"scale":1.8,"strength":46.7127,"tune":440.4,"mix":0.7,"gain":-3.5219},{"key":3.3,"scale":1.8,"strength":42.5364,"tune":439.4517,"mix":0.7,"gain":0.6312},{"key":3.3,"scale":1.8,"strength":59.4785,"tune":438.8392,"mix":0.7,"gain":-1.1823},{"key":3.3,"scale":1.8,"strength":55.1238,"tune":439.255,"mix":0.7,"gain":-3.8842},{"key":3.3,"scale":1.8,"strength":53.7804,"tune":439.4464,"mix":0.7,"gain":-3.7392},{"key":11,"scale":2.3654,"strength":56.6011,"tune":433.8696,"mix":0.96,"gain":-5.5015},{"key":1.8482,"scale":2.5671,"strength":63.1862,"tune":440.3062,"mix":0.5343,"gain":6.7301},{"key":0.992,"scale":4.4675,"strength":8.5303,"tune":440.0786,"mix":0.1652,"gain":-20.615},{"key":7.5692,"scale":2.1236,"strength":63.007,"tune":439.4656,"mix":0.4644,"gain":8.6574},{"key":6.2493,"scale":5.9601,"strength":47.8869,"tune":438.1181,"mix":0.9638,"gain":18.9485},{"key":0.2216,"scale":0.1999,"strength":99.5417,"tune":443.4125,"mix":0.0307,"gain":-20.7609},{"key":10.9123,"scale":0.0939,"strength":2.789,"tune":432.3358,"mix":0.0006,"gain":21.5135},{"key":10.7764,"scale":5.5654,"strength":94.2378,"tune":432.8149,"mix":0.9869,"gain":-20.6398}];
+const PRESETS = [{"rootNote":0,"scaleType":0,"masterTune":440,"harmonicStrength":100,"gain":0},{"rootNote":3.3,"scaleType":1.8,"masterTune":439.6055,"harmonicStrength":70,"gain":1.0076},{"rootNote":3.3,"scaleType":1.8,"masterTune":439.7708,"harmonicStrength":70,"gain":-2.1931},{"rootNote":3.3,"scaleType":1.8,"masterTune":439.0821,"harmonicStrength":70,"gain":4.5497},{"rootNote":3.3,"scaleType":1.8,"masterTune":439.7044,"harmonicStrength":70,"gain":0.8492},{"rootNote":3.3,"scaleType":1.8,"masterTune":439.3732,"harmonicStrength":70,"gain":-0.5516},{"rootNote":6.597,"scaleType":5.0341,"masterTune":437.0321,"harmonicStrength":89.4697,"gain":-11.4959},{"rootNote":6.7247,"scaleType":1.4792,"masterTune":436.1953,"harmonicStrength":10.3478,"gain":4.1286},{"rootNote":2.6214,"scaleType":0.8441,"masterTune":437.8457,"harmonicStrength":75.9149,"gain":16.3},{"rootNote":7.2807,"scaleType":4.5011,"masterTune":435.9014,"harmonicStrength":73.4119,"gain":-8.5409},{"rootNote":7.9308,"scaleType":1.3824,"masterTune":432.4925,"harmonicStrength":72.3782,"gain":-15.7168},{"rootNote":10.687,"scaleType":0.3651,"masterTune":432.4864,"harmonicStrength":7.9213,"gain":22.4841},{"rootNote":0.2216,"scaleType":0.1999,"masterTune":443.945,"harmonicStrength":95.104,"gain":-22.5253},{"rootNote":0.7423,"scaleType":5.9522,"masterTune":432.1878,"harmonicStrength":2.789,"gain":-22.6567}];
 const presetSel = document.getElementById('pfPreset');
 if (presetSel) presetSel.addEventListener('change', () => {
   const vals = PRESETS[+presetSel.value] || {};
   Object.entries(vals).forEach(([id, val]) => {
     if (!juceLib) return;
-    const p = [{"id":"key","min":0,"max":11},{"id":"scale","min":0,"max":6},{"id":"strength","min":0,"max":100},{"id":"tune","min":432,"max":444},{"id":"mix","min":0,"max":1},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
+    const p = [{"id":"rootNote","min":0,"max":11},{"id":"scaleType","min":0,"max":6},{"id":"masterTune","min":432,"max":444},{"id":"harmonicStrength","min":0,"max":100},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
     if (!p) return;
     const norm = (val - p.min) / (p.max - p.min);
     try { juceLib.getSliderState(id).setNormalisedValue(Math.min(1,Math.max(0,norm))); } catch(e){}
@@ -1535,19 +1530,26 @@ const WOmanusEQ = (function () {
       const tune = this.opts.tuneHz || 440;
       const strength = this.opts.harmonicStrength != null ? this.opts.harmonicStrength : 1;
       const inKey = this._inKeyPitchClasses();
-      this.bands.length = 0;
-      for (let midi = 0; midi <= 127; midi++) {
+      // 24 equal-temperament in-key frequencies spaced across the audible range.
+      const candidates = [];
+      for (let midi = 24; midi <= 108; midi++) {
+        if (!inKey[midi % 12]) continue;
         const freq = midiToFreq(midi, tune);
         if (freq < this.opts.minFreq || freq > this.opts.maxFreq) continue;
-        if (this.bands.length >= CONFIG.maxHarmonicBands) break;
-        const pc = midi % 12;
-        const gainDb = inKey[pc] ? 1.5 * strength : -0.8 * strength;
+        candidates.push({ midi: midi, freq: freq });
+      }
+      this.bands.length = 0;
+      const target = CONFIG.maxHarmonicBands;
+      if (!candidates.length) return;
+      for (let b = 0; b < target; b++) {
+        const idx = Math.min(candidates.length - 1, Math.round(b * (candidates.length - 1) / Math.max(1, target - 1)));
+        const c = candidates[idx];
         this.bands.push(new EQBand({
-          freq: freq,
-          gain: gainDb,
-          q: inKey[pc] ? 2.0 : 1.5,
-          midi: midi,
-          color: inKey[pc] ? CONFIG.accent : 'rgba(100,116,139,0.85)',
+          freq: c.freq,
+          gain: 1.5 * strength,
+          q: 2.0,
+          midi: c.midi,
+          color: CONFIG.accent,
         }));
       }
     }
@@ -1803,34 +1805,186 @@ document.addEventListener('DOMContentLoaded', () => {
   const eqCanvas = document.getElementById('eqCanvas');
   if (!eqCanvas) return;
   const hasHarmonic = document.querySelector(
-    '[data-param="rootNote"], [data-param="scaleType"], [data-param="harmonicStrength"], [data-param="root"], [data-param="scale"], [data-param="strength"]',
+    '[data-param="rootNote"], [data-param="scaleType"], [data-param="harmonicStrength"], [data-param="root"], [data-param="scale"], [data-param="key"], [data-param="strength"]',
   );
-  function getParamValue(id) {
-    if (!window.__pfJuce) return null;
-    try {
-      var aliases = id === 'root' ? ['root', 'rootNote'] : id === 'scale' ? ['scale', 'scaleType'] : id === 'strength' ? ['strength', 'harmonicStrength'] : [id];
-      for (var i = 0; i < aliases.length; i++) {
-        var st = window.__pfJuce.getSliderState(aliases[i]);
-        var norm = st.getNormalisedValue();
-        var p = (window.__pfParams || []).find(function (x) { return x.id === aliases[i]; });
-        if (p) return p.min + norm * (p.max - p.min);
+
+  const PF_NOTE_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+  const PF_SCALE_INTERVALS = {
+    major: [0, 2, 4, 5, 7, 9, 11],
+    minor: [0, 2, 3, 5, 7, 8, 10],
+    dorian: [0, 2, 3, 5, 7, 9, 10],
+    phrygian: [0, 1, 3, 5, 7, 8, 10],
+    lydian: [0, 2, 4, 6, 7, 9, 11],
+    mixolydian: [0, 2, 4, 5, 7, 9, 10],
+    'phrygian dominant': [0, 1, 4, 5, 7, 8, 10],
+    'phrygian dom': [0, 1, 4, 5, 7, 8, 10],
+  };
+
+  function readSelectIndex(paramIds) {
+    for (const id of paramIds) {
+      const wrap = document.querySelector('[data-param="' + id + '"]');
+      if (!wrap) continue;
+      const sel = wrap.querySelector('select.pf-select, select');
+      if (sel && sel.selectedIndex >= 0) return sel.selectedIndex;
+      const label = (sel && sel.options[sel.selectedIndex] && sel.options[sel.selectedIndex].text) || '';
+      if (label) {
+        const noteIdx = PF_NOTE_NAMES.indexOf(label.trim());
+        if (noteIdx >= 0) return noteIdx;
       }
-    } catch (_) { /* param not relayed */ }
+    }
     return null;
   }
+
+  function readSelectLabel(paramIds) {
+    for (const id of paramIds) {
+      const wrap = document.querySelector('[data-param="' + id + '"]');
+      const sel = wrap && wrap.querySelector('select.pf-select, select');
+      if (sel && sel.options[sel.selectedIndex]) return String(sel.options[sel.selectedIndex].text || sel.value || '').trim();
+    }
+    return null;
+  }
+
+  function getParamValue(id) {
+    const aliases = id === 'root' ? ['root', 'rootNote', 'key']
+      : id === 'scale' ? ['scale', 'scaleType']
+      : id === 'strength' ? ['strength', 'harmonicStrength']
+      : [id];
+    if (window.__pfJuce) {
+      try {
+        for (var i = 0; i < aliases.length; i++) {
+          var st = window.__pfJuce.getSliderState(aliases[i]);
+          var norm = st.getNormalisedValue();
+          var p = (window.__pfParams || []).find(function (x) { return x.id === aliases[i]; });
+          if (p) return p.min + norm * (p.max - p.min);
+        }
+      } catch (_) { /* param not relayed */ }
+    }
+    const fromDom = readSelectIndex(aliases);
+    if (fromDom != null) return fromDom;
+    return null;
+  }
+
+  /** 24 equal-temperament in-key bands from current Key/Scale dropdowns — no C++ postMessage needed. */
+  function buildHarmonicBandsFromDropdowns(tuneHz) {
+    const tune = Number(tuneHz) || 440;
+    const rootIdx = readSelectIndex(['rootNote', 'root', 'key']) ?? 0;
+    const scaleLabel = (readSelectLabel(['scaleType', 'scale']) || 'major').toLowerCase();
+    const intervals = PF_SCALE_INTERVALS[scaleLabel]
+      || PF_SCALE_INTERVALS[scaleLabel.replace(/\s+dom(inant)?$/, ' dominant')]
+      || PF_SCALE_INTERVALS.major;
+    const inKey = {};
+    for (let i = 0; i < intervals.length; i++) inKey[(rootIdx + intervals[i]) % 12] = true;
+    const candidates = [];
+    for (let midi = 24; midi <= 108; midi++) {
+      if (!inKey[midi % 12]) continue;
+      const freq = tune * Math.pow(2, (midi - 69) / 12);
+      if (freq < 20 || freq > 20000) continue;
+      candidates.push({ freq: freq, midi: midi });
+    }
+    const bands = [];
+    if (!candidates.length) return bands;
+    for (let b = 0; b < 24; b++) {
+      const idx = Math.min(candidates.length - 1, Math.round(b * (candidates.length - 1) / 23));
+      const c = candidates[idx];
+      bands.push({ freq: c.freq, gain: 1.5, q: 2.0, midi: c.midi });
+    }
+    return bands;
+  }
+
+  function applyHarmonicBands(eqInst) {
+    if (!eqInst || !hasHarmonic) return;
+    const bands = buildHarmonicBandsFromDropdowns(440);
+    if (typeof eqInst.receiveBands === 'function') eqInst.receiveBands(bands);
+    else if (eqInst.eq && typeof eqInst.eq.setBands === 'function') eqInst.eq.setBands(bands);
+    if (eqInst.eq) eqInst.eq.curveNeedsUpdate = true;
+  }
+
+  const keyLabel = readSelectLabel(['rootNote', 'root', 'key']) || 'C';
+  const scaleLabel = (readSelectLabel(['scaleType', 'scale']) || 'major').toLowerCase();
   const eq = WOmanusEQ.create('eqCanvas', {
     harmonicMode: !!hasHarmonic,
-    key: 'C',
-    scale: 'major',
+    key: keyLabel,
+    scale: scaleLabel in PF_SCALE_INTERVALS ? scaleLabel : 'major',
+    rootIndex: readSelectIndex(['rootNote', 'root', 'key']) ?? 0,
+    scaleIndex: readSelectIndex(['scaleType', 'scale']) ?? 0,
     showSpectrum: true,
     showPiano: !!hasHarmonic,
     getParamValue: hasHarmonic ? getParamValue : null,
   });
   window.__eq = eq;
+  // Draw 24 temperament bands immediately from dropdowns (do not wait for C++ postMessage).
+  applyHarmonicBands(eq);
+  document.querySelectorAll(
+    '[data-param="rootNote"] select, [data-param="root"] select, [data-param="key"] select, [data-param="scaleType"] select, [data-param="scale"] select',
+  ).forEach((sel) => {
+    sel.addEventListener('change', () => applyHarmonicBands(eq));
+  });
   window.addEventListener('message', (e) => {
     if (e.data?.type === 'spectrum') eq.receiveSpectrum(e.data.pre, e.data.post);
     if (e.data?.type === 'eq') eq.eq.curveNeedsUpdate = true;
   });
 });
+</script>
+<script>
+
+(function () {
+  var SCALE = {
+    major: [0,2,4,5,7,9,11],
+    minor: [0,2,3,5,7,8,10],
+    dorian: [0,2,3,5,7,9,10],
+    phrygian: [0,1,3,5,7,8,10],
+    lydian: [0,2,4,6,7,9,11],
+    mixolydian: [0,2,4,5,7,9,10],
+    'phrygian dominant': [0,1,4,5,7,8,10],
+    'phrygian dom': [0,1,4,5,7,8,10]
+  };
+  var NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  function readSelect(ids) {
+    for (var i = 0; i < ids.length; i++) {
+      var wrap = document.querySelector('[data-param="' + ids[i] + '"]');
+      if (!wrap) continue;
+      var sel = wrap.querySelector('select');
+      if (sel && sel.selectedIndex >= 0) {
+        return { index: sel.selectedIndex, label: (sel.options[sel.selectedIndex].text || '').trim() };
+      }
+    }
+    return null;
+  }
+  function updatePianoHighlights() {
+    var strips = document.querySelectorAll('.pf-interactive-piano');
+    if (!strips.length) return;
+    var root = readSelect(['rootNote','root','key']);
+    var scale = readSelect(['scaleType','scale']);
+    var rootIdx = root ? root.index : 0;
+    if (root && root.label) {
+      var ni = NOTES.indexOf(root.label);
+      if (ni >= 0) rootIdx = ni;
+    }
+    rootIdx = ((rootIdx % 12) + 12) % 12;
+    var scaleName = (scale && scale.label ? scale.label : 'major').toLowerCase();
+    var intervals = SCALE[scaleName] || SCALE[scaleName.replace(/\s+dom(inant)?$/, ' dominant')] || SCALE.major;
+    var inKey = {};
+    for (var i = 0; i < intervals.length; i++) inKey[(rootIdx + intervals[i]) % 12] = true;
+    strips.forEach(function (strip) {
+      strip.querySelectorAll('.pf-piano-key').forEach(function (key) {
+        var pc = parseInt(key.getAttribute('data-pc'), 10);
+        key.classList.toggle('in-key', !!inKey[pc]);
+      });
+    });
+  }
+  document.addEventListener('DOMContentLoaded', function () {
+    updatePianoHighlights();
+    document.querySelectorAll(
+      '[data-param="rootNote"] select, [data-param="root"] select, [data-param="key"] select, [data-param="scaleType"] select, [data-param="scale"] select'
+    ).forEach(function (sel) {
+      sel.addEventListener('change', updatePianoHighlights);
+    });
+    window.addEventListener('message', function (e) {
+      if (e.data && (e.data.type === 'params' || e.data.type === 'param')) updatePianoHighlights();
+    });
+  });
+  window.__pfUpdatePianoHighlights = updatePianoHighlights;
+})();
+
 </script>
 </body></html>
