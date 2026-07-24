@@ -53,10 +53,11 @@ public:
     explicit Harmonic2KEditor (Harmonic2KProcessor& p) : AudioProcessorEditor (p), proc (p)
     {
         loadAssets();
-        strengthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("strength"), strengthRelay, nullptr);
+        rootnoteAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("rootnote"), rootnoteRelay, nullptr);
+        scaletypeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("scaletype"), scaletypeRelay, nullptr);
         tuneAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("tune"), tuneRelay, nullptr);
-        rootNoteAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("rootNote"), rootNoteRelay, nullptr);
-        scaleTypeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("scaleType"), scaleTypeRelay, nullptr);
+        strengthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("strength"), strengthRelay, nullptr);
+        mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
         webView.goToURL (juce::WebBrowserComponent::getResourceProviderRoot());
@@ -101,6 +102,9 @@ public:
         const float rms = proc.outputRmsLevel.load();
         const float meterDb = juce::Decibels::gainToDecibels (juce::jmax (1.0e-6f, rms), -100.0f);
         webView.evaluateJavascript ("window.postMessage({type:'meter',level:" + juce::String (meterDb, 2) + "},'*');");
+        webView.evaluateJavascript (
+            "window.postMessage({type:'spectrum',pre:" + proc.analyzer.getPreEQMagnitudesJsArray()
+            + ",post:" + proc.analyzer.getPostEQMagnitudesJsArray() + "},'*');");
         webView.evaluateJavascript ("window.postMessage({type:'eq',bands:[]},'*');");
 
     }
@@ -109,10 +113,11 @@ private:
     Harmonic2KProcessor& proc;
     Harmonic2KLookAndFeel lnf;
     SpriteAtlas bgAtlas;
-    juce::WebSliderRelay strengthRelay { "strength" };
+    juce::WebSliderRelay rootnoteRelay { "rootnote" };
+    juce::WebSliderRelay scaletypeRelay { "scaletype" };
     juce::WebSliderRelay tuneRelay { "tune" };
-    juce::WebSliderRelay rootNoteRelay { "rootNote" };
-    juce::WebSliderRelay scaleTypeRelay { "scaleType" };
+    juce::WebSliderRelay strengthRelay { "strength" };
+    juce::WebSliderRelay mixRelay { "mix" };
     juce::WebSliderRelay gainRelay { "gain" };
 
 
@@ -142,18 +147,20 @@ private:
         juce::WebBrowserComponent::Options{}
             .withBackend (juce::WebBrowserComponent::Options::Backend::defaultBackend)
             .withNativeIntegrationEnabled()
-            .withOptionsFrom (strengthRelay)
+            .withOptionsFrom (rootnoteRelay)
+            .withOptionsFrom (scaletypeRelay)
             .withOptionsFrom (tuneRelay)
-            .withOptionsFrom (rootNoteRelay)
-            .withOptionsFrom (scaleTypeRelay)
+            .withOptionsFrom (strengthRelay)
+            .withOptionsFrom (mixRelay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
 
-    std::unique_ptr<juce::WebSliderParameterAttachment> strengthAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> rootnoteAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> scaletypeAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> tuneAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> rootNoteAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> scaleTypeAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> strengthAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (Harmonic2KEditor)
 };
