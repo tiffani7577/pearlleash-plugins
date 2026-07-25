@@ -1,0 +1,203 @@
+{
+  "plugin": "GlitchKiss",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "mix": 1,
+        "bpm": 120,
+        "pattern1": 0,
+        "pattern2": 0,
+        "pattern3": 0,
+        "pattern4": 0,
+        "pattern5": 0,
+        "pattern6": 0,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "mix": 0.7,
+        "bpm": 137.5695,
+        "pattern1": 0.3,
+        "pattern2": 0.3,
+        "pattern3": 0.3,
+        "pattern4": 0.3,
+        "pattern5": 0.3,
+        "pattern6": 0.3,
+        "gain": -1.6397
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "mix": 0.7,
+        "bpm": 129.4567,
+        "pattern1": 0.3,
+        "pattern2": 0.3,
+        "pattern3": 0.3,
+        "pattern4": 0.3,
+        "pattern5": 0.3,
+        "pattern6": 0.3,
+        "gain": -2.6619
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "mix": 0.7,
+        "bpm": 119.0522,
+        "pattern1": 0.3,
+        "pattern2": 0.3,
+        "pattern3": 0.3,
+        "pattern4": 0.3,
+        "pattern5": 0.3,
+        "pattern6": 0.3,
+        "gain": 1.0929
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "mix": 0.7,
+        "bpm": 117.1105,
+        "pattern1": 0.3,
+        "pattern2": 0.3,
+        "pattern3": 0.3,
+        "pattern4": 0.3,
+        "pattern5": 0.3,
+        "pattern6": 0.3,
+        "gain": -0.1122
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "mix": 0.7,
+        "bpm": 122.2228,
+        "pattern1": 0.3,
+        "pattern2": 0.3,
+        "pattern3": 0.3,
+        "pattern4": 0.3,
+        "pattern5": 0.3,
+        "pattern6": 0.3,
+        "gain": 3.6828
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "mix": 0.9235,
+        "bpm": 178.5636,
+        "pattern1": 1,
+        "pattern2": 0.3194,
+        "pattern3": 0.6153,
+        "pattern4": 0.1522,
+        "pattern5": 0.1594,
+        "pattern6": 0.5144,
+        "gain": -7.3839
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "mix": 0.611,
+        "bpm": 124.8373,
+        "pattern1": 0.3435,
+        "pattern2": 0.4216,
+        "pattern3": 0.5097,
+        "pattern4": 0.4045,
+        "pattern5": 0.6807,
+        "pattern6": 0.607,
+        "gain": 0.9078
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "mix": 0.4662,
+        "bpm": 117.0658,
+        "pattern1": 0.493,
+        "pattern2": 0.7102,
+        "pattern3": 0.7498,
+        "pattern4": 0.3233,
+        "pattern5": 0.4307,
+        "pattern6": 0.4871,
+        "gain": 16.0318
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "mix": 0.5186,
+        "bpm": 183.519,
+        "pattern1": 0.4589,
+        "pattern2": 0.6105,
+        "pattern3": 0.6921,
+        "pattern4": 0.4644,
+        "pattern5": 0.7039,
+        "pattern6": 0.4435,
+        "gain": 11.4224
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "mix": 0.6904,
+        "bpm": 196.0936,
+        "pattern1": 0.1148,
+        "pattern2": 0.977,
+        "pattern3": 0.0247,
+        "pattern4": 0.1583,
+        "pattern5": 0.7612,
+        "pattern6": 0.7522,
+        "gain": 7.5401
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "mix": 0.0165,
+        "bpm": 71.5188,
+        "pattern1": 0.0048,
+        "pattern2": 0.0588,
+        "pattern3": 0.0196,
+        "pattern4": 0.0379,
+        "pattern5": 0.0342,
+        "pattern6": 0.9915,
+        "gain": -21.7545
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "mix": 0.0587,
+        "bpm": 233.2412,
+        "pattern1": 0.9307,
+        "pattern2": 0.993,
+        "pattern3": 0.0018,
+        "pattern4": 0.9976,
+        "pattern5": 0.9717,
+        "pattern6": 0.0392,
+        "gain": 20.8589
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "mix": 0.9495,
+        "bpm": 230.2775,
+        "pattern1": 0.0775,
+        "pattern2": 0.9731,
+        "pattern3": 0.0074,
+        "pattern4": 0.0414,
+        "pattern5": 0.0463,
+        "pattern6": 0.9438,
+        "gain": 22.0294
+      }
+    }
+  ]
+}
