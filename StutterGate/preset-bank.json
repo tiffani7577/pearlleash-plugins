@@ -1,0 +1,161 @@
+{
+  "plugin": "StutterGate",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "activePattern": 0,
+        "subdivision": 3,
+        "attack": 0.005,
+        "release": 0.01,
+        "gain": 0.8,
+        "mix": 1
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "activePattern": 1.5,
+        "subdivision": 2.3649,
+        "attack": 0.1507,
+        "release": 0.1507,
+        "gain": 0.7005,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "activePattern": 1.5,
+        "subdivision": 3.3314,
+        "attack": 0.1507,
+        "release": 0.1507,
+        "gain": 0.9805,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "activePattern": 1.5,
+        "subdivision": 3.3326,
+        "attack": 0.1507,
+        "release": 0.1507,
+        "gain": 0.7688,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "activePattern": 1.5,
+        "subdivision": 3.5959,
+        "attack": 0.1507,
+        "release": 0.1507,
+        "gain": 0.8404,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "activePattern": 1.5,
+        "subdivision": 2.6118,
+        "attack": 0.1507,
+        "release": 0.1507,
+        "gain": 0.898,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "activePattern": 4.2338,
+        "subdivision": 2.7057,
+        "attack": 0.5,
+        "release": 0.2588,
+        "gain": 0.5434,
+        "mix": 0.5136
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "activePattern": 1.8641,
+        "subdivision": 3.2207,
+        "attack": 0.0794,
+        "release": 0.2062,
+        "gain": 1.2691,
+        "mix": 0.4551
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "activePattern": 2.3529,
+        "subdivision": 1.0538,
+        "attack": 0.3887,
+        "release": 0.1422,
+        "gain": 1.1548,
+        "mix": 0.0525
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "activePattern": 3.2201,
+        "subdivision": 5.5135,
+        "attack": 0.3811,
+        "release": 0.3348,
+        "gain": 1.1184,
+        "mix": 0.6275
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "activePattern": 4.2222,
+        "subdivision": 4.1455,
+        "attack": 0.4437,
+        "release": 0.3323,
+        "gain": 0.0204,
+        "mix": 0.8385
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "activePattern": 0.0681,
+        "subdivision": 6.5778,
+        "attack": 0.0102,
+        "release": 0.0321,
+        "gain": 0.0287,
+        "mix": 0.973
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "activePattern": 4.7004,
+        "subdivision": 6.5203,
+        "attack": 0.4608,
+        "release": 0.0176,
+        "gain": 1.9016,
+        "mix": 0.0537
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "activePattern": 4.7513,
+        "subdivision": 0.3618,
+        "attack": 0.0235,
+        "release": 0.465,
+        "gain": 0.0035,
+        "mix": 0.9498
+      }
+    }
+  ]
+}
