@@ -1,11 +1,11 @@
 # GlitchKiss — Certificate of Invention
 
-**Forged:** 2026-07-25T06:17:40.684Z
+**Forged:** 2026-07-25T22:07:23.427Z
 **Vendor:** PearlLeashPlugin (PearlLeash Plugins)
 **Version:** 1.0.0 · state schema v1 · seed 0x50524C4C
 **Origin:** authored from creative intent
 **DSP chain:** glitchkiss → gain
-**Original processors:** Glitch Kiss — real-time-safety proven by automated lint
+**Original processors:** GlitchKiss — real-time-safety proven by automated lint
 **Determinism:** seed-locked — identical input and automation produce bit-identical renders
 **Licensing:** offline HMAC-SHA256 serial validation embedded
 
