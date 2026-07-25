@@ -8,7 +8,7 @@
 
 namespace GlitchKissLicense
 {
-    static const char* kProductSecret = "c289f914de52614687f8e3ade1d459f2c3c5c9369fc02b81ebad851618b0fdcf";
+    static const char* kProductSecret = "88d1fecaccfbe00664d0fbeaad501fc338d8288ca61c238ddf6f5460f1a11f0d";
     static const char* kMode = "notice";
 
     inline juce::MemoryBlock hmacSha256 (const juce::MemoryBlock& key, const juce::MemoryBlock& msg)
