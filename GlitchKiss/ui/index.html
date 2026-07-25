@@ -17,7 +17,7 @@
     --pf-font-value:'JetBrains Mono',ui-monospace,monospace;
   }
   html,body{margin:0;overflow:hidden;user-select:none;-webkit-user-select:none;}
-  body{width:600px;height:596px;background:linear-gradient(#2D1B69,#0D0D0D);position:relative;font-family:var(--pf-font-label);color:var(--pf-text);}
+  body{width:460px;height:260px;background:linear-gradient(#2D1B69,#0D0D0D);position:relative;font-family:var(--pf-font-label);color:var(--pf-text);}
   .pf-label{position:absolute;white-space:nowrap;pointer-events:none;display:flex;align-items:center;}
   .pf-plugin-header{font-family:var(--pf-font-header);font-weight:700;text-transform:uppercase;letter-spacing:0.08em;}
   .pf-knob-wrap,.pf-slider-wrap,.pf-button,.pf-select-wrap,.pf-toggle-wrap{position:absolute;touch-action:none;}
@@ -114,7 +114,7 @@
     background:var(--pf-bg-60-2,#0a0f18);border:1px solid var(--pf-border,#2a3548);border-radius:4px;overflow:hidden;display:flex;align-items:flex-end;}
   .pf-meter-bar{width:100%;height:calc(var(--meter-level,0)*100%);min-height:0;background:var(--pf-accent-10,#ff4d8d);
     box-shadow:0 0 8px rgba(255,77,141,0.55);transition:height 0.05s ease-out;}
-  .pf-eq-curve{position:absolute;left:0;bottom:0;width:600px;height:80px;z-index:30;pointer-events:none;
+  .pf-eq-curve{position:absolute;left:0;bottom:0;width:460px;height:80px;z-index:30;pointer-events:none;
     background:linear-gradient(180deg,rgba(10,15,24,0) 0%,rgba(10,15,24,0.72) 100%);}
   .pf-eq-curve polyline{stroke-linecap:round;stroke-linejoin:round;}
   .pf-eq-curve .pf-eq-line{fill:none;stroke:var(--pf-accent-10,#ff4d8d);stroke-width:2;}
@@ -129,12 +129,16 @@
   .pf-archetype-eq .pf-macro-bar{top:280px;}
   .pf-studio-layout .pf-macro-bar,.pf-studio-layout .pf-meter-container,.pf-studio-layout>.pf-eq-curve{display:none!important;}
 </style></head>
-<body class="pf-archetype-reverb pf-studio-layout">
+<body class="pf-archetype-distortion pf-studio-layout">
 
 
 
-<div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:560px;height:32px;z-index:2;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">GLITCHKISS</div>
-<div class="pf-knob-wrap" data-param="mix" data-ui="knob" style="left:30px;top:80px;width:100px;height:100px;z-index:2;--accent:#C084FC;">
+<div class="pf-label pf-plugin-header" style="left:20px;top:16px;width:420px;height:32px;z-index:2;font-family:Inter;font-size:24px;color:#C084FC;font-weight:bold">GLITCHKISS</div>
+<div class="pf-select-wrap" data-param="gatePattern" data-ui="select" style="left:30px;top:100px;width:120px;height:56px;z-index:2;">
+  <label>GATE PATTERN</label>
+  <select class="pf-select"><option value="1/4 ON, 1/4 OFF">1/4 ON, 1/4 OFF</option><option value="1/8 ON, 1/8 OFF">1/8 ON, 1/8 OFF</option><option value="1/16 ON, 3/16 OFF">1/16 ON, 3/16 OFF</option><option value="1/4 ON, 1/8 OFF, 1/8 ON">1/4 ON, 1/8 OFF, 1/8 ON</option><option value="1/8 ON, 1/4 OFF, 1/8 ON">1/8 ON, 1/4 OFF, 1/8 ON</option><option value="Dotted 8th Feel">Dotted 8th Feel</option></select>
+</div>
+<div class="pf-knob-wrap" data-param="mix" data-ui="knob" style="left:170px;top:80px;width:100px;height:100px;z-index:2;--accent:#F5F0FF;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -148,45 +152,7 @@
   <span class="pf-knob-label">MIX</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-knob-wrap" data-param="bpm" data-ui="knob" style="left:170px;top:80px;width:100px;height:100px;z-index:2;--accent:#F5F0FF;">
-  <div class="pf-knob-body">
-    <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-    <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
-    <circle class="pf-knob-arc-value" cx="50" cy="50" r="46" fill="none" stroke="var(--accent,var(--pf-accent-10,#ff2d78))" stroke-opacity="0.6" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095" stroke-dashoffset="216.76989309769573"/>
-  </svg>
-    <div class="pf-knob-dial">
-      <div class="pf-knob-highlight"></div>
-      <div class="pf-knob-pointer"></div>
-    </div>
-  </div>
-  <span class="pf-knob-label">BPM</span>
-  <span class="pf-knob-value">0</span>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern1" data-ui="toggle" style="left:330px;top:104px;width:72px;height:48px;z-index:2;--accent:#8b5cf6;">
-  <span class="pf-toggle-label">1/4 NOTE</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern2" data-ui="toggle" style="left:470px;top:104px;width:72px;height:48px;z-index:2;--accent:#a78bfa;">
-  <span class="pf-toggle-label">1/8 NOTE</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern3" data-ui="toggle" style="left:50px;top:244px;width:72px;height:48px;z-index:2;--accent:#C084FC;">
-  <span class="pf-toggle-label">1/16 NOTE</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern4" data-ui="toggle" style="left:190px;top:244px;width:72px;height:48px;z-index:2;--accent:#F5F0FF;">
-  <span class="pf-toggle-label">1/32 NOTE</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern5" data-ui="toggle" style="left:330px;top:244px;width:72px;height:48px;z-index:2;--accent:#8b5cf6;">
-  <span class="pf-toggle-label">TRIPLET 1/8</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-toggle-wrap" data-param="pattern6" data-ui="toggle" style="left:470px;top:244px;width:72px;height:48px;z-index:2;--accent:#a78bfa;">
-  <span class="pf-toggle-label">DOTTED 1/8</span>
-  <div class="pf-toggle-track" aria-pressed="false"><div class="pf-toggle-thumb"></div></div>
-</div>
-<div class="pf-knob-wrap" data-param="gain" data-ui="knob" style="left:30px;top:360px;width:100px;height:100px;z-index:2;--accent:#C084FC;">
+<div class="pf-knob-wrap" data-param="gain" data-ui="knob" style="left:310px;top:80px;width:100px;height:100px;z-index:2;--accent:#8b5cf6;">
   <div class="pf-knob-body">
     <svg class="pf-knob-arc-overlay" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
     <circle class="pf-knob-arc-track" cx="50" cy="50" r="46" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="3" stroke-linecap="round" transform="rotate(135 50 50)" stroke-dasharray="216.76989309769573 289.02652413026095"/>
@@ -200,9 +166,6 @@
   <span class="pf-knob-label">OUTPUT</span>
   <span class="pf-knob-value">0</span>
 </div>
-<div class="pf-piano-strip pf-interactive-piano" id="piano_strip" style="left:0px;top:532px;width:600px;height:56px;z-index:2;" data-octaves="2" data-start-octave="3" role="img" aria-label="Piano keyboard">
-  <div class="pf-piano-strip-inner"><div class="pf-piano-key white" data-midi="36" data-pc="0" style="left:0%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="38" data-pc="2" style="left:7.142857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="40" data-pc="4" style="left:14.285714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="41" data-pc="5" style="left:21.42857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="43" data-pc="7" style="left:28.571428571428573%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="45" data-pc="9" style="left:35.714285714285715%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="47" data-pc="11" style="left:42.85714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="48" data-pc="0" style="left:50%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="50" data-pc="2" style="left:57.142857142857146%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="52" data-pc="4" style="left:64.28571428571429%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="53" data-pc="5" style="left:71.42857142857143%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="55" data-pc="7" style="left:78.57142857142857%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="57" data-pc="9" style="left:85.71428571428572%;width:7.142857142857143%;"></div><div class="pf-piano-key white" data-midi="59" data-pc="11" style="left:92.85714285714286%;width:7.142857142857143%;"></div><div class="pf-piano-key black" data-midi="37" data-pc="1" style="left:5%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="39" data-pc="3" style="left:12.142857142857144%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="42" data-pc="6" style="left:26.42857142857143%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="44" data-pc="8" style="left:33.57142857142857%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="46" data-pc="10" style="left:40.714285714285715%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="49" data-pc="1" style="left:55%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="51" data-pc="3" style="left:62.142857142857146%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="54" data-pc="6" style="left:76.42857142857143%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="56" data-pc="8" style="left:83.57142857142858%;width:4.285714285714286%;"></div><div class="pf-piano-key black" data-midi="58" data-pc="10" style="left:90.71428571428572%;width:4.285714285714286%;"></div></div>
-</div>
 
 
 
@@ -214,7 +177,7 @@ window.__pfJuce = juceLib;
 
 const pfMeterBar = document.querySelector('.pf-meter-bar');
 const pfEqSvg = document.querySelector('.pf-eq-curve');
-const EQ_W = 600;
+const EQ_W = 460;
 const EQ_H = 80;
 const EQ_MIN_DB = -24;
 const EQ_MAX_DB = 24;
@@ -354,7 +317,7 @@ window.addEventListener('message', (e) => {
 setMeterLevel(-100);
 updateEQCurve([]);
 
-const PARAMS = [{"id":"mix","name":"Mix","min":0,"max":1,"unit":"%","ui":{"type":"knob"}},{"id":"bpm","name":"BPM","min":60,"max":240,"unit":"bpm","ui":{"type":"knob"}},{"id":"pattern1","name":"1/4 Note","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"pattern2","name":"1/8 Note","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"pattern3","name":"1/16 Note","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"pattern4","name":"1/32 Note","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"pattern5","name":"Triplet 1/8","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"pattern6","name":"Dotted 1/8","min":0,"max":1,"unit":"","ui":{"type":"toggle"}},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB","ui":{"type":"knob"}}];
+const PARAMS = [{"id":"gatePattern","name":"Gate Pattern","min":0,"max":5,"unit":"index","ui":{"type":"select","options":["1/4 ON, 1/4 OFF","1/8 ON, 1/8 OFF","1/16 ON, 3/16 OFF","1/4 ON, 1/8 OFF, 1/8 ON","1/8 ON, 1/4 OFF, 1/8 ON","Dotted 8th Feel"]}},{"id":"mix","name":"Mix","min":0,"max":1,"unit":"%","ui":{"type":"knob"}},{"id":"gain","name":"Output","min":-24,"max":24,"unit":"dB","ui":{"type":"knob"}}];
 const RATE_PARAM_IDS = new Set([]);
 const KNOB_ARC_R = 46;
 const KNOB_ARC_C = 2 * Math.PI * KNOB_ARC_R;
@@ -773,13 +736,13 @@ window.__setVuLevel = (level) => {
   }, 33);
 })();
 
-const PRESETS = [{"mix":1,"bpm":120,"pattern1":0,"pattern2":0,"pattern3":0,"pattern4":0,"pattern5":0,"pattern6":0,"gain":0},{"mix":0.7,"bpm":137.5695,"pattern1":0.3,"pattern2":0.3,"pattern3":0.3,"pattern4":0.3,"pattern5":0.3,"pattern6":0.3,"gain":-1.6397},{"mix":0.7,"bpm":129.4567,"pattern1":0.3,"pattern2":0.3,"pattern3":0.3,"pattern4":0.3,"pattern5":0.3,"pattern6":0.3,"gain":-2.6619},{"mix":0.7,"bpm":119.0522,"pattern1":0.3,"pattern2":0.3,"pattern3":0.3,"pattern4":0.3,"pattern5":0.3,"pattern6":0.3,"gain":1.0929},{"mix":0.7,"bpm":117.1105,"pattern1":0.3,"pattern2":0.3,"pattern3":0.3,"pattern4":0.3,"pattern5":0.3,"pattern6":0.3,"gain":-0.1122},{"mix":0.7,"bpm":122.2228,"pattern1":0.3,"pattern2":0.3,"pattern3":0.3,"pattern4":0.3,"pattern5":0.3,"pattern6":0.3,"gain":3.6828},{"mix":0.9235,"bpm":178.5636,"pattern1":1,"pattern2":0.3194,"pattern3":0.6153,"pattern4":0.1522,"pattern5":0.1594,"pattern6":0.5144,"gain":-7.3839},{"mix":0.611,"bpm":124.8373,"pattern1":0.3435,"pattern2":0.4216,"pattern3":0.5097,"pattern4":0.4045,"pattern5":0.6807,"pattern6":0.607,"gain":0.9078},{"mix":0.4662,"bpm":117.0658,"pattern1":0.493,"pattern2":0.7102,"pattern3":0.7498,"pattern4":0.3233,"pattern5":0.4307,"pattern6":0.4871,"gain":16.0318},{"mix":0.5186,"bpm":183.519,"pattern1":0.4589,"pattern2":0.6105,"pattern3":0.6921,"pattern4":0.4644,"pattern5":0.7039,"pattern6":0.4435,"gain":11.4224},{"mix":0.6904,"bpm":196.0936,"pattern1":0.1148,"pattern2":0.977,"pattern3":0.0247,"pattern4":0.1583,"pattern5":0.7612,"pattern6":0.7522,"gain":7.5401},{"mix":0.0165,"bpm":71.5188,"pattern1":0.0048,"pattern2":0.0588,"pattern3":0.0196,"pattern4":0.0379,"pattern5":0.0342,"pattern6":0.9915,"gain":-21.7545},{"mix":0.0587,"bpm":233.2412,"pattern1":0.9307,"pattern2":0.993,"pattern3":0.0018,"pattern4":0.9976,"pattern5":0.9717,"pattern6":0.0392,"gain":20.8589},{"mix":0.9495,"bpm":230.2775,"pattern1":0.0775,"pattern2":0.9731,"pattern3":0.0074,"pattern4":0.0414,"pattern5":0.0463,"pattern6":0.9438,"gain":22.0294}];
+const PRESETS = [{"gatePattern":0,"mix":0.5,"gain":0},{"gatePattern":1.5,"mix":0.5976,"gain":-4.2717},{"gatePattern":1.5,"mix":0.5229,"gain":-4.0647},{"gatePattern":1.5,"mix":0.4407,"gain":-1.6397},{"gatePattern":1.5,"mix":0.5525,"gain":3.7856},{"gatePattern":1.5,"mix":0.4777,"gain":1.0029},{"gatePattern":3.1171,"mix":0.6928,"gain":-6.1094},{"gatePattern":1.5571,"mix":0.3842,"gain":-10.8403},{"gatePattern":2.8655,"mix":0.1142,"gain":2.8498},{"gatePattern":3.2168,"mix":0.4671,"gain":5.1322},{"gatePattern":4.1439,"mix":0.6716,"gain":3.0172},{"gatePattern":0.3678,"mix":0.9309,"gain":-22.1249},{"gatePattern":4.8247,"mix":0.063,"gain":22.244},{"gatePattern":0.3469,"mix":0.9819,"gain":23.8372}];
 const presetSel = document.getElementById('pfPreset');
 if (presetSel) presetSel.addEventListener('change', () => {
   const vals = PRESETS[+presetSel.value] || {};
   Object.entries(vals).forEach(([id, val]) => {
     if (!juceLib) return;
-    const p = [{"id":"mix","min":0,"max":1},{"id":"bpm","min":60,"max":240},{"id":"pattern1","min":0,"max":1},{"id":"pattern2","min":0,"max":1},{"id":"pattern3","min":0,"max":1},{"id":"pattern4","min":0,"max":1},{"id":"pattern5","min":0,"max":1},{"id":"pattern6","min":0,"max":1},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
+    const p = [{"id":"gatePattern","min":0,"max":5},{"id":"mix","min":0,"max":1},{"id":"gain","min":-24,"max":24}].find(x=>x.id===id);
     if (!p) return;
     const norm = (val - p.min) / (p.max - p.min);
     try { juceLib.getSliderState(id).setNormalisedValue(Math.min(1,Math.max(0,norm))); } catch(e){}
@@ -1961,65 +1924,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 <script>
-
-(function () {
-  var SCALE = {
-    major: [0,2,4,5,7,9,11],
-    minor: [0,2,3,5,7,8,10],
-    dorian: [0,2,3,5,7,9,10],
-    phrygian: [0,1,3,5,7,8,10],
-    lydian: [0,2,4,6,7,9,11],
-    mixolydian: [0,2,4,5,7,9,10],
-    'phrygian dominant': [0,1,4,5,7,8,10],
-    'phrygian dom': [0,1,4,5,7,8,10]
-  };
-  var NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
-  function readSelect(ids) {
-    for (var i = 0; i < ids.length; i++) {
-      var wrap = document.querySelector('[data-param="' + ids[i] + '"]');
-      if (!wrap) continue;
-      var sel = wrap.querySelector('select');
-      if (sel && sel.selectedIndex >= 0) {
-        return { index: sel.selectedIndex, label: (sel.options[sel.selectedIndex].text || '').trim() };
-      }
-    }
-    return null;
-  }
-  function updatePianoHighlights() {
-    var strips = document.querySelectorAll('.pf-interactive-piano');
-    if (!strips.length) return;
-    var root = readSelect(['rootNote','root','key']);
-    var scale = readSelect(['scaleType','scale']);
-    var rootIdx = root ? root.index : 0;
-    if (root && root.label) {
-      var ni = NOTES.indexOf(root.label);
-      if (ni >= 0) rootIdx = ni;
-    }
-    rootIdx = ((rootIdx % 12) + 12) % 12;
-    var scaleName = (scale && scale.label ? scale.label : 'major').toLowerCase();
-    var intervals = SCALE[scaleName] || SCALE[scaleName.replace(/\s+dom(inant)?$/, ' dominant')] || SCALE.major;
-    var inKey = {};
-    for (var i = 0; i < intervals.length; i++) inKey[(rootIdx + intervals[i]) % 12] = true;
-    strips.forEach(function (strip) {
-      strip.querySelectorAll('.pf-piano-key').forEach(function (key) {
-        var pc = parseInt(key.getAttribute('data-pc'), 10);
-        key.classList.toggle('in-key', !!inKey[pc]);
-      });
-    });
-  }
-  document.addEventListener('DOMContentLoaded', function () {
-    updatePianoHighlights();
-    document.querySelectorAll(
-      '[data-param="rootNote"] select, [data-param="root"] select, [data-param="key"] select, [data-param="scaleType"] select, [data-param="scale"] select'
-    ).forEach(function (sel) {
-      sel.addEventListener('change', updatePianoHighlights);
-    });
-    window.addEventListener('message', function (e) {
-      if (e.data && (e.data.type === 'params' || e.data.type === 'param')) updatePianoHighlights();
-    });
-  });
-  window.__pfUpdatePianoHighlights = updatePianoHighlights;
-})();
 
 </script>
 </body></html>
