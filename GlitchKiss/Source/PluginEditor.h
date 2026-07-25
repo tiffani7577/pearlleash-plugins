@@ -53,21 +53,15 @@ public:
     explicit GlitchKissEditor (GlitchKissProcessor& p) : AudioProcessorEditor (p), proc (p)
     {
         loadAssets();
+        gatePatternAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gatePattern"), gatePatternRelay, nullptr);
         mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
-        bpmAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("bpm"), bpmRelay, nullptr);
-        pattern1Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern1"), pattern1Relay, nullptr);
-        pattern2Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern2"), pattern2Relay, nullptr);
-        pattern3Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern3"), pattern3Relay, nullptr);
-        pattern4Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern4"), pattern4Relay, nullptr);
-        pattern5Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern5"), pattern5Relay, nullptr);
-        pattern6Attach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("pattern6"), pattern6Relay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
         webView.goToURL (juce::WebBrowserComponent::getResourceProviderRoot());
 
 
 
-        setSize (600, 596);
+        setSize (460, 260);
         startTimerHz (30);
     }
 
@@ -104,14 +98,8 @@ private:
     GlitchKissProcessor& proc;
     GlitchKissLookAndFeel lnf;
     GlitchKissLookAndFeel::SpriteAtlas bgAtlas;
+    juce::WebSliderRelay gatePatternRelay { "gatePattern" };
     juce::WebSliderRelay mixRelay { "mix" };
-    juce::WebSliderRelay bpmRelay { "bpm" };
-    juce::WebSliderRelay pattern1Relay { "pattern1" };
-    juce::WebSliderRelay pattern2Relay { "pattern2" };
-    juce::WebSliderRelay pattern3Relay { "pattern3" };
-    juce::WebSliderRelay pattern4Relay { "pattern4" };
-    juce::WebSliderRelay pattern5Relay { "pattern5" };
-    juce::WebSliderRelay pattern6Relay { "pattern6" };
     juce::WebSliderRelay gainRelay { "gain" };
 
 
@@ -169,26 +157,14 @@ private:
         juce::WebBrowserComponent::Options{}
             .withBackend (juce::WebBrowserComponent::Options::Backend::defaultBackend)
             .withNativeIntegrationEnabled()
+            .withOptionsFrom (gatePatternRelay)
             .withOptionsFrom (mixRelay)
-            .withOptionsFrom (bpmRelay)
-            .withOptionsFrom (pattern1Relay)
-            .withOptionsFrom (pattern2Relay)
-            .withOptionsFrom (pattern3Relay)
-            .withOptionsFrom (pattern4Relay)
-            .withOptionsFrom (pattern5Relay)
-            .withOptionsFrom (pattern6Relay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
 
+    std::unique_ptr<juce::WebSliderParameterAttachment> gatePatternAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> bpmAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern1Attach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern2Attach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern3Attach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern4Attach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern5Attach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> pattern6Attach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GlitchKissEditor)
 };
