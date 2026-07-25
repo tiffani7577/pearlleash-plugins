@@ -59,64 +59,30 @@ public:
         licensed = GlitchKissLicense::checkLicense();
         if (! licensed)
             juce::Logger::writeToLog ("GlitchKiss: unlicensed copy — enter your serial to activate.");
-        versionManager.registerParameter ("mix", 1.0f, 1);
-        versionManager.registerParameter ("bpm", 120.0f, 1);
-        versionManager.registerParameter ("pattern1", 0.0f, 1);
-        versionManager.registerParameter ("pattern2", 0.0f, 1);
-        versionManager.registerParameter ("pattern3", 0.0f, 1);
-        versionManager.registerParameter ("pattern4", 0.0f, 1);
-        versionManager.registerParameter ("pattern5", 0.0f, 1);
-        versionManager.registerParameter ("pattern6", 0.0f, 1);
+        versionManager.registerParameter ("gatePattern", 0.0f, 1);
+        versionManager.registerParameter ("mix", 0.5f, 1);
         versionManager.registerParameter ("gain", 0.0f, 1);
-        apvts.addParameterListener ("pattern1", this);
-        apvts.addParameterListener ("pattern2", this);
-        apvts.addParameterListener ("pattern3", this);
-        apvts.addParameterListener ("pattern4", this);
-        keyScaleCoeffsDirty.store (true);
+
+
     }
 
     ~GlitchKissProcessor() override
     {
-        apvts.removeParameterListener ("pattern1", this);
-        apvts.removeParameterListener ("pattern2", this);
-        apvts.removeParameterListener ("pattern3", this);
-        apvts.removeParameterListener ("pattern4", this);
+        // no parameter listeners registered
     }
 
     void parameterChanged (const juce::String& parameterID, float newValue) override
     {
         juce::ignoreUnused (parameterID, newValue);
-        if (parameterID == "pattern1" || parameterID == "pattern2" || parameterID == "pattern3" || parameterID == "pattern4")
-            keyScaleCoeffsDirty.store (true);
-    }
 
-    void maybeRecalculateKeyScaleCoefficients()
-    {
-        if (! keyScaleCoeffsDirty.exchange (false))
-            return;
-        recalculateKeyScaleCoefficients();
-    }
-
-    void recalculateKeyScaleCoefficients()
-    {
-        // Key/Scale choice changes must refresh IIR / harmonic filter coefficients.
-        // Never re-inject prepareToPlay snippets — only getSampleRate() is valid here.
-        // No updateCoeffs — refuse prepareToPlay re-entry; use getSampleRate() only.
-        juce::ignoreUnused (getSampleRate());
     }
 
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     {
         juce::AudioProcessorValueTreeState::ParameterLayout layout;
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f), 1.0f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "bpm", 1 }, "BPM", juce::NormalisableRange<float> (60.0f, 240.0f), 120.0f));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern1", 1 }, "1/4 Note", false));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern2", 1 }, "1/8 Note", false));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern3", 1 }, "1/16 Note", false));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern4", 1 }, "1/32 Note", false));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern5", 1 }, "Triplet 1/8", false));
-        layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "pattern6", 1 }, "Dotted 1/8", false));
+        layout.add (std::make_unique<juce::AudioParameterChoice> (juce::ParameterID { "gatePattern", 1 }, "Gate Pattern", juce::StringArray { "1/4 ON, 1/4 OFF", "1/8 ON, 1/8 OFF", "1/16 ON, 3/16 OFF", "1/4 ON, 1/8 OFF, 1/8 ON", "1/8 ON, 1/4 OFF, 1/8 ON", "Dotted 8th Feel" }, 0));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f), 0.5f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "gain", 1 }, "Output", juce::NormalisableRange<float> (-24.0f, 24.0f), 0.0f));
         return layout;
     }
@@ -128,36 +94,46 @@ public:
 
 
 
+        sm_gatePattern.reset (apvts.getRawParameterValue ("gatePattern")->load(), 10.0f, sampleRate);
         sm_mix.reset (apvts.getRawParameterValue ("mix")->load(), 5.0f, sampleRate);
-        sm_bpm.reset (apvts.getRawParameterValue ("bpm")->load(), 10.0f, sampleRate);
-        sm_pattern1.reset (apvts.getRawParameterValue ("pattern1")->load(), 10.0f, sampleRate);
-        sm_pattern2.reset (apvts.getRawParameterValue ("pattern2")->load(), 10.0f, sampleRate);
-        sm_pattern3.reset (apvts.getRawParameterValue ("pattern3")->load(), 10.0f, sampleRate);
-        sm_pattern4.reset (apvts.getRawParameterValue ("pattern4")->load(), 10.0f, sampleRate);
-        sm_pattern5.reset (apvts.getRawParameterValue ("pattern5")->load(), 10.0f, sampleRate);
-        sm_pattern6.reset (apvts.getRawParameterValue ("pattern6")->load(), 10.0f, sampleRate);
         sm_gain.reset (apvts.getRawParameterValue ("gain")->load(), 10.0f, sampleRate);
 
         juce::dsp::ProcessSpec dspSpec { sampleRate, (juce::uint32) samplesPerBlock, 2 };
-            sampleRate = (float) sampleRate;
-    // Initialize gate patterns (0=off, 1=on) for 1 beat (1/4 note) duration
-    // 1/4 note (on for 1/4, off for 3/4)
-    gatePatterns[0] = 0.25f; // On for 1/4 of a beat
-    // 1/8 note (on for 1/8, off for 7/8)
-    gatePatterns[1] = 0.125f; // On for 1/8 of a beat
-    // 1/16 note (on for 1/16, off for 15/16)
-    gatePatterns[2] = 0.0625f; // On for 1/16 of a beat
-    // 1/32 note (on for 1/32, off for 31/32)
-    gatePatterns[3] = 0.03125f; // On for 1/32 of a beat
-    // Triplet 1/8 (on for 1/12, off for 11/12)
-    gatePatterns[4] = 1.0f / 12.0f; // On for 1/12 of a beat
-    // Dotted 1/8 (on for 3/16, off for 13/16)
-    gatePatterns[5] = 3.0f / 16.0f; // On for 3/16 of a beat
+        samplesPerBeat = (60.0f / getBpm()) * (float) sampleRate;
+currentBeatPosition = getPlayHeadBeatPosition();
 
-    activePattern = 0;
-    currentSampleCount = 0;
-    lastMix = 0.0f;
-    smoothedMix = 0.0f;
+mixSmoothed.reset(sampleRate, 0.020f);
+mixSmoothed.setCurrentAndTargetValue(apvts.getRawParameterValue("mix")->load()); // Initialize with default mix value
+
+// Define patterns. Each 'true' represents an 'on' state, 'false' an 'off' state.
+// Each pattern is defined over 8 16th notes, which equals 2 beats.
+// The pattern index (0-7) corresponds to a 16th note slot within this 2-beat cycle.
+
+// Pattern 0: 1/4 note ON, 1/4 note OFF (repeated over 2 beats)
+// This means 2 16ths ON, 2 16ths OFF. Over 8 16ths: [T T F F T T F F]
+patterns[0] = {true, true, false, false, true, true, false, false};
+
+// Pattern 1: 1/8 note ON, 1/8 note OFF (repeated over 2 beats)
+// This means 1 16th ON, 1 16th OFF. Over 8 16ths: [T F T F T F T F]
+patterns[1] = {true, false, true, false, true, false, true, false};
+
+// Pattern 2: 1/16 note ON, 1/16 note OFF (repeated over 2 beats)
+// This means 1 16th ON, 1 16th OFF. This is the same as pattern 1, but let's make it distinct.
+// Let's make this a more complex 16th pattern: [T F F F T F F F] (1/16th on, 3/16th off)
+patterns[2] = {true, false, false, false, true, false, false, false};
+
+// Pattern 3: 1/4 note ON, 1/8 note OFF, 1/8 note ON (over 2 beats)
+// Over 8 16ths: [T T F T T T F T]
+patterns[3] = {true, true, false, true, true, true, false, true};
+
+// Pattern 4: 1/8 note ON, 1/4 note OFF, 1/8 note ON (over 2 beats)
+// Over 8 16ths: [T F F T T F F T]
+patterns[4] = {true, false, false, true, true, false, false, true};
+
+// Pattern 5: 1/16 note ON, 1/8 note OFF, 1/16 note ON (over 2 beats)
+// Over 8 16ths: [T F F F T F F F] (This is the same as pattern 2, let's make it distinct)
+// Let's make this a dotted 8th feel: [T T T F T T T F]
+patterns[5] = {true, true, true, false, true, true, true, false};
 
             gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         truePeakLeft.prepare ((float) sampleRate);
@@ -175,63 +151,70 @@ public:
     {
         juce::dsp::ProcessContextReplacing<float> ctx (block);
         juce::ignoreUnused (ctx);
-        maybeRecalculateKeyScaleCoefficients();
-        // ---- custom block: Glitch Kiss (AI-generated) ----
-    // Signal flow: input → parameter read → algorithm → output
-    const float wetDryMix = apvts.getRawParameterValue("mix")->load();
-    const int pattern1 = (int)apvts.getRawParameterValue("pattern1")->load();
-    const int pattern2 = (int)apvts.getRawParameterValue("pattern2")->load();
-    const int pattern3 = (int)apvts.getRawParameterValue("pattern3")->load();
-    const int pattern4 = (int)apvts.getRawParameterValue("pattern4")->load();
-    const int pattern5 = (int)apvts.getRawParameterValue("pattern5")->load();
-    const int pattern6 = (int)apvts.getRawParameterValue("pattern6")->load();
-    const float bpm = apvts.getRawParameterValue("bpm")->load();
+        // ---- custom block: GlitchKiss (AI-generated) ----
+float hostBpm = getBpm();
+float hostBeatPosition = getPlayHeadBeatPosition();
 
-    // Determine active pattern (only one can be active)
-    if (pattern1 == 1) activePattern = 0;
-    else if (pattern2 == 1) activePattern = 1;
-    else if (pattern3 == 1) activePattern = 2;
-    else if (pattern4 == 1) activePattern = 3;
-    else if (pattern5 == 1) activePattern = 4;
-    else if (pattern6 == 1) activePattern = 5;
+// Update samplesPerBeat if BPM changes or if it's currently 0 (e.g., first run before host starts)
+if (hostBpm > 0.0f) // Ensure BPM is valid to avoid division by zero
+{
+    samplesPerBeat = (60.0f / hostBpm) * (float)getSampleRate();
+}
 
-    const float samplesPerBeat = (60.0f / bpm) * sampleRate;
-    const float gateOnFraction = gatePatterns[activePattern];
-    const int gateOnSamples = (int)(gateOnFraction * samplesPerBeat);
-    const int gateTotalSamples = (int)samplesPerBeat;
+// If host transport is stopped, hostBeatPosition might be invalid or static.
+// We need to ensure currentBeatPosition tracks the host's actual playhead.
+// If the host is playing, we re-sync currentBeatPosition to hostBeatPosition at the start of the block.
+// If the host is stopped, currentBeatPosition should not advance.
 
-    // Smoothing for mix parameter
-    smoothedMix = smoothedMix * 0.995f + wetDryMix * 0.005f; // 5ms smoothing
+// Check if transport is playing. If not, currentBeatPosition should not advance.
+// Assuming getPlayHeadIsPlaying() is available or infer from hostBeatPosition changes.
+// For simplicity, we'll re-sync at the start of each block if hostBeatPosition changes significantly
+// or if it's the first block (currentBeatPosition == 0.0f and hostBeatPosition != 0.0f).
 
-    for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
+// A more robust way to handle host sync: only update currentBeatPosition from hostBeatPosition
+// if the host is playing and the difference is significant (e.g., after a jump or stop/start).
+// For this simple block, we'll re-sync at the beginning of each block to the host's playhead.
+// This ensures that if the host jumps, our internal beat position also jumps.
+currentBeatPosition = hostBeatPosition;
+
+// Get parameter values
+int patternIndex = (int)apvts.getRawParameterValue("gatePattern")->load();
+patternIndex = juce::jlimit(0, (int)patterns.size() - 1, patternIndex);
+
+float mixParam = apvts.getRawParameterValue("mix")->load();
+mixParam = juce::jlimit(0.0f, 1.0f, mixParam);
+mixSmoothed.setTargetValue(mixParam);
+
+for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
+{
+    auto* d = block.getChannelPointer((int)ch);
+    for (size_t i = 0; i < block.getNumSamples(); ++i)
     {
-        auto* channelData = block.getChannelPointer((int)ch);
-        for (size_t i = 0; i < block.getNumSamples(); ++i)
+        // TempoSyncEngine
+        // The pattern is defined over 8 16th notes (2 beats).
+        // We need to find which of the 8 slots we are currently in.
+        // (currentBeatPosition % 2.0f) gives the beat position within a 2-beat cycle (0.0 to <2.0).
+        // Multiply by 4.0f to get the 16th note index within that 2-beat cycle (0-7).
+        float beatInCycle = fmodf(currentBeatPosition, 2.0f); 
+        int patternSlot = (int)(beatInCycle * 4.0f); 
+        patternSlot = juce::jlimit(0, (int)patterns[patternIndex].size() - 1, patternSlot);
+
+        // VolumeGate
+        bool gateState = patterns[patternIndex][patternSlot];
+        float wetSignal = d[i] * (gateState ? 1.0f : 0.0f);
+
+        // MixStage
+        float currentMix = mixSmoothed.getNextValue();
+        d[i] = d[i] * (1.0f - currentMix) + wetSignal * currentMix;
+
+        // Advance internal beat position for the next sample
+        // This ensures continuous tracking within the current processing block.
+        if (samplesPerBeat > 0.0f) // Avoid division by zero if BPM is 0
         {
-            float in = channelData[i];
-            float gatedSample = in;
-
-            if (gateTotalSamples > 0) // Avoid division by zero
-            {
-                // Calculate current position within the beat cycle
-                int beatPosition = currentSampleCount % gateTotalSamples;
-
-                // Apply gate: on for the 'gateOnSamples' duration, off otherwise
-                if (beatPosition >= gateOnSamples)
-                {
-                    gatedSample = 0.0f; // Gate is off
-                }
-            }
-
-            // Apply wet/dry mix
-            channelData[i] = in * (1.0f - smoothedMix) + gatedSample * smoothedMix;
-
-            currentSampleCount++;
-            if (currentSampleCount >= gateTotalSamples) // Reset counter at end of beat
-                currentSampleCount = 0;
+            currentBeatPosition += 1.0f / samplesPerBeat;
         }
     }
-    // Self-check: mix→wet/dry blend; pattern1-6→activePattern→gateOnFraction→gatedSample; bpm→samplesPerBeat. All affect output.
+}
 
         gainDsp.setGainDecibels (smoothedParam ("gain"));
     gainDsp.process (ctx);
@@ -241,22 +224,10 @@ public:
     {
         juce::ignoreUnused (midiMessages);
         juce::ScopedNoDenormals noDenormals;
+        sm_gatePattern.setTarget (apvts.getRawParameterValue ("gatePattern")->load());
+        sm_gatePattern.update (getSampleRate());
         sm_mix.setTarget (apvts.getRawParameterValue ("mix")->load());
         sm_mix.update (getSampleRate());
-        sm_bpm.setTarget (apvts.getRawParameterValue ("bpm")->load());
-        sm_bpm.update (getSampleRate());
-        sm_pattern1.setTarget (apvts.getRawParameterValue ("pattern1")->load());
-        sm_pattern1.update (getSampleRate());
-        sm_pattern2.setTarget (apvts.getRawParameterValue ("pattern2")->load());
-        sm_pattern2.update (getSampleRate());
-        sm_pattern3.setTarget (apvts.getRawParameterValue ("pattern3")->load());
-        sm_pattern3.update (getSampleRate());
-        sm_pattern4.setTarget (apvts.getRawParameterValue ("pattern4")->load());
-        sm_pattern4.update (getSampleRate());
-        sm_pattern5.setTarget (apvts.getRawParameterValue ("pattern5")->load());
-        sm_pattern5.update (getSampleRate());
-        sm_pattern6.setTarget (apvts.getRawParameterValue ("pattern6")->load());
-        sm_pattern6.update (getSampleRate());
         sm_gain.setTarget (apvts.getRawParameterValue ("gain")->load());
         sm_gain.update (getSampleRate());
         analyzer.pushBuffer (buffer);
@@ -264,6 +235,29 @@ public:
 
 
         processChain (juce::dsp::AudioBlock<float> (buffer));
+        // ---- master output stage: -1 dB headroom trim + soft-knee limiter ----
+        // Transparent below -6 dBFS; smoothly saturates the last 6 dB so the
+        // chain can never hand the host a hard-clipped sample. Pure math,
+        // zero allocation. (elite-audio / every generated plugin)
+        {
+            constexpr float trim = 0.891251f;      // -1 dB
+            constexpr float knee = 0.501187f;      // -6 dBFS knee start
+            constexpr float ceil_ = 0.985f;        // true-peak ceiling (-0.13 dB)
+            for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
+            {
+                auto* d = buffer.getWritePointer (ch);
+                for (int i = 0; i < buffer.getNumSamples(); ++i)
+                {
+                    float x = d[i] * trim;
+                    const float ax = std::abs (x);
+                    if (ax > knee)
+                        x = (x > 0.0f ? 1.0f : -1.0f)
+                            * (knee + (ceil_ - knee) * std::tanh ((ax - knee) / (ceil_ - knee)));
+                    d[i] = x;
+                }
+            }
+        }
+        // Optional true-peak catch after soft-knee (legacy safety net)
         for (int ch = 0; ch < buffer.getNumChannels(); ++ch)
         {
             auto* d = buffer.getWritePointer (ch);
@@ -360,28 +354,16 @@ public:
     // Seed-locked deterministic RNG (xorshift32). All stochastic DSP must use
     // nextRandom() so identical input + identical automation = identical output.
     // Reset in prepareToPlay, so every render from the top is bit-reproducible.
+    WoManusSmoothedParameter<float> sm_gatePattern;
     WoManusSmoothedParameter<float> sm_mix;
-    WoManusSmoothedParameter<float> sm_bpm;
-    WoManusSmoothedParameter<float> sm_pattern1;
-    WoManusSmoothedParameter<float> sm_pattern2;
-    WoManusSmoothedParameter<float> sm_pattern3;
-    WoManusSmoothedParameter<float> sm_pattern4;
-    WoManusSmoothedParameter<float> sm_pattern5;
-    WoManusSmoothedParameter<float> sm_pattern6;
     WoManusSmoothedParameter<float> sm_gain;
 
     // Zipper-noise-free parameter access. Prefer smoothedParam("id") over raw
     // apvts loads inside audio code; advances one smoothing step per call site.
     inline float smoothedParam (const char* id) noexcept
     {
+        if (strcmp (id, "gatePattern") == 0) return sm_gatePattern.getNextValue();
         if (strcmp (id, "mix") == 0) return sm_mix.getNextValue();
-        if (strcmp (id, "bpm") == 0) return sm_bpm.getNextValue();
-        if (strcmp (id, "pattern1") == 0) return sm_pattern1.getNextValue();
-        if (strcmp (id, "pattern2") == 0) return sm_pattern2.getNextValue();
-        if (strcmp (id, "pattern3") == 0) return sm_pattern3.getNextValue();
-        if (strcmp (id, "pattern4") == 0) return sm_pattern4.getNextValue();
-        if (strcmp (id, "pattern5") == 0) return sm_pattern5.getNextValue();
-        if (strcmp (id, "pattern6") == 0) return sm_pattern6.getNextValue();
         if (strcmp (id, "gain") == 0) return sm_gain.getNextValue();
         return 0.0f;
     }
@@ -412,158 +394,74 @@ private:
         switch (index)
         {
     case 0:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (1.0f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (120.0f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 1:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (137.5695f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-1.6397f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5976f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-4.2717f));
         break;
     case 2:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (129.4567f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-2.6619f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5229f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-4.0647f));
         break;
     case 3:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (119.0522f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.0929f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4407f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-1.6397f));
         break;
     case 4:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (117.1105f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-0.1122f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5525f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (3.7856f));
         break;
     case 5:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (122.2228f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (3.6828f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4777f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.0029f));
         break;
     case 6:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9235f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (178.5636f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (1.0f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.3194f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.6153f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.1522f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.1594f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.5144f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-7.3839f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (3.1171f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6928f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-6.1094f));
         break;
     case 7:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.611f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (124.8373f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.3435f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.4216f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.5097f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.4045f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.6807f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.607f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.9078f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (1.5571f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.3842f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-10.8403f));
         break;
     case 8:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4662f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (117.0658f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.493f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.7102f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.7498f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.3233f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.4307f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.4871f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (16.0318f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (2.8655f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.1142f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (2.8498f));
         break;
     case 9:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5186f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (183.519f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.4589f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.6105f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.6921f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.4644f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.7039f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.4435f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (11.4224f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (3.2168f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4671f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (5.1322f));
         break;
     case 10:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6904f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (196.0936f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.1148f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.977f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.0247f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.1583f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.7612f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.7522f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (7.5401f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (4.1439f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6716f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (3.0172f));
         break;
     case 11:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0165f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (71.5188f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.0048f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.0588f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.0196f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.0379f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.0342f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.9915f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-21.7545f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (0.3678f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9309f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-22.1249f));
         break;
     case 12:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0587f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (233.2412f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.9307f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.993f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.0018f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.9976f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.9717f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.0392f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (20.8589f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (4.8247f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.063f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (22.244f));
         break;
     case 13:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9495f));
-        if (auto* param = apvts.getParameter ("bpm")) param->setValueNotifyingHost (param->convertTo0to1 (230.2775f));
-        if (auto* param = apvts.getParameter ("pattern1")) param->setValueNotifyingHost (param->convertTo0to1 (0.0775f));
-        if (auto* param = apvts.getParameter ("pattern2")) param->setValueNotifyingHost (param->convertTo0to1 (0.9731f));
-        if (auto* param = apvts.getParameter ("pattern3")) param->setValueNotifyingHost (param->convertTo0to1 (0.0074f));
-        if (auto* param = apvts.getParameter ("pattern4")) param->setValueNotifyingHost (param->convertTo0to1 (0.0414f));
-        if (auto* param = apvts.getParameter ("pattern5")) param->setValueNotifyingHost (param->convertTo0to1 (0.0463f));
-        if (auto* param = apvts.getParameter ("pattern6")) param->setValueNotifyingHost (param->convertTo0to1 (0.9438f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (22.0294f));
+        if (auto* param = apvts.getParameter ("gatePattern")) param->setValueNotifyingHost (param->convertTo0to1 (0.3469f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9819f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (23.8372f));
         break;
         default: break;
         }
@@ -572,18 +470,16 @@ private:
     }
 
 
-    std::array<float, 6> gatePatterns;
-    int activePattern = 0;
-    int currentSampleCount = 0;
-    float lastMix = 0.0f;
-    float smoothedMix = 0.0f;
-    float sampleRate = 44100.0f;
+float currentBeatPosition = 0.0f;
+float samplesPerBeat = 0.0f;
+std::array<std::vector<bool>, 6> patterns;
+juce::SmoothedValue<float> mixSmoothed;
 
     juce::dsp::Gain<float> gainDsp;
     TruePeakLimiter truePeakLeft;
     TruePeakLimiter truePeakRight;
     int demoSampleCounter = 0;
     bool demoSilenceActive = false;
-    std::atomic<bool> keyScaleCoeffsDirty { true };
+
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (GlitchKissProcessor)
 };
