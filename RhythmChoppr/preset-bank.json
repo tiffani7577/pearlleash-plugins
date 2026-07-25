@@ -1,0 +1,147 @@
+{
+  "plugin": "RhythmChoppr",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "activePattern": 0,
+        "attack": 5,
+        "release": 5,
+        "mix": 0.8,
+        "gain": 1
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "activePattern": 1.5,
+        "attack": 15.7,
+        "release": 15.7,
+        "mix": 0.7,
+        "gain": 1.0739
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "activePattern": 1.5,
+        "attack": 15.7,
+        "release": 15.7,
+        "mix": 0.7,
+        "gain": 1.116
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "activePattern": 1.5,
+        "attack": 15.7,
+        "release": 15.7,
+        "mix": 0.7,
+        "gain": 0.8013
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "activePattern": 1.5,
+        "attack": 15.7,
+        "release": 15.7,
+        "mix": 0.7,
+        "gain": 1.1584
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "activePattern": 1.5,
+        "attack": 15.7,
+        "release": 15.7,
+        "mix": 0.7,
+        "gain": 1.0054
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "activePattern": 3.1749,
+        "attack": 40.3254,
+        "release": 18.984,
+        "mix": 0.9912,
+        "gain": 1.0117
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "activePattern": 0.8849,
+        "attack": 14.393,
+        "release": 16.8872,
+        "mix": 0.6448,
+        "gain": 0.3064
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "activePattern": 2.8056,
+        "attack": 31.0736,
+        "release": 15.8644,
+        "mix": 0.6351,
+        "gain": 1.1456
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "activePattern": 3.5971,
+        "attack": 21.8457,
+        "release": 28.171,
+        "mix": 0.4032,
+        "gain": 1.3545
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "activePattern": 3.6882,
+        "attack": 35.084,
+        "release": 11.8845,
+        "mix": 0.3928,
+        "gain": 1.4434
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "activePattern": 4.849,
+        "attack": 48.5755,
+        "release": 1.6724,
+        "mix": 0.9337,
+        "gain": 0.0771
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "activePattern": 0.2411,
+        "attack": 1.511,
+        "release": 3.6404,
+        "mix": 0.0181,
+        "gain": 1.8896
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "activePattern": 4.6666,
+        "attack": 48.427,
+        "release": 1.9852,
+        "mix": 0.9623,
+        "gain": 0.101
+      }
+    }
+  ]
+}
