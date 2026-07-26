@@ -1,0 +1,147 @@
+{
+  "plugin": "RhythmGateForge",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "patternSlot": 0,
+        "attack": 10,
+        "release": 10,
+        "mix": 1,
+        "gain": 1
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "patternSlot": 1.5,
+        "attack": 150.7,
+        "release": 150.7,
+        "mix": 0.7,
+        "gain": 1.2
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "patternSlot": 1.5,
+        "attack": 150.7,
+        "release": 150.7,
+        "mix": 0.7,
+        "gain": 1.2
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "patternSlot": 1.5,
+        "attack": 150.7,
+        "release": 150.7,
+        "mix": 0.7,
+        "gain": 1.2
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "patternSlot": 1.5,
+        "attack": 150.7,
+        "release": 150.7,
+        "mix": 0.7,
+        "gain": 1.2
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "patternSlot": 1.5,
+        "attack": 150.7,
+        "release": 150.7,
+        "mix": 0.7,
+        "gain": 1.2
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "patternSlot": 4.3534,
+        "attack": 362.2082,
+        "release": 498.0745,
+        "mix": 0.6515,
+        "gain": 2.8224
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "patternSlot": 3.1907,
+        "attack": 321.5894,
+        "release": 233.1509,
+        "mix": 0.2068,
+        "gain": 1.5465
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "patternSlot": 3.6203,
+        "attack": 199.5874,
+        "release": 303.1127,
+        "mix": 0.4142,
+        "gain": 2.6861
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "patternSlot": 3.128,
+        "attack": 184.988,
+        "release": 194.6004,
+        "mix": 0.6822,
+        "gain": 3.043
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "patternSlot": 4.8627,
+        "attack": 412.2661,
+        "release": 276.0321,
+        "mix": 0.769,
+        "gain": 2.6877
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "patternSlot": 4.958,
+        "attack": 482.2299,
+        "release": 14.2475,
+        "mix": 0.9532,
+        "gain": 0.2282
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "patternSlot": 4.6406,
+        "attack": 5.8815,
+        "release": 473.1325,
+        "mix": 0.9897,
+        "gain": 3.775
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "patternSlot": 4.8359,
+        "attack": 464.8291,
+        "release": 488.5639,
+        "mix": 0.9286,
+        "gain": 0.1397
+      }
+    }
+  ]
+}
