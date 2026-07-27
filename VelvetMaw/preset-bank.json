@@ -1,0 +1,161 @@
+{
+  "plugin": "VelvetMaw",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "cutoff": 800,
+        "resonance": 0.5,
+        "predrive": 1.5,
+        "postdrive": 1.5,
+        "gain": 1,
+        "mix": 1
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "cutoff": 5414,
+        "resonance": 0.5382,
+        "predrive": 3.07,
+        "postdrive": 3.07,
+        "gain": 1.2,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "cutoff": 5414,
+        "resonance": 0.5814,
+        "predrive": 3.07,
+        "postdrive": 3.07,
+        "gain": 1.2913,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "cutoff": 5414,
+        "resonance": 0.4058,
+        "predrive": 3.07,
+        "postdrive": 3.07,
+        "gain": 1.2,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "cutoff": 5414,
+        "resonance": 0.5254,
+        "predrive": 3.07,
+        "postdrive": 3.07,
+        "gain": 1.2,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "cutoff": 5414,
+        "resonance": 0.5814,
+        "predrive": 3.07,
+        "postdrive": 3.07,
+        "gain": 1.2,
+        "mix": 0.7
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "cutoff": 18000,
+        "resonance": 0.98,
+        "predrive": 10,
+        "postdrive": 5.7072,
+        "gain": 0.7512,
+        "mix": 0.8676
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "cutoff": 6405.0476,
+        "resonance": 0.4979,
+        "predrive": 1.5979,
+        "postdrive": 3.7532,
+        "gain": 1.4703,
+        "mix": 0.4619
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "cutoff": 8947.8706,
+        "resonance": 0.4233,
+        "predrive": 1.6704,
+        "postdrive": 5.3572,
+        "gain": 0.9363,
+        "mix": 0.6726
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "cutoff": 12343.3205,
+        "resonance": 0.6839,
+        "predrive": 7.7236,
+        "postdrive": 7.4899,
+        "gain": 2.5109,
+        "mix": 0.643
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "cutoff": 9133.5085,
+        "resonance": 0.7154,
+        "predrive": 8.4649,
+        "postdrive": 7.2426,
+        "gain": 2.6898,
+        "mix": 0.9066
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "cutoff": 1391.6723,
+        "resonance": 0.9136,
+        "predrive": 0.4674,
+        "postdrive": 9.706,
+        "gain": 0.1821,
+        "mix": 0.9843
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "cutoff": 1138.5979,
+        "resonance": 0.9459,
+        "predrive": 0.4241,
+        "postdrive": 9.845,
+        "gain": 0.2759,
+        "mix": 0.9691
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "cutoff": 17036.0606,
+        "resonance": 0.0401,
+        "predrive": 9.8213,
+        "postdrive": 0.7416,
+        "gain": 3.7125,
+        "mix": 0.0382
+      }
+    }
+  ]
+}
