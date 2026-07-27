@@ -1,0 +1,217 @@
+{
+  "plugin": "TriChopSync",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "lowCross": 250,
+        "highCross": 2500,
+        "lowSubdiv": 2,
+        "midSubdiv": 4,
+        "highSubdiv": 5,
+        "lowDepth": 1,
+        "midDepth": 1,
+        "highDepth": 1,
+        "mix": 1,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "lowCross": 296,
+        "highCross": 2960,
+        "lowSubdiv": 2.1,
+        "midSubdiv": 4.5612,
+        "highSubdiv": 4.9,
+        "lowDepth": 0.7,
+        "midDepth": 0.7,
+        "highDepth": 0.7,
+        "mix": 0.7,
+        "gain": 3.2115
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "lowCross": 296,
+        "highCross": 2960,
+        "lowSubdiv": 2.2359,
+        "midSubdiv": 3.737,
+        "highSubdiv": 4.8653,
+        "lowDepth": 0.7,
+        "midDepth": 0.7,
+        "highDepth": 0.7,
+        "mix": 0.7,
+        "gain": 2.331
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "lowCross": 296,
+        "highCross": 2960,
+        "lowSubdiv": 2.1013,
+        "midSubdiv": 3.8964,
+        "highSubdiv": 4.9,
+        "lowDepth": 0.7,
+        "midDepth": 0.7,
+        "highDepth": 0.7,
+        "mix": 0.7,
+        "gain": -1.1091
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "lowCross": 296,
+        "highCross": 2960,
+        "lowSubdiv": 2.1,
+        "midSubdiv": 4.2515,
+        "highSubdiv": 4.8388,
+        "lowDepth": 0.7,
+        "midDepth": 0.7,
+        "highDepth": 0.7,
+        "mix": 0.7,
+        "gain": -4.7539
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "lowCross": 296,
+        "highCross": 3161.6097,
+        "lowSubdiv": 2.6449,
+        "midSubdiv": 4.0839,
+        "highSubdiv": 4.9,
+        "lowDepth": 0.7,
+        "midDepth": 0.7,
+        "highDepth": 0.7,
+        "mix": 0.7,
+        "gain": -2.2438
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "lowCross": 755.7186,
+        "highCross": 6126.9875,
+        "lowSubdiv": 3.2265,
+        "midSubdiv": 1.7486,
+        "highSubdiv": 5.7636,
+        "lowDepth": 0.871,
+        "midDepth": 0.7549,
+        "highDepth": 0.833,
+        "mix": 0.5931,
+        "gain": -6.2684
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "lowCross": 242.6544,
+        "highCross": 5380.379,
+        "lowSubdiv": 3.1348,
+        "midSubdiv": 1.5173,
+        "highSubdiv": 2.3836,
+        "lowDepth": 0.1231,
+        "midDepth": 0.5965,
+        "highDepth": 0.6404,
+        "mix": 0.1053,
+        "gain": -15.3697
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "lowCross": 601.4785,
+        "highCross": 1829.45,
+        "lowSubdiv": 5.0703,
+        "midSubdiv": 5.3432,
+        "highSubdiv": 0.8811,
+        "lowDepth": 0.2782,
+        "midDepth": 0.1995,
+        "highDepth": 0.6889,
+        "mix": 0.3057,
+        "gain": -7.5226
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "lowCross": 557.4328,
+        "highCross": 3300.0221,
+        "lowSubdiv": 2.2204,
+        "midSubdiv": 5.3209,
+        "highSubdiv": 2.8239,
+        "lowDepth": 0.6451,
+        "midDepth": 0.7828,
+        "highDepth": 0.5541,
+        "mix": 0.6042,
+        "gain": -0.0442
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "lowCross": 531.3702,
+        "highCross": 7282.4764,
+        "lowSubdiv": 3.8113,
+        "midSubdiv": 0.9757,
+        "highSubdiv": 5.2278,
+        "lowDepth": 0.2992,
+        "midDepth": 0.239,
+        "highDepth": 0.7523,
+        "mix": 0.5382,
+        "gain": 2.1975
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "lowCross": 82.469,
+        "highCross": 7911.6755,
+        "lowSubdiv": 6.8619,
+        "midSubdiv": 6.9829,
+        "highSubdiv": 0.169,
+        "lowDepth": 0.992,
+        "midDepth": 0.9958,
+        "highDepth": 0.008,
+        "mix": 0.9781,
+        "gain": 21.5527
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "lowCross": 107.1031,
+        "highCross": 7464.5045,
+        "lowSubdiv": 0.253,
+        "midSubdiv": 0.4607,
+        "highSubdiv": 6.8128,
+        "lowDepth": 0.0787,
+        "midDepth": 0.9888,
+        "highDepth": 0.9747,
+        "mix": 0.9723,
+        "gain": 21.07
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "lowCross": 761.9441,
+        "highCross": 1086.3375,
+        "lowSubdiv": 6.6601,
+        "midSubdiv": 6.5244,
+        "highSubdiv": 0.2384,
+        "lowDepth": 0.0666,
+        "midDepth": 0.0452,
+        "highDepth": 0.0013,
+        "mix": 0.9733,
+        "gain": 23.0557
+      }
+    }
+  ]
+}
