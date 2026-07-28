@@ -56,8 +56,9 @@ public:
         driveAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("drive"), driveRelay, nullptr);
         warmthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("warmth"), warmthRelay, nullptr);
         presenceAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("presence"), presenceRelay, nullptr);
+        characterAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("character"), characterRelay, nullptr);
         mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
-        outputAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("output"), outputRelay, nullptr);
+        trimAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("trim"), trimRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
         webView.goToURL (juce::WebBrowserComponent::getResourceProviderRoot());
@@ -104,8 +105,9 @@ private:
     juce::WebSliderRelay driveRelay { "drive" };
     juce::WebSliderRelay warmthRelay { "warmth" };
     juce::WebSliderRelay presenceRelay { "presence" };
+    juce::WebSliderRelay characterRelay { "character" };
     juce::WebSliderRelay mixRelay { "mix" };
-    juce::WebSliderRelay outputRelay { "output" };
+    juce::WebSliderRelay trimRelay { "trim" };
     juce::WebSliderRelay gainRelay { "gain" };
 
 
@@ -166,8 +168,9 @@ private:
             .withOptionsFrom (driveRelay)
             .withOptionsFrom (warmthRelay)
             .withOptionsFrom (presenceRelay)
+            .withOptionsFrom (characterRelay)
             .withOptionsFrom (mixRelay)
-            .withOptionsFrom (outputRelay)
+            .withOptionsFrom (trimRelay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
@@ -175,8 +178,9 @@ private:
     std::unique_ptr<juce::WebSliderParameterAttachment> driveAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> warmthAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> presenceAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> characterAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> outputAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> trimAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoftTouchEditor)
 };
