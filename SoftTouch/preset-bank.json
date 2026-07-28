@@ -6,155 +6,169 @@
     {
       "name": "Init",
       "values": {
-        "drive": 0.3,
+        "drive": 0.15,
         "warmth": 0.5,
         "presence": 0.5,
-        "mix": 0.5,
-        "output": 0,
+        "character": 0.5,
+        "mix": 1,
+        "trim": 0,
         "gain": 0
       }
     },
     {
       "name": "Daily Driver",
       "values": {
-        "drive": 0.3009,
+        "drive": 0.3,
         "warmth": 0.4041,
         "presence": 0.554,
-        "mix": 0.4615,
-        "output": 0.6807,
-        "gain": 0.3216
+        "character": 0.4615,
+        "mix": 0.7,
+        "trim": 0.1608,
+        "gain": -2.7323
       }
     },
     {
       "name": "Studio Safe",
       "values": {
         "drive": 0.3,
-        "warmth": 0.5976,
-        "presence": 0.5552,
-        "mix": 0.5782,
-        "output": -0.5115,
-        "gain": 1.1856
+        "warmth": 0.5552,
+        "presence": 0.5782,
+        "character": 0.4858,
+        "mix": 0.7,
+        "trim": -0.4964,
+        "gain": -1.1524
       }
     },
     {
       "name": "Gentle Push",
       "values": {
         "drive": 0.3,
-        "warmth": 0.476,
-        "presence": 0.4166,
-        "mix": 0.4285,
-        "output": 1.1068,
-        "gain": 2.0629
+        "warmth": 0.4285,
+        "presence": 0.5307,
+        "character": 0.543,
+        "mix": 0.7,
+        "trim": -0.9872,
+        "gain": 1.9275
       }
     },
     {
       "name": "Mix Ready",
       "values": {
         "drive": 0.3,
-        "warmth": 0.4589,
-        "presence": 0.5402,
-        "mix": 0.5101,
-        "output": 0.5719,
-        "gain": 0.237
+        "warmth": 0.5159,
+        "presence": 0.5049,
+        "character": 0.5139,
+        "mix": 0.7,
+        "trim": 1.2837,
+        "gain": 1.8275
       }
     },
     {
       "name": "Clean Lift",
       "values": {
-        "drive": 0.3139,
-        "warmth": 0.4952,
-        "presence": 0.5535,
-        "mix": 0.5381,
-        "output": 1.2,
-        "gain": 4.3344
+        "drive": 0.3,
+        "warmth": 0.5903,
+        "presence": 0.5772,
+        "character": 0.4126,
+        "mix": 0.7,
+        "trim": 1.4646,
+        "gain": 4.0013
       }
     },
     {
       "name": "Techno",
       "values": {
         "drive": 1,
-        "warmth": 0.2131,
-        "presence": 0.7483,
-        "mix": 0.9551,
-        "output": 12,
-        "gain": 24
+        "warmth": 0.7126,
+        "presence": 0.9161,
+        "character": 0.4745,
+        "mix": 0.4065,
+        "trim": 2.7855,
+        "gain": 5.0873
       }
     },
     {
       "name": "Ambient",
       "values": {
-        "drive": 0.4376,
-        "warmth": 0.5597,
-        "presence": 0.2947,
-        "mix": 0.2539,
-        "output": -10.3331,
-        "gain": -6.0676
+        "drive": 0.192,
+        "warmth": 0.2528,
+        "presence": 0.6692,
+        "character": 0.5467,
+        "mix": 0.3917,
+        "trim": 4.3648,
+        "gain": -13.1594
       }
     },
     {
       "name": "Hip-Hop",
       "values": {
-        "drive": 0.1726,
-        "warmth": 0.2537,
-        "presence": 0.8089,
-        "mix": 0.6456,
-        "output": -8.1973,
-        "gain": 15.6395
+        "drive": 0.3893,
+        "warmth": 0.8152,
+        "presence": 0.7274,
+        "character": 0.27,
+        "mix": 0.4683,
+        "trim": -9.9735,
+        "gain": 13.9439
       }
     },
     {
       "name": "Cinematic",
       "values": {
-        "drive": 0.4049,
-        "warmth": 0.512,
-        "presence": 0.7782,
-        "mix": 0.7234,
-        "output": -8.2498,
-        "gain": 2.9488
+        "drive": 0.7713,
+        "warmth": 0.7446,
+        "presence": 0.3837,
+        "character": 0.4267,
+        "mix": 0.7142,
+        "trim": 4.5567,
+        "gain": 13.1193
       }
     },
     {
       "name": "Experimental",
       "values": {
-        "drive": 0.0689,
-        "warmth": 0.5744,
-        "presence": 0.5573,
-        "mix": 0.6107,
-        "output": -14.3613,
-        "gain": -4.5367
+        "drive": 0.5184,
+        "warmth": 0.7752,
+        "presence": 0.9927,
+        "character": 0.7587,
+        "mix": 0.3377,
+        "trim": 0.8069,
+        "gain": 13.4857
       }
     },
     {
       "name": "Edge of Stability",
       "values": {
-        "drive": 0.9824,
-        "warmth": 0.9459,
-        "presence": 0.9606,
-        "mix": 0.0169,
-        "output": -21.9291,
-        "gain": -20.5123
+        "drive": 0.0727,
+        "warmth": 0.0745,
+        "presence": 0.0525,
+        "character": 0.9276,
+        "mix": 0.9686,
+        "trim": -10.2163,
+        "gain": -23.9026
       }
     },
     {
       "name": "Total Commitment",
       "values": {
-        "drive": 0.0745,
-        "warmth": 0.0525,
-        "presence": 0.9276,
-        "mix": 0.9686,
-        "output": -21.3244,
-        "gain": -23.9026
+        "drive": 0.0343,
+        "warmth": 0.9916,
+        "presence": 0.9973,
+        "character": 0.0683,
+        "mix": 0.033,
+        "trim": 11.4286,
+        "gain": 20.6067
       }
     },
     {
       "name": "The Deep End",
       "values": {
-        "drive": 0.0343,
-        "warmth": 0.9916,
-        "presence": 0.9973,
-        "mix": 0.0683,
-        "output": -22.8118,
-        "gain": 22.8572
+        "drive": 0.0292,
+        "warmth": 0.0694,
+        "presence": 0.0688,
+        "character": 0.0105,
+        "mix": 0.953,
+        "trim": 11.4125,
+        "gain": -23.5561
       }
     }
   ]
