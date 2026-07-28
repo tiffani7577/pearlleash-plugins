@@ -62,11 +62,12 @@ public:
         licensed = SoftTouchLicense::checkLicense();
         if (! licensed)
             juce::Logger::writeToLog ("SoftTouch: unlicensed copy — enter your serial to activate.");
-        versionManager.registerParameter ("drive", 0.3f, 1);
+        versionManager.registerParameter ("drive", 0.15f, 1);
         versionManager.registerParameter ("warmth", 0.5f, 1);
         versionManager.registerParameter ("presence", 0.5f, 1);
-        versionManager.registerParameter ("mix", 0.5f, 1);
-        versionManager.registerParameter ("output", 0.0f, 1);
+        versionManager.registerParameter ("character", 0.5f, 1);
+        versionManager.registerParameter ("mix", 1.0f, 1);
+        versionManager.registerParameter ("trim", 0.0f, 1);
         versionManager.registerParameter ("gain", 0.0f, 1);
 
 
@@ -87,11 +88,12 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout()
     {
         juce::AudioProcessorValueTreeState::ParameterLayout layout;
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "drive", 1 }, "Drive", juce::NormalisableRange<float> (0.0f, 1.0f), 0.3f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "drive", 1 }, "Drive", juce::NormalisableRange<float> (0.0f, 1.0f), 0.15f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "warmth", 1 }, "Warmth", juce::NormalisableRange<float> (0.0f, 1.0f), 0.5f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "presence", 1 }, "Presence", juce::NormalisableRange<float> (0.0f, 1.0f), 0.5f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f), 0.5f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "output", 1 }, "Output", juce::NormalisableRange<float> (-24.0f, 12.0f), 0.0f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "character", 1 }, "Character", juce::NormalisableRange<float> (0.0f, 1.0f), 0.5f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f), 1.0f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "trim", 1 }, "Output Trim", juce::NormalisableRange<float> (-12.0f, 12.0f), 0.0f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "gain", 1 }, "Output", juce::NormalisableRange<float> (-24.0f, 24.0f), 0.0f));
         return layout;
     }
@@ -106,25 +108,26 @@ public:
         sm_drive.reset (apvts.getRawParameterValue ("drive")->load(), 10.0f, sampleRate);
         sm_warmth.reset (apvts.getRawParameterValue ("warmth")->load(), 10.0f, sampleRate);
         sm_presence.reset (apvts.getRawParameterValue ("presence")->load(), 10.0f, sampleRate);
+        sm_character.reset (apvts.getRawParameterValue ("character")->load(), 10.0f, sampleRate);
         sm_mix.reset (apvts.getRawParameterValue ("mix")->load(), 5.0f, sampleRate);
-        sm_output.reset (apvts.getRawParameterValue ("output")->load(), 10.0f, sampleRate);
+        sm_trim.reset (apvts.getRawParameterValue ("trim")->load(), 10.0f, sampleRate);
         sm_gain.reset (apvts.getRawParameterValue ("gain")->load(), 10.0f, sampleRate);
 
         juce::dsp::ProcessSpec dspSpec { sampleRate, (juce::uint32) samplesPerBlock, 2 };
         srF = (float) sampleRate;
 driveSmoothed.reset(srF, 0.020);
-driveSmoothed.setCurrentAndTargetValue(0.3f);
+driveSmoothed.setCurrentAndTargetValue(0.15f);
 warmthSmoothed.reset(srF, 0.020);
 warmthSmoothed.setCurrentAndTargetValue(0.5f);
 presenceSmoothed.reset(srF, 0.020);
 presenceSmoothed.setCurrentAndTargetValue(0.5f);
+characterSmoothed.reset(srF, 0.020);
+characterSmoothed.setCurrentAndTargetValue(0.5f);
 mixSmoothed.reset(srF, 0.020);
-mixSmoothed.setCurrentAndTargetValue(0.5f);
-outputSmoothed.reset(srF, 0.020);
-outputSmoothed.setCurrentAndTargetValue(1.0f);
-for (size_t c = 0; c < (size_t) 2; ++c){warmthZ1[c]=0.0f;warmthZ2[c]=0.0f;presZ1[c]=0.0f;presZ2[c]=0.0f;}
-calcWarmth(2.0f);
-calcPresence(1.5f);
+mixSmoothed.setCurrentAndTargetValue(1.0f);
+trimSmoothed.reset(srF, 0.020);
+trimSmoothed.setCurrentAndTargetValue(0.0f);
+for (size_t c = 0; c < (size_t) 2; ++c) { warmthState[c] = 0.0f; presenceState[c] = 0.0f; for (size_t k = 0; k < (size_t) 8; ++k) { upHistory[c][k] = 0.0f; downHistory[c][k] = 0.0f; } }
             gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         truePeakLeft.prepare ((float) sampleRate);
         truePeakRight.prepare ((float) sampleRate);
@@ -171,47 +174,73 @@ calcPresence(1.5f);
         juce::dsp::ProcessContextReplacing<float> ctx (block);
         juce::ignoreUnused (ctx);
         // ---- custom block: SoftTouch (AI-generated) ----
-{
-float rawDrive = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("drive")->load());
-float rawWarmth = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("warmth")->load());
-float rawPresence = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("presence")->load());
-float rawMix = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("mix")->load());
-float rawOutput = juce::jlimit(-24.0f,12.0f,apvts.getRawParameterValue("output")->load());
+const float rawDrive = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("drive")->load());
+const float rawWarmth = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("warmth")->load());
+const float rawPresence = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("presence")->load());
+const float rawCharacter = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("character")->load());
+const float rawMix = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("mix")->load());
+const float rawTrim = juce::jlimit(-12.0f, 12.0f, apvts.getRawParameterValue("trim")->load());
 driveSmoothed.setTargetValue(rawDrive);
 warmthSmoothed.setTargetValue(rawWarmth);
 presenceSmoothed.setTargetValue(rawPresence);
+characterSmoothed.setTargetValue(rawCharacter);
 mixSmoothed.setTargetValue(rawMix);
-outputSmoothed.setTargetValue(powf(10.0f, rawOutput/20.0f));
-calcWarmth(rawWarmth * 4.0f);
-calcPresence(rawPresence * 3.0f);
-const size_t numSamples = block.getNumSamples();
-const size_t numChannels = block.getNumChannels();
-for (size_t i = 0; i < numSamples; ++i) {
-  float drv = driveSmoothed.getNextValue();
-  float outG = outputSmoothed.getNextValue();
-  float m = mixSmoothed.getNextValue();
-  float dScaled = 1.0f + drv * 7.0f;
-  float norm = tanhf(dScaled);
-  if(norm < 1e-6f) norm = 1e-6f;
-  for (size_t ch = 0; ch < numChannels; ++ch) {
-    auto* d = block.getChannelPointer((int)ch);
-    int chIdx = (int)ch < 2 ? (int)ch : 1;
-    float dry = d[i];
-    float xw = dry;
-    float yw = wB0*xw + warmthZ1[chIdx];
-    warmthZ1[chIdx] = wB1*xw - wA1*yw + warmthZ2[chIdx];
-    warmthZ2[chIdx] = wB2*xw - wA2*yw;
-    float xSat = yw;
-    float wet = tanhf(dScaled * xSat) / norm;
-    float xp = wet;
-    float yp = pB0*xp + presZ1[chIdx];
-    presZ1[chIdx] = pB1*xp - pA1*yp + presZ2[chIdx];
-    presZ2[chIdx] = pB2*xp - pA2*yp;
-    float processedSample = yp;
-    float output = dry * (1.0f - m) + processedSample * m;
-    d[i] = output * outG;
+trimSmoothed.setTargetValue(rawTrim);
+const float wf0 = 250.0f;
+const float pf0 = 3000.0f;
+const float wG = std::tan(juce::MathConstants<float>::pi * wf0 / srF);
+const float pG = std::tan(juce::MathConstants<float>::pi * pf0 / srF);
+for (size_t ch = 0; ch < block.getNumChannels(); ++ch) {
+  auto* d = block.getChannelPointer((int)ch);
+  int ci = (int)ch < 2 ? (int)ch : 1;
+  for (size_t i = 0; i < block.getNumSamples(); ++i) {
+    const float drv = driveSmoothed.getNextValue();
+    const float wrm = warmthSmoothed.getNextValue();
+    const float prs = presenceSmoothed.getNextValue();
+    const float chr = characterSmoothed.getNextValue();
+    const float dScaled = 0.01f + drv * drv * 7.99f;
+    const float tanhD = std::tanh(dScaled);
+    const float gComp = (tanhD > 1e-6f) ? (1.0f / tanhD) : 1.0f;
+    float inputSample = d[i];
+    float x = inputSample;
+    float acc = 0.0f;
+    for (int k = 7; k > 0; --k) upHistory[ci][k] = upHistory[ci][k-1];
+    upHistory[ci][0] = x;
+    for (size_t os = 0; os < (size_t) OS; ++os) {
+      float up = (os == 0) ? x * (float)OS : 0.0f;
+      float sat = std::tanh(dScaled * up);
+      if (tanhD > 1e-6f) sat /= tanhD;
+      float y2 = sat * sat;
+      float yChar = sat + chr * 0.15f * y2;
+      float peak = 1.0f + chr * 0.15f;
+      if (peak > 1e-6f) yChar /= peak;
+      acc += yChar;
+    }
+    float processed = acc * (1.0f / (float)OS);
+    processed *= gComp;
+    const float wAmp = std::pow(10.0f, (wrm * 6.0f) / 20.0f);
+    const float wA = wG * wAmp;
+    const float wDenom = 1.0f + wG;
+    const float wv = (processed - warmthState[ci]) / wDenom;
+    const float wLow = wv * wG + warmthState[ci];
+    warmthState[ci] += 2.0f * wv * wG;
+    float wBlend = wLow * wAmp + (processed - wLow);
+    processed = wBlend;
+    const float pAmp = std::pow(10.0f, (prs * 6.0f) / 20.0f);
+    const float pDenom = 1.0f + pG;
+    const float pv = (processed - presenceState[ci]) / pDenom;
+    const float pLow = pv * pG + presenceState[ci];
+    presenceState[ci] += 2.0f * pv * pG;
+    float pHigh = processed - pLow;
+    float pBlend = pLow + pHigh * pAmp;
+    processed = pBlend;
+    const float trimGain = std::pow(10.0f, trimSmoothed.getNextValue() / 20.0f);
+    processed *= trimGain;
+    float dry = inputSample;
+    float wet = processed;
+    float output = dry * (1.0f - mixSmoothed.getNextValue()) + wet * mixSmoothed.getNextValue();
+    d[i] = output;
   }
-}
 }
         gainDsp.setGainDecibels (smoothedParam ("gain"));
     gainDsp.process (ctx);
@@ -227,10 +256,12 @@ for (size_t i = 0; i < numSamples; ++i) {
         sm_warmth.update (getSampleRate());
         sm_presence.setTarget (apvts.getRawParameterValue ("presence")->load());
         sm_presence.update (getSampleRate());
+        sm_character.setTarget (apvts.getRawParameterValue ("character")->load());
+        sm_character.update (getSampleRate());
         sm_mix.setTarget (apvts.getRawParameterValue ("mix")->load());
         sm_mix.update (getSampleRate());
-        sm_output.setTarget (apvts.getRawParameterValue ("output")->load());
-        sm_output.update (getSampleRate());
+        sm_trim.setTarget (apvts.getRawParameterValue ("trim")->load());
+        sm_trim.update (getSampleRate());
         sm_gain.setTarget (apvts.getRawParameterValue ("gain")->load());
         sm_gain.update (getSampleRate());
         analyzer.pushBuffer (buffer);
@@ -360,8 +391,9 @@ public:
     WoManusSmoothedParameter<float> sm_drive;
     WoManusSmoothedParameter<float> sm_warmth;
     WoManusSmoothedParameter<float> sm_presence;
+    WoManusSmoothedParameter<float> sm_character;
     WoManusSmoothedParameter<float> sm_mix;
-    WoManusSmoothedParameter<float> sm_output;
+    WoManusSmoothedParameter<float> sm_trim;
     WoManusSmoothedParameter<float> sm_gain;
 
     // Zipper-noise-free parameter access. Prefer smoothedParam("id") over raw
@@ -371,8 +403,9 @@ public:
         if (strcmp (id, "drive") == 0) return sm_drive.getNextValue();
         if (strcmp (id, "warmth") == 0) return sm_warmth.getNextValue();
         if (strcmp (id, "presence") == 0) return sm_presence.getNextValue();
+        if (strcmp (id, "character") == 0) return sm_character.getNextValue();
         if (strcmp (id, "mix") == 0) return sm_mix.getNextValue();
-        if (strcmp (id, "output") == 0) return sm_output.getNextValue();
+        if (strcmp (id, "trim") == 0) return sm_trim.getNextValue();
         if (strcmp (id, "gain") == 0) return sm_gain.getNextValue();
         return 0.0f;
     }
@@ -403,116 +436,130 @@ private:
         switch (index)
         {
     case 0:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.15f));
         if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
         if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (1.0f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 1:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3009f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
         if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.4041f));
         if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.554f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4615f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (0.6807f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.3216f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.4615f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (0.1608f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-2.7323f));
         break;
     case 2:
         if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5976f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5552f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5782f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-0.5115f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.1856f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5552f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5782f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.4858f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (-0.4964f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-1.1524f));
         break;
     case 3:
         if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.476f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.4166f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4285f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (1.1068f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (2.0629f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.4285f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5307f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.543f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (-0.9872f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.9275f));
         break;
     case 4:
         if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.4589f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5402f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5101f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (0.5719f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.237f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5159f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5049f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.5139f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (1.2837f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (1.8275f));
         break;
     case 5:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3139f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.4952f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5535f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5381f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (1.2f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (4.3344f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5903f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5772f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.4126f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (1.4646f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (4.0013f));
         break;
     case 6:
         if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (1.0f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.2131f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.7483f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9551f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (12.0f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (24.0f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.7126f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.9161f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.4745f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4065f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (2.7855f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (5.0873f));
         break;
     case 7:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.4376f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5597f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.2947f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.2539f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-10.3331f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-6.0676f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.192f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.2528f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.6692f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.5467f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.3917f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (4.3648f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-13.1594f));
         break;
     case 8:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.1726f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.2537f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.8089f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6456f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-8.1973f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (15.6395f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.3893f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.8152f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.7274f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.27f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4683f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (-9.9735f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (13.9439f));
         break;
     case 9:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.4049f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.512f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.7782f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7234f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-8.2498f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (2.9488f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.7713f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.7446f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.3837f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.4267f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.7142f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (4.5567f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (13.1193f));
         break;
     case 10:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.0689f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.5744f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.5573f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6107f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-14.3613f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-4.5367f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.5184f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.7752f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.9927f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.7587f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.3377f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (0.8069f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (13.4857f));
         break;
     case 11:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.9824f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.9459f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.9606f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0169f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-21.9291f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-20.5123f));
-        break;
-    case 12:
-        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.0745f));
-        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.0525f));
-        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.9276f));
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.0727f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.0745f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.0525f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.9276f));
         if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.9686f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-21.3244f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (-10.2163f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-23.9026f));
         break;
-    case 13:
+    case 12:
         if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.0343f));
         if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.9916f));
         if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.9973f));
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.0683f));
-        if (auto* param = apvts.getParameter ("output")) param->setValueNotifyingHost (param->convertTo0to1 (-22.8118f));
-        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (22.8572f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.0683f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.033f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (11.4286f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (20.6067f));
+        break;
+    case 13:
+        if (auto* param = apvts.getParameter ("drive")) param->setValueNotifyingHost (param->convertTo0to1 (0.0292f));
+        if (auto* param = apvts.getParameter ("warmth")) param->setValueNotifyingHost (param->convertTo0to1 (0.0694f));
+        if (auto* param = apvts.getParameter ("presence")) param->setValueNotifyingHost (param->convertTo0to1 (0.0688f));
+        if (auto* param = apvts.getParameter ("character")) param->setValueNotifyingHost (param->convertTo0to1 (0.0105f));
+        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.953f));
+        if (auto* param = apvts.getParameter ("trim")) param->setValueNotifyingHost (param->convertTo0to1 (11.4125f));
+        if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (-23.5561f));
         break;
         default: break;
         }
@@ -524,42 +571,17 @@ private:
 juce::SmoothedValue<float> driveSmoothed;
 juce::SmoothedValue<float> warmthSmoothed;
 juce::SmoothedValue<float> presenceSmoothed;
+juce::SmoothedValue<float> characterSmoothed;
 juce::SmoothedValue<float> mixSmoothed;
-juce::SmoothedValue<float> outputSmoothed;
+juce::SmoothedValue<float> trimSmoothed;
 float srF = 44100.0f;
-float warmthZ1[2] = {0.0f, 0.0f};
-float warmthZ2[2] = {0.0f, 0.0f};
-float presZ1[2] = {0.0f, 0.0f};
-float presZ2[2] = {0.0f, 0.0f};
-float wB0=1,wB1=0,wB2=0,wA1=0,wA2=0;
-float pB0=1,pB1=0,pB2=0,pA1=0,pA2=0;
-void calcWarmth(float gainDb){
-  float fc=250.0f;
-  float A=powf(10.0f,gainDb/40.0f);
-  float w0=2.0f*3.14159265f*fc/srF;
-  float cosw=cosf(w0),sinw=sinf(w0);
-  float alpha=sinw/2.0f*sqrtf((A+1.0f/A)*(1.0f-1.0f)+2.0f);
-  alpha = sinw * 0.7071f;
-  float a0=(A+1.0f)+(A-1.0f)*cosw+2.0f*sqrtf(A)*alpha;
-  wB0=A*((A+1.0f)-(A-1.0f)*cosw+2.0f*sqrtf(A)*alpha)/a0;
-  wB1=2.0f*A*((A-1.0f)-(A+1.0f)*cosw)/a0;
-  wB2=A*((A+1.0f)-(A-1.0f)*cosw-2.0f*sqrtf(A)*alpha)/a0;
-  wA1=-2.0f*((A-1.0f)+(A+1.0f)*cosw)/a0;
-  wA2=((A+1.0f)+(A-1.0f)*cosw-2.0f*sqrtf(A)*alpha)/a0;
-}
-void calcPresence(float gainDb){
-  float fc=8000.0f;
-  float A=powf(10.0f,gainDb/40.0f);
-  float w0=2.0f*3.14159265f*fc/srF;
-  float cosw=cosf(w0),sinw=sinf(w0);
-  float alpha=sinw*0.7071f;
-  float a0=(A+1.0f)-(A-1.0f)*cosw+2.0f*sqrtf(A)*alpha;
-  pB0=A*((A+1.0f)+(A-1.0f)*cosw+2.0f*sqrtf(A)*alpha)/a0;
-  pB1=-2.0f*A*((A-1.0f)+(A+1.0f)*cosw)/a0;
-  pB2=A*((A+1.0f)+(A-1.0f)*cosw-2.0f*sqrtf(A)*alpha)/a0;
-  pA1=2.0f*((A-1.0f)-(A+1.0f)*cosw)/a0;
-  pA2=((A+1.0f)-(A-1.0f)*cosw-2.0f*sqrtf(A)*alpha)/a0;
-}
+float warmthState[2] = {0.0f, 0.0f};
+float presenceState[2] = {0.0f, 0.0f};
+static constexpr int OS = 4;
+float osBuffer[OS] = {};
+static constexpr float FIR_UP[4] = {0.25f, 0.25f, 0.25f, 0.25f};
+float upHistory[2][8] = {};
+float downHistory[2][8] = {};
     juce::dsp::Gain<float> gainDsp;
     TruePeakLimiter truePeakLeft;
     TruePeakLimiter truePeakRight;
