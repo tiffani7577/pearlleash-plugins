@@ -57,6 +57,7 @@ public:
         warmthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("warmth"), warmthRelay, nullptr);
         presenceAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("presence"), presenceRelay, nullptr);
         mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
+        outputAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("output"), outputRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
         webView.goToURL (juce::WebBrowserComponent::getResourceProviderRoot());
@@ -104,6 +105,7 @@ private:
     juce::WebSliderRelay warmthRelay { "warmth" };
     juce::WebSliderRelay presenceRelay { "presence" };
     juce::WebSliderRelay mixRelay { "mix" };
+    juce::WebSliderRelay outputRelay { "output" };
     juce::WebSliderRelay gainRelay { "gain" };
 
 
@@ -165,6 +167,7 @@ private:
             .withOptionsFrom (warmthRelay)
             .withOptionsFrom (presenceRelay)
             .withOptionsFrom (mixRelay)
+            .withOptionsFrom (outputRelay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
@@ -173,6 +176,7 @@ private:
     std::unique_ptr<juce::WebSliderParameterAttachment> warmthAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> presenceAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> outputAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SoftTouchEditor)
 };
