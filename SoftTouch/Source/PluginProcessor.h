@@ -109,16 +109,23 @@ public:
 
         juce::dsp::ProcessSpec dspSpec { sampleRate, (juce::uint32) samplesPerBlock, 2 };
         srF = (float) sampleRate;
-driveSmooth.reset(srF, 0.020f);
-driveSmooth.setCurrentAndTargetValue(0.3f);
-warmthSmooth.reset(srF, 0.020f);
-warmthSmooth.setCurrentAndTargetValue(0.5f);
-presenceSmooth.reset(srF, 0.020f);
-presenceSmooth.setCurrentAndTargetValue(0.5f);
+driveSmoothed.reset(srF, 0.020f);
+driveSmoothed.setCurrentAndTargetValue(0.3f);
+warmthSmoothed.reset(srF, 0.020f);
+warmthSmoothed.setCurrentAndTargetValue(0.5f);
+presenceSmoothed.reset(srF, 0.020f);
+presenceSmoothed.setCurrentAndTargetValue(0.5f);
 mixSmoothed.reset(srF, 0.020f);
 mixSmoothed.setCurrentAndTargetValue(1.0f);
-for (size_t c = 0; c < (size_t) 2; ++c) { ic1eq[c] = 0.0f; ic2eq[c] = 0.0f; ic3eq[c] = 0.0f; ic4eq[c] = 0.0f; }
-for (size_t k = 0; k < (size_t) 4; ++k) { os_state[k] = 0.0f; ds_state[k] = 0.0f; }
+for (size_t c = 0; c < (size_t) 2; ++c){
+  dcX1[c]=0.f;dcY1[c]=0.f;
+  warmthZ1[c]=0.f;warmthZ2[c]=0.f;
+  warmthOut1[c]=0.f;warmthOut2[c]=0.f;
+  presZ1[c]=0.f;presOut1[c]=0.f;
+}
+lastWarmth=-1.f;lastPresence=-1.f;
+calcWarmth(350.f,0.8f,3.0f,srF);
+calcPresence(7000.f,2.5f,srF);
             gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         truePeakLeft.prepare ((float) sampleRate);
         truePeakRight.prepare ((float) sampleRate);
@@ -165,63 +172,49 @@ for (size_t k = 0; k < (size_t) 4; ++k) { os_state[k] = 0.0f; ds_state[k] = 0.0f
         juce::dsp::ProcessContextReplacing<float> ctx (block);
         juce::ignoreUnused (ctx);
         // ---- custom block: SoftTouch (AI-generated) ----
-const float rawDrive = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("drive")->load());
-const float rawWarmth = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("warmth")->load());
-const float rawPresence = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("presence")->load());
-const float rawMix = juce::jlimit(0.0f, 1.0f, apvts.getRawParameterValue("mix")->load());
-driveSmooth.setTargetValue(rawDrive);
-warmthSmooth.setTargetValue(rawWarmth);
-presenceSmooth.setTargetValue(rawPresence);
+const float rawDrive = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("drive")->load());
+const float rawWarmth = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("warmth")->load());
+const float rawPresence = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("presence")->load());
+const float rawMix = juce::jlimit(0.0f,1.0f,apvts.getRawParameterValue("mix")->load());
+driveSmoothed.setTargetValue(rawDrive);
+warmthSmoothed.setTargetValue(rawWarmth);
+presenceSmoothed.setTargetValue(rawPresence);
 mixSmoothed.setTargetValue(rawMix);
-const float osRate = srF * 4.0f;
-for (size_t ch = 0; ch < block.getNumChannels(); ++ch) {
-  auto* d = block.getChannelPointer((int)ch);
-  int ci = (int)ch < 2 ? (int)ch : 0;
-  for (size_t i = 0; i < block.getNumSamples(); ++i) {
-    float driveSm = driveSmooth.getNextValue();
-    float warmSm = warmthSmooth.getNextValue();
-    float presSm = presenceSmooth.getNextValue();
-    float internalDrive = 0.5f + driveSm * 7.5f;
-    float dry = d[i];
-    float x = dry;
-    float osOut = 0.0f;
-    float normD = tanhf(internalDrive);
-    if (normD < 1e-6f) normD = 1e-6f;
-    for (size_t k = 0; k < (size_t) 4; ++k) {
-      float xUp = (k == 0) ? x : 0.0f;
-      float g_up = tanf(3.14159265f * 18000.0f / osRate);
-      float k_up = 0.7072f;
-      float a1u = 1.0f / (1.0f + g_up * (g_up + k_up));
-      float v1u = a1u * (xUp - ic2eq[ci] - k_up * ic1eq[ci]);
-      float v2u = ic2eq[ci] + g_up * v1u;
-      ic1eq[ci] = 2.0f * v1u - ic1eq[ci];
-      ic2eq[ci] = 2.0f * v2u - ic2eq[ci];
-      float sat = tanhf(internalDrive * v2u) / normD;
-      osOut += sat;
-    }
-    osOut *= 0.25f;
-    float g_ds = tanf(3.14159265f * 18000.0f / osRate);
-    float k_ds = 0.7072f;
-    float a1d = 1.0f / (1.0f + g_ds * (g_ds + k_ds));
-    float v1d = a1d * (osOut - ic3eq[ci] - k_ds * ic4eq[ci]);
-    float v2d = ic3eq[ci] + g_ds * v1d;
-    ic3eq[ci] = 2.0f * v1d - ic3eq[ci];
-    ic3eq[ci] = ic3eq[ci];
-    ic4eq[ci] = 2.0f * v2d - ic4eq[ci];
-    float filtered = v2d;
-    float warmCutoff = 80.0f + warmSm * 320.0f;
-    float gW = tanf(3.14159265f * warmCutoff / srF);
-    float warmGainLin = 1.0f + warmSm * (powf(10.0f, 3.0f / 20.0f) - 1.0f);
-    float lsOut = filtered + (warmGainLin - 1.0f) * gW / (1.0f + gW) * filtered;
-    float presCutoff = 6000.0f;
-    float gP = tanf(3.14159265f * presCutoff / srF);
-    float presGainLin = 1.0f + presSm * (powf(10.0f, 4.0f / 20.0f) - 1.0f);
-    float hsOut = lsOut + (presGainLin - 1.0f) * (1.0f - gP / (1.0f + gP)) * lsOut;
-    float makeup = internalDrive / normD;
-    if (makeup > 4.0f) makeup = 4.0f;
-    float wet = hsOut / makeup;
-    float output = dry * (1.0f - mixSmoothed.getNextValue()) + wet * mixSmoothed.getNextValue();
-    d[i] = output;
+const float blockWarmth = warmthSmoothed.getCurrentValue();
+const float blockPresence = presenceSmoothed.getCurrentValue();
+if(blockWarmth != lastWarmth){
+  calcWarmth(350.f,0.8f,blockWarmth*6.0f,srF);
+  lastWarmth=blockWarmth;
+}
+if(blockPresence != lastPresence){
+  calcPresence(7000.f,blockPresence*5.0f,srF);
+  lastPresence=blockPresence;
+}
+for(size_t ch=0;ch<block.getNumChannels();++ch){
+  auto* d=block.getChannelPointer((int)ch);
+  int ci=(int)ch<2?(int)ch:0;
+  for(size_t i=0;i<block.getNumSamples();++i){
+    float drvN=driveSmoothed.getNextValue();
+    float dCoef=1.0f+drvN*5.0f;
+    float bCoef=0.15f*dCoef;
+    float denom=tanhf(dCoef+bCoef);
+    if(denom<1e-6f)denom=1e-6f;
+    float gComp=1.0f/denom;
+    float inputSample=d[i];
+    float x=inputSample;
+    float sat=tanhf(dCoef*x+bCoef*x*x)*gComp;
+    float wy=wbA0*sat+wbA1*warmthZ1[ci]+wbA2*warmthZ2[ci]-wbB1*warmthOut1[ci]-wbB2*warmthOut2[ci];
+    warmthZ2[ci]=warmthZ1[ci];warmthZ1[ci]=sat;
+    warmthOut2[ci]=warmthOut1[ci];warmthOut1[ci]=wy;
+    float py=psA0*wy+psA1*presZ1[ci]-psB1*presOut1[ci];
+    presZ1[ci]=wy;presOut1[ci]=py;
+    float dcY=py-dcX1[ci]+0.9997f*dcY1[ci];
+    dcX1[ci]=py;dcY1[ci]=dcY;
+    float processedSample=dcY;
+    float dry=inputSample;
+    float wet=processedSample;
+    float mv=mixSmoothed.getNextValue();
+    d[i]=dry*(1.0f-mv)+wet*mv;
   }
 }
         gainDsp.setGainDecibels (smoothedParam ("gain"));
@@ -514,18 +507,38 @@ private:
     }
 
 
-juce::SmoothedValue<float> driveSmooth;
-juce::SmoothedValue<float> warmthSmooth;
-juce::SmoothedValue<float> presenceSmooth;
+juce::SmoothedValue<float> driveSmoothed;
+juce::SmoothedValue<float> warmthSmoothed;
+juce::SmoothedValue<float> presenceSmoothed;
 juce::SmoothedValue<float> mixSmoothed;
-float ic1eq[2] = {0.0f, 0.0f};
-float ic2eq[2] = {0.0f, 0.0f};
-float ic3eq[2] = {0.0f, 0.0f};
-float ic4eq[2] = {0.0f, 0.0f};
 float srF = 44100.0f;
-float os_buf[8] = {0.0f};
-float os_state[4] = {0.0f};
-float ds_state[4] = {0.0f};
+float dcX1[2] = {0.0f, 0.0f};
+float dcY1[2] = {0.0f, 0.0f};
+float warmthZ1[2] = {0.0f, 0.0f};
+float warmthZ2[2] = {0.0f, 0.0f};
+float warmthOut1[2] = {0.0f, 0.0f};
+float warmthOut2[2] = {0.0f, 0.0f};
+float presZ1[2] = {0.0f, 0.0f};
+float presOut1[2] = {0.0f, 0.0f};
+float wbA0=1.f,wbA1=0.f,wbA2=0.f,wbB1=0.f,wbB2=0.f;
+float psA0=1.f,psA1=0.f,psB1=0.f;
+float lastWarmth=-1.f,lastPresence=-1.f;
+void calcWarmth(float fc,float Q,float gainDB,float sr){
+  float A=powf(10.f,gainDB/40.f);
+  float w0=2.f*3.14159265f*fc/sr;
+  float cw=cosf(w0),sw=sinf(w0);
+  float alpha=sw/(2.f*Q);
+  float b0=1.f+alpha*A,b1=-2.f*cw,b2=1.f-alpha*A;
+  float a0=1.f+alpha/A,a1=-2.f*cw,a2=1.f-alpha/A;
+  wbA0=b0/a0;wbA1=b1/a0;wbA2=b2/a0;wbB1=a1/a0;wbB2=a2/a0;
+}
+void calcPresence(float fc,float gainDB,float sr){
+  float A=powf(10.f,gainDB/20.f);
+  float w0=2.f*3.14159265f*fc/sr;
+  float K=tanf(w0/2.f);
+  if(gainDB>=0.f){float b0=K+A,b1=-(K-A),a0=K+1.f,a1=-(K-1.f);psA0=b0/a0;psA1=b1/a0;psB1=a1/a0;}
+  else{float b0=K+1.f,b1=-(K-1.f),a0=K+A,a1=-(K-A);psA0=b0/a0;psA1=b1/a0;psB1=a1/a0;}
+}
     juce::dsp::Gain<float> gainDsp;
     TruePeakLimiter truePeakLeft;
     TruePeakLimiter truePeakRight;
