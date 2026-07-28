@@ -1,0 +1,105 @@
+{
+  "plugin": "BuiltinAwareBlend",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "mixAmount": 1,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "mixAmount": 0.7,
+        "gain": -3.7377
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "mixAmount": 0.7,
+        "gain": -1.9505
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "mixAmount": 0.7,
+        "gain": -2.0932
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "mixAmount": 0.7,
+        "gain": -2.5349
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "mixAmount": 0.7,
+        "gain": -1.4191
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "mixAmount": 1,
+        "gain": 4.1426
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "mixAmount": 0.2204,
+        "gain": -7.0295
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "mixAmount": 0.4892,
+        "gain": -9.8335
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "mixAmount": 0.4582,
+        "gain": 7.262
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "mixAmount": 0.7639,
+        "gain": -14.0687
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "mixAmount": 0.9517,
+        "gain": -20.2002
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "mixAmount": 0.0276,
+        "gain": 23.0179
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "mixAmount": 0.0286,
+        "gain": -22.141
+      }
+    }
+  ]
+}
