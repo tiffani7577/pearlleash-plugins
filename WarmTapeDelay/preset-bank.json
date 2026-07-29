@@ -1,0 +1,175 @@
+{
+  "plugin": "WarmTapeDelay",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "delayTime": 250,
+        "feedback": 0.5,
+        "mix": 0.5,
+        "wowFlutter": 0.3,
+        "drive": 2,
+        "tone": 4000,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "delayTime": 360.7,
+        "feedback": 0.4448,
+        "mix": 0.5283,
+        "wowFlutter": 0.3,
+        "drive": 1.9,
+        "tone": 4523.573,
+        "gain": -0.0052
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "delayTime": 360.7,
+        "feedback": 0.5607,
+        "mix": 0.4493,
+        "wowFlutter": 0.3,
+        "drive": 2.0345,
+        "tone": 4327.7865,
+        "gain": 4.5378
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "delayTime": 360.7,
+        "feedback": 0.5031,
+        "mix": 0.5945,
+        "wowFlutter": 0.3853,
+        "drive": 2.1804,
+        "tone": 4136.6973,
+        "gain": 2.9964
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "delayTime": 360.7,
+        "feedback": 0.4645,
+        "mix": 0.4653,
+        "wowFlutter": 0.3005,
+        "drive": 2.0211,
+        "tone": 3472.0527,
+        "gain": 3.2938
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "delayTime": 360.7,
+        "feedback": 0.5621,
+        "mix": 0.5736,
+        "wowFlutter": 0.3,
+        "drive": 2.087,
+        "tone": 4078.5684,
+        "gain": -2.7994
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "delayTime": 304.1634,
+        "feedback": 0.5167,
+        "mix": 0.3538,
+        "wowFlutter": 0.8306,
+        "drive": 3.8618,
+        "tone": 6038.5133,
+        "gain": -3.4391
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "delayTime": 565.1863,
+        "feedback": 0.6449,
+        "mix": 0.3519,
+        "wowFlutter": 0.3906,
+        "drive": 1.3634,
+        "tone": 5394.8204,
+        "gain": -10.3048
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "delayTime": 700.4074,
+        "feedback": 0.5054,
+        "mix": 0.109,
+        "wowFlutter": 0.5068,
+        "drive": 3.116,
+        "tone": 2065.9376,
+        "gain": -5.9709
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "delayTime": 679.957,
+        "feedback": 0.6825,
+        "mix": 0.4346,
+        "wowFlutter": 0.4628,
+        "drive": 1.9434,
+        "tone": 4441.2323,
+        "gain": 12.2193
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "delayTime": 835.3994,
+        "feedback": 0.7085,
+        "mix": 0.9075,
+        "wowFlutter": 0.8562,
+        "drive": 3.8444,
+        "tone": 6152.1955,
+        "gain": -18.6371
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "delayTime": 28.5787,
+        "feedback": 0.8959,
+        "mix": 0.0364,
+        "wowFlutter": 0.9522,
+        "drive": 3.8829,
+        "tone": 1131.3567,
+        "gain": -20.3395
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "delayTime": 59.6651,
+        "feedback": 0.0644,
+        "mix": 0.0594,
+        "wowFlutter": 0.0666,
+        "drive": 1.2042,
+        "tone": 907.0694,
+        "gain": -23.7901
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "delayTime": 80.4808,
+        "feedback": 0.9108,
+        "mix": 0.0698,
+        "wowFlutter": 0.9534,
+        "drive": 1.2179,
+        "tone": 1001.193,
+        "gain": -21.4028
+      }
+    }
+  ]
+}
