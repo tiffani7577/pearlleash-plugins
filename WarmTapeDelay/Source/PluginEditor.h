@@ -55,10 +55,10 @@ public:
         loadAssets();
         delayTimeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("delayTime"), delayTimeRelay, nullptr);
         feedbackAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("feedback"), feedbackRelay, nullptr);
-        mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
-        wowFlutterAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("wowFlutter"), wowFlutterRelay, nullptr);
-        driveAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("drive"), driveRelay, nullptr);
         toneAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("tone"), toneRelay, nullptr);
+        driveAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("drive"), driveRelay, nullptr);
+        wowFlutterAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("wowFlutter"), wowFlutterRelay, nullptr);
+        mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         addAndMakeVisible (webView);
         webView.goToURL (juce::WebBrowserComponent::getResourceProviderRoot());
@@ -104,10 +104,10 @@ private:
     WarmTapeDelayLookAndFeel::SpriteAtlas bgAtlas;
     juce::WebSliderRelay delayTimeRelay { "delayTime" };
     juce::WebSliderRelay feedbackRelay { "feedback" };
-    juce::WebSliderRelay mixRelay { "mix" };
-    juce::WebSliderRelay wowFlutterRelay { "wowFlutter" };
-    juce::WebSliderRelay driveRelay { "drive" };
     juce::WebSliderRelay toneRelay { "tone" };
+    juce::WebSliderRelay driveRelay { "drive" };
+    juce::WebSliderRelay wowFlutterRelay { "wowFlutter" };
+    juce::WebSliderRelay mixRelay { "mix" };
     juce::WebSliderRelay gainRelay { "gain" };
 
 
@@ -167,20 +167,20 @@ private:
             .withNativeIntegrationEnabled()
             .withOptionsFrom (delayTimeRelay)
             .withOptionsFrom (feedbackRelay)
-            .withOptionsFrom (mixRelay)
-            .withOptionsFrom (wowFlutterRelay)
-            .withOptionsFrom (driveRelay)
             .withOptionsFrom (toneRelay)
+            .withOptionsFrom (driveRelay)
+            .withOptionsFrom (wowFlutterRelay)
+            .withOptionsFrom (mixRelay)
             .withOptionsFrom (gainRelay)
             .withResourceProvider ([] (const auto& url) { return getResource (url); })
     };
 
     std::unique_ptr<juce::WebSliderParameterAttachment> delayTimeAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> feedbackAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> wowFlutterAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> driveAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> toneAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> driveAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> wowFlutterAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WarmTapeDelayEditor)
 };
