@@ -8,10 +8,10 @@
       "values": {
         "delayTime": 250,
         "feedback": 0.5,
-        "mix": 0.5,
-        "wowFlutter": 0.5,
+        "tone": 0.4,
         "drive": 1.5,
-        "tone": 4000,
+        "wowFlutter": 0.003,
+        "mix": 0.5,
         "gain": 0
       }
     },
@@ -19,11 +19,11 @@
       "name": "Daily Driver",
       "values": {
         "delayTime": 360.7,
-        "feedback": 0.4431,
-        "mix": 0.5283,
-        "wowFlutter": 0.4981,
+        "feedback": 0.4448,
+        "tone": 0.4281,
         "drive": 1.55,
-        "tone": 5750,
+        "wowFlutter": 0.006,
+        "mix": 0.5727,
         "gain": -0.0052
       }
     },
@@ -31,11 +31,11 @@
       "name": "Studio Safe",
       "values": {
         "delayTime": 360.7,
-        "feedback": 0.5627,
-        "mix": 0.4493,
-        "wowFlutter": 0.491,
+        "feedback": 0.5607,
+        "tone": 0.3498,
         "drive": 1.55,
-        "tone": 5750,
+        "wowFlutter": 0.006,
+        "mix": 0.5455,
         "gain": 4.5378
       }
     },
@@ -43,11 +43,11 @@
       "name": "Gentle Push",
       "values": {
         "delayTime": 360.7,
-        "feedback": 0.5032,
-        "mix": 0.5945,
-        "wowFlutter": 0.5853,
-        "drive": 1.7105,
-        "tone": 5750,
+        "feedback": 0.5031,
+        "tone": 0.4935,
+        "drive": 1.7985,
+        "wowFlutter": 0.006,
+        "mix": 0.519,
         "gain": 2.9964
       }
     },
@@ -55,11 +55,11 @@
       "name": "Mix Ready",
       "values": {
         "delayTime": 360.7,
-        "feedback": 0.4634,
-        "mix": 0.4653,
-        "wowFlutter": 0.5005,
+        "feedback": 0.4645,
+        "tone": 0.3657,
         "drive": 1.55,
-        "tone": 5750,
+        "wowFlutter": 0.006,
+        "mix": 0.4267,
         "gain": 3.2938
       }
     },
@@ -67,11 +67,11 @@
       "name": "Clean Lift",
       "values": {
         "delayTime": 360.7,
-        "feedback": 0.564,
-        "mix": 0.5736,
-        "wowFlutter": 0.4523,
-        "drive": 1.6015,
-        "tone": 5750,
+        "feedback": 0.5621,
+        "tone": 0.4728,
+        "drive": 1.55,
+        "wowFlutter": 0.006,
+        "mix": 0.5109,
         "gain": -2.7994
       }
     },
@@ -79,11 +79,11 @@
       "name": "Techno",
       "values": {
         "delayTime": 304.1634,
-        "feedback": 0.533,
-        "mix": 0.3538,
-        "wowFlutter": 0.8306,
-        "drive": 3.8388,
-        "tone": 13232.4976,
+        "feedback": 0.5167,
+        "tone": 0.3602,
+        "drive": 3.4069,
+        "wowFlutter": 0.0191,
+        "mix": 0.7276,
         "gain": -3.4391
       }
     },
@@ -91,11 +91,11 @@
       "name": "Ambient",
       "values": {
         "delayTime": 565.1863,
-        "feedback": 0.6653,
-        "mix": 0.3519,
-        "wowFlutter": 0.3906,
-        "drive": 0.924,
-        "tone": 11667.9663,
+        "feedback": 0.6449,
+        "tone": 0.3584,
+        "drive": 1.8672,
+        "wowFlutter": 0.0024,
+        "mix": 0.6382,
         "gain": -10.3048
       }
     },
@@ -103,11 +103,11 @@
       "name": "Hip-Hop",
       "values": {
         "delayTime": 700.4074,
-        "feedback": 0.5214,
-        "mix": 0.109,
-        "wowFlutter": 0.5068,
-        "drive": 2.9687,
-        "tone": 3576.9316,
+        "feedback": 0.5054,
+        "tone": 0.118,
+        "drive": 2.2736,
+        "wowFlutter": 0.0141,
+        "mix": 0.1758,
         "gain": -5.9709
       }
     },
@@ -115,11 +115,11 @@
       "name": "Cinematic",
       "values": {
         "delayTime": 679.957,
-        "feedback": 0.704,
-        "mix": 0.4346,
-        "wowFlutter": 0.4628,
-        "drive": 1.6006,
-        "tone": 9350.2174,
+        "feedback": 0.6825,
+        "tone": 0.4402,
+        "drive": 2.1199,
+        "wowFlutter": 0.0063,
+        "mix": 0.5057,
         "gain": 12.2193
       }
     },
@@ -127,11 +127,11 @@
       "name": "Experimental",
       "values": {
         "delayTime": 835.3994,
-        "feedback": 0.7308,
-        "mix": 0.9075,
-        "wowFlutter": 0.8562,
-        "drive": 3.8184,
-        "tone": 13508.8085,
+        "feedback": 0.7085,
+        "tone": 0.9085,
+        "drive": 3.4968,
+        "wowFlutter": 0.019,
+        "mix": 0.7434,
         "gain": -18.6371
       }
     },
@@ -139,11 +139,11 @@
       "name": "Edge of Stability",
       "values": {
         "delayTime": 28.5787,
-        "feedback": 0.9242,
-        "mix": 0.0364,
-        "wowFlutter": 0.9522,
-        "drive": 3.8634,
-        "tone": 1305.3808,
+        "feedback": 0.8959,
+        "tone": 0.046,
+        "drive": 3.8327,
+        "wowFlutter": 0.0192,
+        "mix": 0.046,
         "gain": -20.3395
       }
     },
@@ -151,11 +151,11 @@
       "name": "Total Commitment",
       "values": {
         "delayTime": 59.6651,
-        "feedback": 0.0665,
-        "mix": 0.0594,
-        "wowFlutter": 0.0666,
-        "drive": 0.7383,
-        "tone": 760.2381,
+        "feedback": 0.0644,
+        "tone": 0.0688,
+        "drive": 0.7331,
+        "wowFlutter": 0.0014,
+        "mix": 0.0149,
         "gain": -23.7901
       }
     },
@@ -163,11 +163,11 @@
       "name": "The Deep End",
       "values": {
         "delayTime": 80.4808,
-        "feedback": 0.9396,
-        "mix": 0.0698,
-        "wowFlutter": 0.9534,
-        "drive": 0.7543,
-        "tone": 989.0107,
+        "feedback": 0.9108,
+        "tone": 0.0791,
+        "drive": 3.8369,
+        "wowFlutter": 0.0015,
+        "mix": 0.0279,
         "gain": -21.4028
       }
     }
