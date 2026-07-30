@@ -1,0 +1,147 @@
+{
+  "plugin": "SakuraShimmer",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling (.vstpreset conversion is a follow-up; .fxp is VST2-only and deliberately not produced).",
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "roomSize": 0.5,
+        "shimmer": 0.6,
+        "decay": 0.7,
+        "mix": 0.5,
+        "gain": 0
+      }
+    },
+    {
+      "name": "Daily Driver",
+      "values": {
+        "roomSize": 0.4803,
+        "shimmer": 0.6407,
+        "decay": 0.6154,
+        "mix": 0.4825,
+        "gain": 1.9376
+      }
+    },
+    {
+      "name": "Studio Safe",
+      "values": {
+        "roomSize": 0.5486,
+        "shimmer": 0.6474,
+        "decay": 0.7,
+        "mix": 0.4478,
+        "gain": -4.4994
+      }
+    },
+    {
+      "name": "Gentle Push",
+      "values": {
+        "roomSize": 0.4464,
+        "shimmer": 0.6582,
+        "decay": 0.7,
+        "mix": 0.5116,
+        "gain": -3.6986
+      }
+    },
+    {
+      "name": "Mix Ready",
+      "values": {
+        "roomSize": 0.5916,
+        "shimmer": 0.6387,
+        "decay": 0.6047,
+        "mix": 0.4886,
+        "gain": -1.5862
+      }
+    },
+    {
+      "name": "Clean Lift",
+      "values": {
+        "roomSize": 0.5331,
+        "shimmer": 0.6793,
+        "decay": 0.7,
+        "mix": 0.4139,
+        "gain": -1.6834
+      }
+    },
+    {
+      "name": "Techno",
+      "values": {
+        "roomSize": 0.2303,
+        "shimmer": 0.4939,
+        "decay": 0.7969,
+        "mix": 1,
+        "gain": 15.6618
+      }
+    },
+    {
+      "name": "Ambient",
+      "values": {
+        "roomSize": 0.6389,
+        "shimmer": 0.2718,
+        "decay": 0.3046,
+        "mix": 0.5487,
+        "gain": -0.0044
+      }
+    },
+    {
+      "name": "Hip-Hop",
+      "values": {
+        "roomSize": 0.3121,
+        "shimmer": 0.3612,
+        "decay": 0.3842,
+        "mix": 0.1233,
+        "gain": 0.5057
+      }
+    },
+    {
+      "name": "Cinematic",
+      "values": {
+        "roomSize": 0.5135,
+        "shimmer": 0.5965,
+        "decay": 0.7076,
+        "mix": 0.5829,
+        "gain": -4.1255
+      }
+    },
+    {
+      "name": "Experimental",
+      "values": {
+        "roomSize": 0.9446,
+        "shimmer": 0.7518,
+        "decay": 0.7622,
+        "mix": 0.795,
+        "gain": 13.7749
+      }
+    },
+    {
+      "name": "Edge of Stability",
+      "values": {
+        "roomSize": 0.9477,
+        "shimmer": 0.9386,
+        "decay": 0.0071,
+        "mix": 0.9409,
+        "gain": -20.2757
+      }
+    },
+    {
+      "name": "Total Commitment",
+      "values": {
+        "roomSize": 0.0172,
+        "shimmer": 0.0119,
+        "decay": 0.932,
+        "mix": 1,
+        "gain": -23.4155
+      }
+    },
+    {
+      "name": "The Deep End",
+      "values": {
+        "roomSize": 0.9859,
+        "shimmer": 0.9377,
+        "decay": 0.0252,
+        "mix": 0.9546,
+        "gain": 21.8505
+      }
+    }
+  ]
+}
