@@ -1,0 +1,99 @@
+{
+  "clap-preset": {
+    "name": "Vintage · Vintage Soft",
+    "plugin-id": "com.pearlleash.echosphere",
+    "parameters": [
+      {
+        "id": 0,
+        "value": -13.44
+      },
+      {
+        "id": 1,
+        "value": 0.5
+      },
+      {
+        "id": 2,
+        "value": 2.448
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "EchoSphere",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Vintage · Vintage Soft",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "f7305832-d241-d553-8b9f-ce2ed9fcb8df",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "F7305832-D241-D553-8B9F-CE2ED9FCB8DF",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "name": "Vintage · Vintage Soft",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "f7305832-d241-d553-8b9f-ce2ed9fcb8df",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ]
+      }
+    }
+  }
+}
