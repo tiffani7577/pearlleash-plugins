@@ -1,0 +1,847 @@
+{
+  "plugin": "EchoSphere",
+  "pluginId": "com.pearlleash.echosphere",
+  "format": "womanus-preset-bank-v1",
+  "note": "Native presets are compiled into the plugin. This JSON mirrors them for external tooling. Also emit .clap-preset per factory preset. NKS Sound Type + Character tags included for Komplete Kontrol / Maschine.",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoSphere",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "physicsMode": null,
+    "archetype": "reverb",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "eb335aec-58ec-74b7-8ecf-d09bcedea2b7"
+  },
+  "presets": [
+    {
+      "name": "Init",
+      "values": {
+        "inputGain": 0,
+        "roomSize": 0.5,
+        "gain": 0
+      },
+      "personality": "init",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Init",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "5947d46f-fbee-d79d-5d1b-f437f08cffc7",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "5947D46F-FBEE-D79D-5D1B-F437F08CFFC7",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet"
+          ],
+          "name": "Init",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "5947d46f-fbee-d79d-5d1b-f437f08cffc7",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vintage · Analog Push",
+      "values": {
+        "inputGain": 4.8,
+        "roomSize": 0.5,
+        "gain": -5.76
+      },
+      "personality": "vintage",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Vintage · Analog Push",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "81ac65d1-5a8e-fb87-0338-774ff39eb473",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "81AC65D1-5A8E-FB87-0338-774FF39EB473",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ],
+          "name": "Vintage · Analog Push",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "81ac65d1-5a8e-fb87-0338-774ff39eb473",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vintage · Console Warm",
+      "values": {
+        "inputGain": -4.8,
+        "roomSize": 0.5,
+        "gain": -1.44
+      },
+      "personality": "vintage",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Vintage · Console Warm",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "b71aa5f9-422b-5d3d-a20a-9c15af553d9d",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "B71AA5F9-422B-5D3D-A20A-9C15AF553D9D",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ],
+          "name": "Vintage · Console Warm",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "b71aa5f9-422b-5d3d-a20a-9c15af553d9d",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vintage · Retro Room",
+      "values": {
+        "inputGain": -12,
+        "roomSize": 0.5,
+        "gain": 1.8
+      },
+      "personality": "vintage",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Vintage · Retro Room",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "55a714e3-7f4b-4311-8b26-86ce012b616e",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "55A714E3-7F4B-4311-8B26-86CE012B616E",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ],
+          "name": "Vintage · Retro Room",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "55a714e3-7f4b-4311-8b26-86ce012b616e",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vintage · Tape Bloom",
+      "values": {
+        "inputGain": -2.4,
+        "roomSize": 0.5,
+        "gain": -2.52
+      },
+      "personality": "vintage",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Vintage · Tape Bloom",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "942f7192-46a9-3187-9610-205eca56f135",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "942F7192-46A9-3187-9610-205ECA56F135",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ],
+          "name": "Vintage · Tape Bloom",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "942f7192-46a9-3187-9610-205eca56f135",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Vintage · Vintage Soft",
+      "values": {
+        "inputGain": -13.44,
+        "roomSize": 0.5,
+        "gain": 2.448
+      },
+      "personality": "vintage",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Vintage · Vintage Soft",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "f7305832-d241-d553-8b9f-ce2ed9fcb8df",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "F7305832-D241-D553-8B9F-CE2ED9FCB8DF",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ],
+          "name": "Vintage · Vintage Soft",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "f7305832-d241-d553-8b9f-ce2ed9fcb8df",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Analog",
+            "Warm"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modern · Modern Clean",
+      "values": {
+        "inputGain": -15.36,
+        "roomSize": 0.5,
+        "gain": 3.312
+      },
+      "personality": "modern",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Modern · Modern Clean",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "f0d56189-cdd2-8bd9-34c4-7d2d8192755f",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "F0D56189-CDD2-8BD9-34C4-7D2D8192755F",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ],
+          "name": "Modern · Modern Clean",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "f0d56189-cdd2-8bd9-34c4-7d2d8192755f",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modern · Pop Gloss",
+      "values": {
+        "inputGain": -7.2,
+        "roomSize": 0.5,
+        "gain": -0.36
+      },
+      "personality": "modern",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Modern · Pop Gloss",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "785380a4-7371-4e4f-b5dc-ce270e639748",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "785380A4-7371-4E4F-B5DC-CE270E639748",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ],
+          "name": "Modern · Pop Gloss",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "785380a4-7371-4e4f-b5dc-ce270e639748",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modern · Radio Ready",
+      "values": {
+        "inputGain": -9.6,
+        "roomSize": 0.5,
+        "gain": 0.72
+      },
+      "personality": "modern",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Modern · Radio Ready",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "af58f621-a1bb-fd85-4fe2-d6522b2defec",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "AF58F621-A1BB-FD85-4FE2-D6522B2DEFEC",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ],
+          "name": "Modern · Radio Ready",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "af58f621-a1bb-fd85-4fe2-d6522b2defec",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modern · Studio Edge",
+      "values": {
+        "inputGain": 2.4,
+        "roomSize": 0.5,
+        "gain": -4.68
+      },
+      "personality": "modern",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Modern · Studio Edge",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "082b935d-b403-5d95-a0f6-4435d8de4a2c",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "082B935D-B403-5D95-A0F6-4435D8DE4A2C",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ],
+          "name": "Modern · Studio Edge",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "082b935d-b403-5d95-a0f6-4435d8de4a2c",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Modern · Tight Bus",
+      "values": {
+        "inputGain": -4.8,
+        "roomSize": 0.5,
+        "gain": -1.44
+      },
+      "personality": "modern",
+      "nks": {
+        "deviceType": "FX",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "soundTypes": [
+          "Effect > Reverb"
+        ],
+        "bankchain": [
+          "EchoSphere",
+          "Intent · reverb",
+          ""
+        ],
+        "vendor": "PearlLeashPlugin",
+        "author": "PearlLeashPlugin",
+        "name": "Modern · Tight Bus",
+        "comment": "archetype:reverb · family:delay-network",
+        "uuid": "18da889c-e3d9-e361-420f-720a968161e5",
+        "physicsMode": null,
+        "nisi": {
+          "UUID": "18DA889C-E3D9-E361-420F-720A968161E5",
+          "author": "PearlLeashPlugin",
+          "bankchain": [
+            "EchoSphere",
+            "Intent · reverb",
+            ""
+          ],
+          "comment": "archetype:reverb · family:delay-network",
+          "deviceType": "FX",
+          "modes": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ],
+          "name": "Modern · Tight Bus",
+          "types": [
+            [
+              "Effect",
+              "Reverb"
+            ]
+          ],
+          "uuid": "18da889c-e3d9-e361-420f-720a968161e5",
+          "vendor": "PearlLeashPlugin",
+          "characters": [
+            "Atmospheric",
+            "Wet",
+            "Synthetic"
+          ]
+        }
+      }
+    }
+  ]
+}
