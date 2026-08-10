@@ -1,0 +1,79 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EchoSphere",
+  "pluginId": "com.pearlleash.echosphere",
+  "name": "Vintage · Console Warm",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoSphere",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Console Warm",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "b71aa5f9-422b-5d3d-a20a-9c15af553d9d",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "B71AA5F9-422B-5D3D-A20A-9C15AF553D9D",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EchoSphere",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Console Warm",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "b71aa5f9-422b-5d3d-a20a-9c15af553d9d",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "inputGain": -4.8,
+    "roomSize": 0.5,
+    "gain": -1.44
+  }
+}
