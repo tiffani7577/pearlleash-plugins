@@ -1,0 +1,71 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EchoSphere",
+  "pluginId": "com.pearlleash.echosphere",
+  "name": "Init",
+  "personality": "init",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoSphere",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Init",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "5947d46f-fbee-d79d-5d1b-f437f08cffc7",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "5947D46F-FBEE-D79D-5D1B-F437F08CFFC7",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EchoSphere",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet"
+      ],
+      "name": "Init",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "5947d46f-fbee-d79d-5d1b-f437f08cffc7",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet"
+      ]
+    }
+  },
+  "values": {
+    "inputGain": 0,
+    "roomSize": 0.5,
+    "gain": 0
+  }
+}
