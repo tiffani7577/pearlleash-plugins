@@ -1,0 +1,75 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EchoChamber",
+  "pluginId": "com.pearlleash.echochamber",
+  "name": "Modern · Modern Clean",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoChamber",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Modern Clean",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "f3e4e873-ce9e-1cc6-23db-251635e9addf",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "F3E4E873-CE9E-1CC6-23DB-251635E9ADDF",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EchoChamber",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Modern Clean",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "f3e4e873-ce9e-1cc6-23db-251635e9addf",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "inputGain": -15.36,
+    "roomSize": 0.5,
+    "gain": 3.312
+  }
+}
