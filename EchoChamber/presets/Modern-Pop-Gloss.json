@@ -68,8 +68,8 @@
     }
   },
   "values": {
-    "inputGain": -7.2,
-    "roomSize": 0.5,
-    "gain": -0.36
+    "mix": 0.5,
+    "predelay": 45,
+    "gain": 0
   }
 }
