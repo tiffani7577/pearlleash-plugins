@@ -1,0 +1,44 @@
+{
+  "format": "womanus-nks-nisi-v1",
+  "nisi": {
+    "UUID": "2F47C222-259B-57D9-B71A-CF5F9CB05A34",
+    "author": "PearlLeashPlugin",
+    "bankchain": [
+      "CelestialReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "comment": "archetype:reverb · family:delay-network",
+    "deviceType": "FX",
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "name": "Vintage · Analog Push",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "uuid": "2f47c222-259b-57d9-b71a-cf5f9cb05a34",
+    "vendor": "PearlLeashPlugin",
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ]
+  },
+  "soundTypes": [
+    "Effect > Reverb"
+  ],
+  "characters": [
+    "Atmospheric",
+    "Wet",
+    "Analog",
+    "Warm"
+  ]
+}
