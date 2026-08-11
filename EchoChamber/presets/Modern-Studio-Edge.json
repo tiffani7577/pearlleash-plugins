@@ -1,0 +1,75 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EchoChamber",
+  "pluginId": "com.pearlleash.echochamber",
+  "name": "Modern · Studio Edge",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoChamber",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Studio Edge",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "a4c72d7e-2713-db8a-e72a-2e733a4ff038",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "A4C72D7E-2713-DB8A-E72A-2E733A4FF038",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EchoChamber",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Studio Edge",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "a4c72d7e-2713-db8a-e72a-2e733a4ff038",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "inputGain": 2.4,
+    "roomSize": 0.5,
+    "gain": -4.68
+  }
+}
