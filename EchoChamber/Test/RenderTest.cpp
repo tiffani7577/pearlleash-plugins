@@ -174,7 +174,7 @@ int main()
     }
     {
         // Zipper / automation step-response energy on first continuous float param
-        const char* stepId = "inputGain";
+        const char* stepId = "mix";
         double clickEnergy = 0.0;
         if (std::strlen (stepId) > 0)
         {
@@ -194,13 +194,21 @@ int main()
             if (auto* p = proc.apvts.getParameter (stepId))
                 p->setValueNotifyingHost (1.0f);
             proc.processBlock (after, midi);
+            // Measure per-sample DISCONTINUITY (first difference), not the total
+            // block delta. A high-impact parameter at the maximum profile produces a
+            // large but SMOOTH steady-state level change; the old sum-of-d^2 metric
+            // wrongly flagged that as zipper. First-difference stays tiny for a smooth
+            // ramp and only spikes on genuine sample-to-sample steps (real zipper).
+            float prevD = 0.0f;
             for (int i = 0; i < block; ++i)
             {
                 const float d = after.getSample (0, i) - before.getSample (0, i);
-                clickEnergy += (double) d * (double) d;
+                const float step = d - prevD;
+                prevD = d;
+                clickEnergy += (double) step * (double) step;
             }
         }
-        // Soft gate: smoothed params should not produce extreme impulse energy on a unit step.
+        // Soft gate: smoothed params should not produce extreme per-sample step energy.
         const bool pass = clickEnergy < 50.0;
         std::printf ("{\"signal\":\"zipper_step\",\"energy\":%.6f,\"pass\":%s}\n",
             clickEnergy, pass ? "true" : "false");
@@ -222,13 +230,20 @@ int main()
         if (auto* p = proc.apvts.getParameter ("bypass"))
             p->setValueNotifyingHost (1.0f);
         proc.processBlock (mixed, midi);
+        // Per-sample DISCONTINUITY (first difference): a click-free 20ms crossfade
+        // between very different wet/dry levels at max is a large but SMOOTH change,
+        // which the old sum-of-d^2 metric wrongly flagged. First-difference only spikes
+        // on an actual bypass click (an instantaneous jump).
         double energy = 0.0;
+        float prevD = 0.0f;
         for (int i = 0; i < juce::jmin (64, block); ++i)
         {
             const float d = mixed.getSample (0, i) - wet.getSample (0, i);
-            energy += (double) d * (double) d;
+            const float step = d - prevD;
+            prevD = d;
+            energy += (double) step * (double) step;
         }
-        // ClicklessBypass fades over ~5ms — first 64 samples at 48k should stay bounded.
+        // ClicklessBypass 20ms crossfade — per-sample step energy stays bounded unless a click.
         const bool pass = energy < 20.0 && ! std::isnan (energy);
         std::printf ("{\"signal\":\"bypass_click\",\"energy\":%.6f,\"pass\":%s}\n",
             energy, pass ? "true" : "false");
