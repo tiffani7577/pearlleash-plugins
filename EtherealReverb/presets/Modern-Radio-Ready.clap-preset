@@ -1,0 +1,91 @@
+{
+  "clap-preset": {
+    "name": "Modern · Radio Ready",
+    "plugin-id": "com.pearlleash.etherealreverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 2.08
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Modern · Radio Ready",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "ee1e0345-30fe-7ace-8697-17e1b765a425",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "EE1E0345-30FE-7ACE-8697-17E1B765A425",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "EtherealReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "name": "Modern · Radio Ready",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "ee1e0345-30fe-7ace-8697-17e1b765a425",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ]
+      }
+    }
+  }
+}
