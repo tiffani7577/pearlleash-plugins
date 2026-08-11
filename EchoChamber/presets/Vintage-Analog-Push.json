@@ -1,0 +1,79 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EchoChamber",
+  "pluginId": "com.pearlleash.echochamber",
+  "name": "Vintage · Analog Push",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EchoChamber",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Analog Push",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "bda1311e-92e8-1c6f-e7d8-23767b41b6f7",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "BDA1311E-92E8-1C6F-E7D8-23767B41B6F7",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EchoChamber",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Analog Push",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "bda1311e-92e8-1c6f-e7d8-23767b41b6f7",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "inputGain": 4.8,
+    "roomSize": 0.5,
+    "gain": -5.76
+  }
+}
