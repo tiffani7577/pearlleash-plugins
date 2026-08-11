@@ -62,8 +62,8 @@ public:
           webView (makeWebViewOptions())
     {
         loadAssets();
-        inputGainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("inputGain"), inputGainRelay, nullptr);
-        roomSizeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("roomSize"), roomSizeRelay, nullptr);
+        mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
+        predelayAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("predelay"), predelayRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         bypassAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("bypass"), bypassRelay, nullptr);
         widthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("width"), widthRelay, nullptr);
@@ -80,8 +80,8 @@ public:
         setSize (520, 340);
         setResizeLimits (400, 300, 1200, 900);
         setResizable (true, true);
-        proc.apvts.addParameterListener ("inputGain", this);
-        proc.apvts.addParameterListener ("roomSize", this);
+        proc.apvts.addParameterListener ("mix", this);
+        proc.apvts.addParameterListener ("predelay", this);
         proc.apvts.addParameterListener ("gain", this);
         proc.apvts.addParameterListener ("bypass", this);
         proc.apvts.addParameterListener ("width", this);
@@ -101,8 +101,8 @@ public:
     ~EchoChamberEditor() override
     {
         stopTimer();
-        proc.apvts.removeParameterListener ("inputGain", this);
-        proc.apvts.removeParameterListener ("roomSize", this);
+        proc.apvts.removeParameterListener ("mix", this);
+        proc.apvts.removeParameterListener ("predelay", this);
         proc.apvts.removeParameterListener ("gain", this);
         proc.apvts.removeParameterListener ("bypass", this);
         proc.apvts.removeParameterListener ("width", this);
@@ -155,8 +155,8 @@ public:
 
     void pushAllParametersToWebView()
     {
-        parameterChanged ("inputGain", 0.0f);
-        parameterChanged ("roomSize", 0.0f);
+        parameterChanged ("mix", 0.0f);
+        parameterChanged ("predelay", 0.0f);
         parameterChanged ("gain", 0.0f);
         parameterChanged ("bypass", 0.0f);
         parameterChanged ("width", 0.0f);
@@ -238,8 +238,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> nativeGainSliderAttach;
     EchoChamberLookAndFeel lnf;
     EchoChamberLookAndFeel::SpriteAtlas bgAtlas;
-    juce::WebSliderRelay inputGainRelay { "inputGain" };
-    juce::WebSliderRelay roomSizeRelay { "roomSize" };
+    juce::WebSliderRelay mixRelay { "mix" };
+    juce::WebSliderRelay predelayRelay { "predelay" };
     juce::WebSliderRelay gainRelay { "gain" };
     juce::WebSliderRelay bypassRelay { "bypass" };
     juce::WebSliderRelay widthRelay { "width" };
@@ -331,8 +331,8 @@ private:
             .withNativeIntegrationEnabled()
             // Logic / FL hide the editor without destroying it — default unloads to about:blank.
             .withKeepPageLoadedWhenBrowserIsHidden()
-            .withOptionsFrom (inputGainRelay)
-            .withOptionsFrom (roomSizeRelay)
+            .withOptionsFrom (mixRelay)
+            .withOptionsFrom (predelayRelay)
             .withOptionsFrom (gainRelay)
             .withOptionsFrom (bypassRelay)
             .withOptionsFrom (widthRelay)
@@ -371,8 +371,8 @@ private:
 
     juce::WebBrowserComponent webView;
 
-    std::unique_ptr<juce::WebSliderParameterAttachment> inputGainAttach;
-    std::unique_ptr<juce::WebSliderParameterAttachment> roomSizeAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> predelayAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> bypassAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> widthAttach;
