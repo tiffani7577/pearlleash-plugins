@@ -1,0 +1,41 @@
+{
+  "format": "womanus-nks-nisi-v1",
+  "nisi": {
+    "UUID": "6FE2417D-2139-7FA4-D97A-8A7E65D4DD4C",
+    "author": "PearlLeashPlugin",
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "comment": "archetype:reverb · family:delay-network",
+    "deviceType": "FX",
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "name": "Modern · Pop Gloss",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "uuid": "6fe2417d-2139-7fa4-d97a-8a7e65d4dd4c",
+    "vendor": "PearlLeashPlugin",
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ]
+  },
+  "soundTypes": [
+    "Effect > Reverb"
+  ],
+  "characters": [
+    "Atmospheric",
+    "Wet",
+    "Synthetic"
+  ]
+}
