@@ -23,7 +23,11 @@ public:
         };
         dryDelay.prepare (spec);
         dryDelay.setDelay ((float) latencySamples);
-        fade.init (bypassed ? 0.0f : 1.0f, 5.0f, (float) sampleRate);
+        // 20ms crossfade (was 5ms): a gentler dry/wet bypass ramp so engaging bypass
+        // at extreme settings (large wet/dry difference) stays click-free. Also keeps
+        // the RenderTest bypass_click energy (first 64 samples of the transition) well
+        // bounded — a 5ms fade moved ~26% inside that window; 20ms moves ~6%.
+        fade.init (bypassed ? 0.0f : 1.0f, 20.0f, (float) sampleRate);
         delayPrepared = true;
     }
 
