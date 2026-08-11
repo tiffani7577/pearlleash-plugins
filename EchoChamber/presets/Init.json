@@ -64,8 +64,7 @@
     }
   },
   "values": {
-    "mix": 0.35,
-    "predelay": 20,
+    "decayTime": 1.8,
     "gain": 0
   }
 }
