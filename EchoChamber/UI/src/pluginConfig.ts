@@ -43,26 +43,15 @@ export const PLUGIN_CONFIG: PluginConfig = {
   "accent": "#00FFAA",
   "params": [
     {
-      "id": "mix",
-      "name": "Mix",
-      "min": 0,
-      "max": 1,
-      "def": 0.35,
-      "unit": "%",
+      "id": "decayTime",
+      "name": "Decay Time",
+      "min": 0.1,
+      "max": 10,
+      "def": 1.8,
+      "unit": "s",
       "type": "knob",
       "skew": 1,
-      "defNormalised": 0.35
-    },
-    {
-      "id": "predelay",
-      "name": "Predelay",
-      "min": 0,
-      "max": 100,
-      "def": 20,
-      "unit": "ms",
-      "type": "knob",
-      "skew": 1,
-      "defNormalised": 0.2
+      "defNormalised": 0.1717171717171717
     },
     {
       "id": "gain",
@@ -110,7 +99,7 @@ export const PLUGIN_CONFIG: PluginConfig = {
     }
   ],
   "features": {
-    "spectrum": true,
+    "spectrum": false,
     "gainReduction": false,
     "destructive": false,
     "mainParamId": "gain",
