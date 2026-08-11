@@ -1,0 +1,74 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "CelestialReverb",
+  "pluginId": "com.pearlleash.celestialreverb",
+  "name": "Modern · Modern Clean",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "CelestialReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Modern Clean",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "b2232b52-ea0d-80c5-a778-847b0a63cf8f",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "B2232B52-EA0D-80C5-A778-847B0A63CF8F",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "CelestialReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Modern Clean",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "b2232b52-ea0d-80c5-a778-847b0a63cf8f",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "reverbTime": 4.08,
+    "gain": 0
+  }
+}
