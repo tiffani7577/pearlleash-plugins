@@ -19,8 +19,8 @@
 #include "PhaseDecorrelator.h"
 #include "SignalSanityGuard.h"
 
-#include "AirShelf.h"
-#include "SpectrumAnalyzer.h"
+
+
 
 
 
@@ -80,8 +80,7 @@ public:
         cloudSync.prepare ("com.pearlleash.echochamber",
                            juce::String(),
                            "1.0.0");
-        versionManager.registerParameter ("mix", 0.35f, 1);
-        versionManager.registerParameter ("predelay", 20.0f, 1);
+        versionManager.registerParameter ("decayTime", 1.8f, 1);
         versionManager.registerParameter ("gain", 0.0f, 1);
         versionManager.registerParameter ("bypass", 0.0f, 1);
         versionManager.registerParameter ("width", 0.35f, 1);
@@ -106,8 +105,7 @@ public:
     static juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
     {
         juce::AudioProcessorValueTreeState::ParameterLayout layout;
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "mix", 1 }, "Mix", juce::NormalisableRange<float> (0.0f, 1.0f, 0.0f, 1.0f), 0.35f));
-        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "predelay", 1 }, "Predelay", juce::NormalisableRange<float> (0.0f, 100.0f, 0.0f, 1.0f), 20.0f));
+        layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "decayTime", 1 }, "Decay Time", juce::NormalisableRange<float> (0.1f, 10.0f, 0.0f, 1.0f), 1.8f));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "gain", 1 }, "Output", juce::NormalisableRange<float> (-24.0f, 24.0f, 0.0f, 1.0f), 0.0f));
         layout.add (std::make_unique<juce::AudioParameterBool> (juce::ParameterID { "bypass", 1 }, "Bypass", false));
         layout.add (std::make_unique<juce::AudioParameterFloat> (juce::ParameterID { "width", 1 }, "Width", juce::NormalisableRange<float> (0.0f, 1.0f, 0.0f, 0.85f), 0.35f));
@@ -122,14 +120,12 @@ public:
 
 
 
-        rawParam_mix = apvts.getRawParameterValue ("mix");
-        rawParam_predelay = apvts.getRawParameterValue ("predelay");
+        rawParam_decayTime = apvts.getRawParameterValue ("decayTime");
         rawParam_gain = apvts.getRawParameterValue ("gain");
         rawParam_bypass = apvts.getRawParameterValue ("bypass");
         rawParam_width = apvts.getRawParameterValue ("width");
         rawParam_decorrelate = apvts.getRawParameterValue ("decorrelate");
-        sm_mix.reset (rawParam_mix != nullptr ? rawParam_mix->load() : 0.35f, 30.0f, sampleRate);
-        sm_predelay.reset (rawParam_predelay != nullptr ? rawParam_predelay->load() : 20.0f, 25.0f, sampleRate);
+        sm_decayTime.reset (rawParam_decayTime != nullptr ? rawParam_decayTime->load() : 1.8f, 25.0f, sampleRate);
         sm_gain.reset (rawParam_gain != nullptr ? rawParam_gain->load() : 0.0f, 30.0f, sampleRate);
         sm_bypass.reset (rawParam_bypass != nullptr ? rawParam_bypass->load() : 0.0f, 25.0f, sampleRate);
         sm_width.reset (rawParam_width != nullptr ? rawParam_width->load() : 0.35f, 20.0f, sampleRate);
@@ -156,16 +152,15 @@ public:
         shimmerReverbDsp_.prepare (dspSampleRate);
     shimmerReverbDsp_.setParameters (
         0.55f,
-        0.72f,
+        juce::jlimit (0.0f, 1.0f, (smoothedParam ("decayTime") - 0.1f) / 9.9f),
         0.45f,
-        juce::jlimit (0.0f, 1.0f, smoothedParam ("mix")));
-        for (auto& s : airShelfDsp_) s.prepare ((float) dspSampleRate);
+        0.50f);
         gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         signalSanityGuardDsp_.prepare (dspSampleRate);
         truePeakLeft.prepare ((float) sampleRate);
         truePeakRight.prepare ((float) sampleRate);
         analyzer.prepare (sampleRate);
-        spectrumAnalyzer.prepare (sampleRate);
+
 
     }
 
@@ -217,10 +212,8 @@ public:
             oversampling->reset();
         truePeakLeft.reset();
         truePeakRight.reset();
-        if (rawParam_mix != nullptr)
-            sm_mix.reset (rawParam_mix->load(), 30.0f, preparedSampleRate_ > 0.0 ? (float) preparedSampleRate_ : 48000.0f);
-        if (rawParam_predelay != nullptr)
-            sm_predelay.reset (rawParam_predelay->load(), 25.0f, preparedSampleRate_ > 0.0 ? (float) preparedSampleRate_ : 48000.0f);
+        if (rawParam_decayTime != nullptr)
+            sm_decayTime.reset (rawParam_decayTime->load(), 25.0f, preparedSampleRate_ > 0.0 ? (float) preparedSampleRate_ : 48000.0f);
         if (rawParam_gain != nullptr)
             sm_gain.reset (rawParam_gain->load(), 30.0f, preparedSampleRate_ > 0.0 ? (float) preparedSampleRate_ : 48000.0f);
         if (rawParam_bypass != nullptr)
@@ -278,23 +271,13 @@ public:
     {
         shimmerReverbDsp_.setParameters (
             0.55f,
-            0.72f,
+            juce::jlimit (0.0f, 1.0f, (smoothedParam ("decayTime") - 0.1f) / 9.9f),
             0.45f,
-            juce::jlimit (0.0f, 1.0f, smoothedParam ("mix")));
+            0.50f);
         auto* left = block.getChannelPointer (0);
         float* right = block.getNumChannels() > 1 ? block.getChannelPointer (1) : left;
         for (size_t i = 0; i < block.getNumSamples(); ++i)
             shimmerReverbDsp_.processSample (left[i], right[i]);
-    }
-        // ---- built-in block: eq.air_shelf (JUCE builtin) ----
-    {
-        for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
-        {
-            auto& shelf = airShelfDsp_[juce::jmin ((size_t) 1, ch)];
-            auto* d = block.getChannelPointer ((int) ch);
-            for (size_t i = 0; i < block.getNumSamples(); ++i)
-                d[i] = shelf.processSample (d[i]);
-        }
     }
         // ---- built-in block: gain (JUCE builtin) ----
     gainDsp.setGainDecibels (smoothedParam ("gain"));
@@ -314,12 +297,9 @@ public:
     {
         juce::ignoreUnused (midiMessages);
         juce::ScopedNoDenormals noDenormals;
-        if (rawParam_mix != nullptr)
-            sm_mix.setTarget (rawParam_mix->load());
-        sm_mix.update (getSampleRate());
-        if (rawParam_predelay != nullptr)
-            sm_predelay.setTarget (rawParam_predelay->load());
-        sm_predelay.update (getSampleRate());
+        if (rawParam_decayTime != nullptr)
+            sm_decayTime.setTarget (rawParam_decayTime->load());
+        sm_decayTime.update (getSampleRate());
         if (rawParam_gain != nullptr)
             sm_gain.setTarget (rawParam_gain->load());
         sm_gain.update (getSampleRate());
@@ -424,17 +404,7 @@ public:
             }
         }
         analyzer.pushPostBuffer (buffer);
-        {
-            const int numCh = buffer.getNumChannels();
-            const int numSamples = buffer.getNumSamples();
-            if (numCh > 0 && numSamples > 0)
-            {
-                const float* L = buffer.getReadPointer (0);
-                const float* R = numCh > 1 ? buffer.getReadPointer (1) : L;
-                for (int i = 0; i < numSamples; ++i)
-                    spectrumAnalyzer.pushSample (0.5f * (L[i] + R[i]));
-            }
-        }
+
 
         {
         double sumSq = 0.0;
@@ -505,7 +475,7 @@ public:
     WoManusAnalyzer analyzer;
     CloudSyncClient cloudSync;
     std::atomic<float> outputRmsLevel { 0.0f };
-    SpectrumAnalyzer spectrumAnalyzer;
+
 
 
 public:
@@ -513,14 +483,12 @@ public:
     // Seed-locked deterministic RNG (xorshift32). All stochastic DSP must use
     // nextRandom() so identical input + identical automation = identical output.
     // Reset in prepareToPlay, so every render from the top is bit-reproducible.
-    std::atomic<float>* rawParam_mix = nullptr;
-    std::atomic<float>* rawParam_predelay = nullptr;
+    std::atomic<float>* rawParam_decayTime = nullptr;
     std::atomic<float>* rawParam_gain = nullptr;
     std::atomic<float>* rawParam_bypass = nullptr;
     std::atomic<float>* rawParam_width = nullptr;
     std::atomic<float>* rawParam_decorrelate = nullptr;
-    WoManusSmoothedParameter<float> sm_mix;
-    WoManusSmoothedParameter<float> sm_predelay;
+    WoManusSmoothedParameter<float> sm_decayTime;
     WoManusSmoothedParameter<float> sm_gain;
     WoManusSmoothedParameter<float> sm_bypass;
     WoManusSmoothedParameter<float> sm_width;
@@ -531,8 +499,7 @@ public:
     // Cached rawParam_* atomics are refreshed once per block in processBlock (smoothUpdate).
     inline float smoothedParam (const char* id) noexcept
     {
-        if (strcmp (id, "mix") == 0) return sm_mix.getNextValue();
-        if (strcmp (id, "predelay") == 0) return sm_predelay.getNextValue();
+        if (strcmp (id, "decayTime") == 0) return sm_decayTime.getNextValue();
         if (strcmp (id, "gain") == 0) return sm_gain.getNextValue();
         if (strcmp (id, "bypass") == 0) return sm_bypass.getNextValue();
         if (strcmp (id, "width") == 0) return sm_width.getNextValue();
@@ -544,8 +511,7 @@ public:
     /** Block-rate peek (no smoother advance) — use outside per-sample loops only. */
     inline float rawParamLoad (const char* id, float fallback = 0.0f) const noexcept
     {
-        if (strcmp (id, "mix") == 0) return rawParam_mix != nullptr ? rawParam_mix->load() : fallback;
-        if (strcmp (id, "predelay") == 0) return rawParam_predelay != nullptr ? rawParam_predelay->load() : fallback;
+        if (strcmp (id, "decayTime") == 0) return rawParam_decayTime != nullptr ? rawParam_decayTime->load() : fallback;
         if (strcmp (id, "gain") == 0) return rawParam_gain != nullptr ? rawParam_gain->load() : fallback;
         if (strcmp (id, "bypass") == 0) return rawParam_bypass != nullptr ? rawParam_bypass->load() : fallback;
         if (strcmp (id, "width") == 0) return rawParam_width != nullptr ? rawParam_width->load() : fallback;
@@ -586,58 +552,47 @@ private:
         switch (index)
         {
     case 0:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.35f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (20.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (1.8f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 1:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.65f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 2:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 3:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.45f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (75.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (7.525f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 4:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.55f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 5:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.4f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (20.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (2.08f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 6:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.35f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (20.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (2.08f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 7:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 8:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.5f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (20.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (2.08f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 9:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.6f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
     case 10:
-        if (auto* param = apvts.getParameter ("mix")) param->setValueNotifyingHost (param->convertTo0to1 (0.45f));
-        if (auto* param = apvts.getParameter ("predelay")) param->setValueNotifyingHost (param->convertTo0to1 (45.0f));
+        if (auto* param = apvts.getParameter ("decayTime")) param->setValueNotifyingHost (param->convertTo0to1 (4.555f));
         if (auto* param = apvts.getParameter ("gain")) param->setValueNotifyingHost (param->convertTo0to1 (0.0f));
         break;
         default: break;
@@ -650,7 +605,6 @@ private:
     AllpassDiffuser allpassDiffuserDsp_;
     PhaseDecorrelator phaseDecorrelatorDsp_;
     TrustedShimmerReverb shimmerReverbDsp_;
-    AirShelf airShelfDsp_[2];
     juce::dsp::Gain<float> gainDsp;
     SignalSanityGuard signalSanityGuardDsp_;
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
