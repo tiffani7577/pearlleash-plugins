@@ -1,0 +1,95 @@
+{
+  "clap-preset": {
+    "name": "Vintage · Retro Room",
+    "plugin-id": "com.pearlleash.etherealreverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 7.525
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Vintage · Retro Room",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "ef315dbe-b16b-770a-9208-bbc8fe1c9386",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "EF315DBE-B16B-770A-9208-BBC8FE1C9386",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "EtherealReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "name": "Vintage · Retro Room",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "ef315dbe-b16b-770a-9208-bbc8fe1c9386",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ]
+      }
+    }
+  }
+}
