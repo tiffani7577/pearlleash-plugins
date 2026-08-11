@@ -1,0 +1,91 @@
+{
+  "clap-preset": {
+    "name": "Modern · Tight Bus",
+    "plugin-id": "com.pearlleash.etherealreverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 4.555
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Modern · Tight Bus",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "3196b75d-5b6c-ebfc-fc25-f743d6348cd3",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "3196B75D-5B6C-EBFC-FC25-F743D6348CD3",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "EtherealReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "name": "Modern · Tight Bus",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "3196b75d-5b6c-ebfc-fc25-f743d6348cd3",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ]
+      }
+    }
+  }
+}
