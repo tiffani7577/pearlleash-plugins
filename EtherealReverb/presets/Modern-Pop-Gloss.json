@@ -1,0 +1,74 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EtherealReverb",
+  "pluginId": "com.pearlleash.etherealreverb",
+  "name": "Modern · Pop Gloss",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Pop Gloss",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "6fe2417d-2139-7fa4-d97a-8a7e65d4dd4c",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "6FE2417D-2139-7FA4-D97A-8A7E65D4DD4C",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Pop Gloss",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "6fe2417d-2139-7fa4-d97a-8a7e65d4dd4c",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "decayTime": 4.555,
+    "gain": 0
+  }
+}
