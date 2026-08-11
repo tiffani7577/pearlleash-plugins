@@ -1,0 +1,78 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "CelestialReverb",
+  "pluginId": "com.pearlleash.celestialreverb",
+  "name": "Vintage · Retro Room",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "CelestialReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Retro Room",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "e9c8ffe1-02bb-148b-3d50-c34e3c0d0e2e",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "E9C8FFE1-02BB-148B-3D50-C34E3C0D0E2E",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "CelestialReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Retro Room",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "e9c8ffe1-02bb-148b-3d50-c34e3c0d0e2e",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "reverbTime": 15.025,
+    "gain": 0
+  }
+}
