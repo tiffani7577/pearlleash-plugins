@@ -5,11 +5,11 @@
     "parameters": [
       {
         "id": 0,
-        "value": 0.35
+        "value": 2.08
       },
       {
         "id": 1,
-        "value": 20
+        "value": 0
       },
       {
         "id": 2,
@@ -21,10 +21,6 @@
       },
       {
         "id": 4,
-        "value": 0
-      },
-      {
-        "id": 5,
         "value": 0
       }
     ],
