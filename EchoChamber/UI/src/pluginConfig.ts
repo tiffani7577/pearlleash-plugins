@@ -43,26 +43,26 @@ export const PLUGIN_CONFIG: PluginConfig = {
   "accent": "#00FFAA",
   "params": [
     {
-      "id": "inputGain",
-      "name": "Input Gain",
-      "min": -24,
-      "max": 24,
-      "def": 0,
-      "unit": "dB",
+      "id": "mix",
+      "name": "Mix",
+      "min": 0,
+      "max": 1,
+      "def": 0.35,
+      "unit": "%",
       "type": "knob",
       "skew": 1,
-      "defNormalised": 0.5
+      "defNormalised": 0.35
     },
     {
-      "id": "roomSize",
-      "name": "Room Size",
-      "min": 0.1,
-      "max": 1,
-      "def": 0.5,
-      "unit": "",
+      "id": "predelay",
+      "name": "Predelay",
+      "min": 0,
+      "max": 100,
+      "def": 20,
+      "unit": "ms",
       "type": "knob",
       "skew": 1,
-      "defNormalised": 0.4444444444444445
+      "defNormalised": 0.2
     },
     {
       "id": "gain",
