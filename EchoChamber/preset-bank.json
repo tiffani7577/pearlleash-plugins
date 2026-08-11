@@ -38,8 +38,7 @@
     {
       "name": "Init",
       "values": {
-        "mix": 0.35,
-        "predelay": 20,
+        "decayTime": 1.8,
         "gain": 0
       },
       "personality": "init",
@@ -106,8 +105,7 @@
     {
       "name": "Vintage · Analog Push",
       "values": {
-        "mix": 0.65,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "vintage",
@@ -182,8 +180,7 @@
     {
       "name": "Vintage · Console Warm",
       "values": {
-        "mix": 0.5,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "vintage",
@@ -258,8 +255,7 @@
     {
       "name": "Vintage · Retro Room",
       "values": {
-        "mix": 0.45,
-        "predelay": 75,
+        "decayTime": 7.525,
         "gain": 0
       },
       "personality": "vintage",
@@ -334,8 +330,7 @@
     {
       "name": "Vintage · Tape Bloom",
       "values": {
-        "mix": 0.55,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "vintage",
@@ -410,8 +405,7 @@
     {
       "name": "Vintage · Vintage Soft",
       "values": {
-        "mix": 0.4,
-        "predelay": 20,
+        "decayTime": 2.08,
         "gain": 0
       },
       "personality": "vintage",
@@ -486,8 +480,7 @@
     {
       "name": "Modern · Modern Clean",
       "values": {
-        "mix": 0.35,
-        "predelay": 20,
+        "decayTime": 2.08,
         "gain": 0
       },
       "personality": "modern",
@@ -558,8 +551,7 @@
     {
       "name": "Modern · Pop Gloss",
       "values": {
-        "mix": 0.5,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "modern",
@@ -630,8 +622,7 @@
     {
       "name": "Modern · Radio Ready",
       "values": {
-        "mix": 0.5,
-        "predelay": 20,
+        "decayTime": 2.08,
         "gain": 0
       },
       "personality": "modern",
@@ -702,8 +693,7 @@
     {
       "name": "Modern · Studio Edge",
       "values": {
-        "mix": 0.6,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "modern",
@@ -774,8 +764,7 @@
     {
       "name": "Modern · Tight Bus",
       "values": {
-        "mix": 0.45,
-        "predelay": 45,
+        "decayTime": 4.555,
         "gain": 0
       },
       "personality": "modern",
