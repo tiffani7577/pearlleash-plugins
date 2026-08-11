@@ -1,0 +1,91 @@
+{
+  "clap-preset": {
+    "name": "Init",
+    "plugin-id": "com.pearlleash.echochamber",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 0
+      },
+      {
+        "id": 1,
+        "value": 0.5
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "EchoChamber",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Init",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "cf2d2e7c-4c57-002d-9fab-3dec23b9fbf5",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "CF2D2E7C-4C57-002D-9FAB-3DEC23B9FBF5",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "EchoChamber",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet"
+        ],
+        "name": "Init",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "cf2d2e7c-4c57-002d-9fab-3dec23b9fbf5",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet"
+        ]
+      }
+    }
+  }
+}
