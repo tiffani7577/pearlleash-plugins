@@ -1,0 +1,41 @@
+{
+  "format": "womanus-nks-nisi-v1",
+  "nisi": {
+    "UUID": "3196B75D-5B6C-EBFC-FC25-F743D6348CD3",
+    "author": "PearlLeashPlugin",
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "comment": "archetype:reverb · family:delay-network",
+    "deviceType": "FX",
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "name": "Modern · Tight Bus",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "uuid": "3196b75d-5b6c-ebfc-fc25-f743d6348cd3",
+    "vendor": "PearlLeashPlugin",
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ]
+  },
+  "soundTypes": [
+    "Effect > Reverb"
+  ],
+  "characters": [
+    "Atmospheric",
+    "Wet",
+    "Synthetic"
+  ]
+}
