@@ -1,0 +1,44 @@
+{
+  "format": "womanus-nks-nisi-v1",
+  "nisi": {
+    "UUID": "E20D02FB-8853-21E8-94D7-EB6B5F3AE167",
+    "author": "PearlLeashPlugin",
+    "bankchain": [
+      "EchoChamber",
+      "Intent · reverb",
+      ""
+    ],
+    "comment": "archetype:reverb · family:delay-network",
+    "deviceType": "FX",
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "name": "Vintage · Vintage Soft",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "uuid": "e20d02fb-8853-21e8-94d7-eb6b5f3ae167",
+    "vendor": "PearlLeashPlugin",
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ]
+  },
+  "soundTypes": [
+    "Effect > Reverb"
+  ],
+  "characters": [
+    "Atmospheric",
+    "Wet",
+    "Analog",
+    "Warm"
+  ]
+}
