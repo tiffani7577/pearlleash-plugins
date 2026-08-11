@@ -1,0 +1,87 @@
+{
+  "clap-preset": {
+    "name": "Vintage · Vintage Soft",
+    "plugin-id": "com.pearlleash.celestialreverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 4.08
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "CelestialReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Vintage · Vintage Soft",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "dc4444cf-f010-b812-4b4d-fed46634f109",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "DC4444CF-F010-B812-4B4D-FED46634F109",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "CelestialReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "name": "Vintage · Vintage Soft",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "dc4444cf-f010-b812-4b4d-fed46634f109",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ]
+      }
+    }
+  }
+}
