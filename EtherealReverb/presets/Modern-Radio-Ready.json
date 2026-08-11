@@ -1,0 +1,74 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EtherealReverb",
+  "pluginId": "com.pearlleash.etherealreverb",
+  "name": "Modern · Radio Ready",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Radio Ready",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "ee1e0345-30fe-7ace-8697-17e1b765a425",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "EE1E0345-30FE-7ACE-8697-17E1B765A425",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Radio Ready",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "ee1e0345-30fe-7ace-8697-17e1b765a425",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "decayTime": 2.08,
+    "gain": 0
+  }
+}
