@@ -72,8 +72,7 @@
     }
   },
   "values": {
-    "inputGain": 4.8,
-    "roomSize": 0.5,
-    "gain": -5.76
+    "decayTime": 4.555,
+    "gain": 0
   }
 }
