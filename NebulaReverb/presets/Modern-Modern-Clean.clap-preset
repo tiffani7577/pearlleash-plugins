@@ -1,0 +1,123 @@
+{
+  "clap-preset": {
+    "name": "Modern · Modern Clean",
+    "plugin-id": "com.pearlleash.nebulareverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 20
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      },
+      {
+        "id": 6,
+        "value": 0
+      },
+      {
+        "id": 7,
+        "value": 0
+      },
+      {
+        "id": 8,
+        "value": 0
+      },
+      {
+        "id": 9,
+        "value": 0
+      },
+      {
+        "id": 10,
+        "value": 0
+      },
+      {
+        "id": 11,
+        "value": 0
+      },
+      {
+        "id": 12,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Modern · Modern Clean",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "dd227870-61f2-20f2-986a-abc0479a39ab",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "DD227870-61F2-20F2-986A-ABC0479A39AB",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "NebulaReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "name": "Modern · Modern Clean",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "dd227870-61f2-20f2-986a-abc0479a39ab",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ]
+      }
+    }
+  }
+}
