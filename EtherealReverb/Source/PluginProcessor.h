@@ -19,8 +19,8 @@
 #include "PhaseDecorrelator.h"
 #include "SignalSanityGuard.h"
 
-#include "AirShelf.h"
-#include "SpectrumAnalyzer.h"
+
+
 
 
 
@@ -147,21 +147,20 @@ public:
         const double dspSampleRate = sampleRate * (double) oversampling->getOversamplingFactor();
         const int dspSamplesPerBlock = samplesPerBlock * (int) oversampling->getOversamplingFactor();
         juce::dsp::ProcessSpec dspSpec { dspSampleRate, (juce::uint32) dspSamplesPerBlock, 2 };
-        phaseDecorrelatorDsp_.prepare (dspSampleRate);
         allpassDiffuserDsp_.prepare (dspSampleRate);
+        phaseDecorrelatorDsp_.prepare (dspSampleRate);
         shimmerReverbDsp_.prepare (dspSampleRate);
     shimmerReverbDsp_.setParameters (
         0.55f,
-        0.72f,
+        juce::jlimit (0.0f, 1.0f, (smoothedParam ("decayTime") - 0.1f) / 9.9f),
         0.45f,
         0.50f);
-        for (auto& s : airShelfDsp_) s.prepare ((float) dspSampleRate);
         gainDsp.prepare (dspSpec); gainDsp.setRampDurationSeconds (0.02);
         signalSanityGuardDsp_.prepare (dspSampleRate);
         truePeakLeft.prepare ((float) sampleRate);
         truePeakRight.prepare ((float) sampleRate);
         analyzer.prepare (sampleRate);
-        spectrumAnalyzer.prepare (sampleRate);
+
 
     }
 
@@ -245,6 +244,13 @@ public:
     {
         juce::dsp::ProcessContextReplacing<float> ctx (block);
         juce::ignoreUnused (ctx);
+        // ---- built-in block: AllpassDiffuser (JUCE builtin) ----
+    {
+        auto* left = block.getChannelPointer (0);
+        float* right = block.getNumChannels() > 1 ? block.getChannelPointer (1) : left;
+        for (size_t i = 0; i < block.getNumSamples(); ++i)
+            allpassDiffuserDsp_.process (left[i], right[i]);
+    }
         // ---- built-in block: PhaseDecorrelator (JUCE builtin) ----
     {
         const float width = PhaseDecorrelator::clampWidth (smoothedParam ("width"));
@@ -261,34 +267,17 @@ public:
             if (stereoOut) right[i] = r;
         }
     }
-        // ---- built-in block: AllpassDiffuser (JUCE builtin) ----
-    {
-        auto* left = block.getChannelPointer (0);
-        float* right = block.getNumChannels() > 1 ? block.getChannelPointer (1) : left;
-        for (size_t i = 0; i < block.getNumSamples(); ++i)
-            allpassDiffuserDsp_.process (left[i], right[i]);
-    }
         // ---- built-in block: ShimmerReverb (JUCE builtin) ----
     {
         shimmerReverbDsp_.setParameters (
             0.55f,
-            0.72f,
+            juce::jlimit (0.0f, 1.0f, (smoothedParam ("decayTime") - 0.1f) / 9.9f),
             0.45f,
             0.50f);
         auto* left = block.getChannelPointer (0);
         float* right = block.getNumChannels() > 1 ? block.getChannelPointer (1) : left;
         for (size_t i = 0; i < block.getNumSamples(); ++i)
             shimmerReverbDsp_.processSample (left[i], right[i]);
-    }
-        // ---- built-in block: eq.air_shelf (JUCE builtin) ----
-    {
-        for (size_t ch = 0; ch < block.getNumChannels(); ++ch)
-        {
-            auto& shelf = airShelfDsp_[juce::jmin ((size_t) 1, ch)];
-            auto* d = block.getChannelPointer ((int) ch);
-            for (size_t i = 0; i < block.getNumSamples(); ++i)
-                d[i] = shelf.processSample (d[i]);
-        }
     }
         // ---- built-in block: gain (JUCE builtin) ----
     gainDsp.setGainDecibels (smoothedParam ("gain"));
@@ -400,27 +389,22 @@ public:
             clicklessBypass_.process (dryView, buffer);
             for (int c = 0; c < ch; ++c)
                 buffer.copyFrom (c, 0, bypassDryBuf_, c, 0, n);
-            // Final host-facing scrub: dry-path NaN (nan_recovery fixture) must never escape.
+            // Final host-facing scrub: flush NaN/Inf (nan_recovery fixture) AND denormals.
+            // A decaying reverb/delay tail copied straight to the output can carry subnormal
+            // samples that ScopedNoDenormals / FTZ (which only flush arithmetic results, not
+            // plain buffer copies) never catch — that trips the fixture's maxDenormal=0 gate
+            // and spikes host CPU. 1e-15 (~-300 dBFS) is far below any audible signal and far
+            // above the subnormal range, so it clears all denormals with no audible effect.
             for (int c = 0; c < buffer.getNumChannels(); ++c)
             {
                 auto* d = buffer.getWritePointer (c);
                 for (int i = 0; i < n; ++i)
-                    if (! std::isfinite (d[i]))
+                    if (! std::isfinite (d[i]) || std::abs (d[i]) < 1.0e-15f)
                         d[i] = 0.0f;
             }
         }
         analyzer.pushPostBuffer (buffer);
-        {
-            const int numCh = buffer.getNumChannels();
-            const int numSamples = buffer.getNumSamples();
-            if (numCh > 0 && numSamples > 0)
-            {
-                const float* L = buffer.getReadPointer (0);
-                const float* R = numCh > 1 ? buffer.getReadPointer (1) : L;
-                for (int i = 0; i < numSamples; ++i)
-                    spectrumAnalyzer.pushSample (0.5f * (L[i] + R[i]));
-            }
-        }
+
 
         {
         double sumSq = 0.0;
@@ -491,7 +475,7 @@ public:
     WoManusAnalyzer analyzer;
     CloudSyncClient cloudSync;
     std::atomic<float> outputRmsLevel { 0.0f };
-    SpectrumAnalyzer spectrumAnalyzer;
+
 
 
 public:
@@ -618,10 +602,9 @@ private:
     }
 
 
-    PhaseDecorrelator phaseDecorrelatorDsp_;
     AllpassDiffuser allpassDiffuserDsp_;
+    PhaseDecorrelator phaseDecorrelatorDsp_;
     TrustedShimmerReverb shimmerReverbDsp_;
-    AirShelf airShelfDsp_[2];
     juce::dsp::Gain<float> gainDsp;
     SignalSanityGuard signalSanityGuardDsp_;
     std::unique_ptr<juce::dsp::Oversampling<float>> oversampling;
