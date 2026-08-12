@@ -68,7 +68,6 @@
     }
   },
   "values": {
-    "mix": 0.5,
     "roomSize": 0.5,
     "gain": 0
   }
