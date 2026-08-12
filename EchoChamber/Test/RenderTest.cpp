@@ -174,7 +174,7 @@ int main()
     }
     {
         // Zipper / automation step-response energy on first continuous float param
-        const char* stepId = "decayTime";
+        const char* stepId = "mix";
         double clickEnergy = 0.0;
         if (std::strlen (stepId) > 0)
         {
