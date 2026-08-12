@@ -1,0 +1,78 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EtherealReverb",
+  "pluginId": "com.pearlleash.etherealreverb",
+  "name": "Vintage · Tape Bloom",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Tape Bloom",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "89904197-a31d-0623-8146-79cc8912c5a0",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "89904197-A31D-0623-8146-79CC8912C5A0",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Tape Bloom",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "89904197-a31d-0623-8146-79cc8912c5a0",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "decayTime": 4.555,
+    "gain": 0
+  }
+}
