@@ -43,26 +43,15 @@ export const PLUGIN_CONFIG: PluginConfig = {
   "accent": "#00FFAA",
   "params": [
     {
-      "id": "mix",
-      "name": "Mix",
-      "min": 0,
-      "max": 1,
-      "def": 0.35,
-      "unit": "%",
-      "type": "knob",
-      "skew": 1,
-      "defNormalised": 0.35
-    },
-    {
       "id": "roomSize",
       "name": "Room Size",
-      "min": 0,
+      "min": 0.1,
       "max": 1,
       "def": 0.5,
       "unit": "",
       "type": "knob",
       "skew": 1,
-      "defNormalised": 0.5
+      "defNormalised": 0.4444444444444445
     },
     {
       "id": "gain",
@@ -110,7 +99,7 @@ export const PLUGIN_CONFIG: PluginConfig = {
     }
   ],
   "features": {
-    "spectrum": true,
+    "spectrum": false,
     "gainReduction": false,
     "destructive": false,
     "mainParamId": "gain",
