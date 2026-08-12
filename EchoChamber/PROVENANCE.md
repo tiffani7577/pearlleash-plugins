@@ -1,10 +1,10 @@
 # EchoChamber — Certificate of Invention
 
-**Forged:** 2026-08-11T23:20:30.469Z
+**Forged:** 2026-08-12T01:12:46.722Z
 **Vendor:** PearlLeashPlugin (PearlLeash Plugins)
 **Version:** 1.0.0 · state schema v1 · seed 0x50524C4C
 **Origin:** authored from creative intent
-**DSP chain:** AllpassDiffuser → PhaseDecorrelator → shimmer_reverb → gain
+**DSP chain:** AllpassDiffuser → shimmer_reverb → PhaseDecorrelator → eq.air_shelf → gain
 
 **Determinism:** seed-locked — identical input and automation produce bit-identical renders
 **Licensing:** offline HMAC-SHA256 serial validation embedded
