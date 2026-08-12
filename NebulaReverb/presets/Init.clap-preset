@@ -1,0 +1,119 @@
+{
+  "clap-preset": {
+    "name": "Init",
+    "plugin-id": "com.pearlleash.nebulareverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 20
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      },
+      {
+        "id": 6,
+        "value": 0
+      },
+      {
+        "id": 7,
+        "value": 0
+      },
+      {
+        "id": 8,
+        "value": 0
+      },
+      {
+        "id": 9,
+        "value": 0
+      },
+      {
+        "id": 10,
+        "value": 0
+      },
+      {
+        "id": 11,
+        "value": 0
+      },
+      {
+        "id": 12,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Init",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "0e3edec2-29a5-bccb-70c5-e0bcace0c64e",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "0E3EDEC2-29A5-BCCB-70C5-E0BCACE0C64E",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "NebulaReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet"
+        ],
+        "name": "Init",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "0e3edec2-29a5-bccb-70c5-e0bcace0c64e",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet"
+        ]
+      }
+    }
+  }
+}
