@@ -1,0 +1,74 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "NebulaReverb",
+  "pluginId": "com.pearlleash.nebulareverb",
+  "name": "Modern · Tight Bus",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "NebulaReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Tight Bus",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "6a08d08d-4b86-fd4d-566d-8e08226ab715",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "6A08D08D-4B86-FD4D-566D-8E08226AB715",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Tight Bus",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "6a08d08d-4b86-fd4d-566d-8e08226ab715",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "predelayTime": 45,
+    "gain": 0
+  }
+}
