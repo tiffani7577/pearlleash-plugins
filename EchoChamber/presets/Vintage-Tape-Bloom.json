@@ -72,7 +72,8 @@
     }
   },
   "values": {
-    "decayTime": 4.555,
+    "mix": 0.55,
+    "roomSize": 0.5,
     "gain": 0
   }
 }
