@@ -1,0 +1,78 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "NebulaReverb",
+  "pluginId": "com.pearlleash.nebulareverb",
+  "name": "Vintage · Console Warm",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "NebulaReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Console Warm",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "730ab046-e6a2-3593-e006-c5b6dffa64d6",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "730AB046-E6A2-3593-E006-C5B6DFFA64D6",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Console Warm",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "730ab046-e6a2-3593-e006-c5b6dffa64d6",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "predelayTime": 45,
+    "gain": 0
+  }
+}
