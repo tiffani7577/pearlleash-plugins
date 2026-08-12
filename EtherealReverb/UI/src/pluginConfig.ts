@@ -99,7 +99,7 @@ export const PLUGIN_CONFIG: PluginConfig = {
     }
   ],
   "features": {
-    "spectrum": true,
+    "spectrum": false,
     "gainReduction": false,
     "destructive": false,
     "mainParamId": "gain",
