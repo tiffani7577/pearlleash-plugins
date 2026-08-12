@@ -1,0 +1,74 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "NebulaReverb",
+  "pluginId": "com.pearlleash.nebulareverb",
+  "name": "Modern · Pop Gloss",
+  "personality": "modern",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "NebulaReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Modern · Pop Gloss",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "80448451-c189-19a4-2ee6-c672ef6ce250",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "80448451-C189-19A4-2EE6-C672EF6CE250",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "name": "Modern · Pop Gloss",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "80448451-c189-19a4-2ee6-c672ef6ce250",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ]
+    }
+  },
+  "values": {
+    "predelayTime": 45,
+    "gain": 0
+  }
+}
