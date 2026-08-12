@@ -1,0 +1,127 @@
+{
+  "clap-preset": {
+    "name": "Vintage · Tape Bloom",
+    "plugin-id": "com.pearlleash.nebulareverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 45
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      },
+      {
+        "id": 6,
+        "value": 0
+      },
+      {
+        "id": 7,
+        "value": 0
+      },
+      {
+        "id": 8,
+        "value": 0
+      },
+      {
+        "id": 9,
+        "value": 0
+      },
+      {
+        "id": 10,
+        "value": 0
+      },
+      {
+        "id": 11,
+        "value": 0
+      },
+      {
+        "id": 12,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Vintage · Tape Bloom",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "ed24cc10-e782-2019-8a33-5794cb65b35b",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "ED24CC10-E782-2019-8A33-5794CB65B35B",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "NebulaReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ],
+        "name": "Vintage · Tape Bloom",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "ed24cc10-e782-2019-8a33-5794cb65b35b",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Analog",
+          "Warm"
+        ]
+      }
+    }
+  }
+}
