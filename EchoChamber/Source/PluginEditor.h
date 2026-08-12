@@ -4,7 +4,7 @@
 #include "BinaryData.h"
 #include "AssetRenderer.h"
 #include "AudioReactiveKnob.h"
-
+#include "SpectrumAnalyzer.h"
 
 
 
@@ -58,10 +58,12 @@ public:
     explicit EchoChamberEditor (EchoChamberProcessor& p)
         : juce::AudioProcessorEditor (p),
           proc (p),
+          spectrumAnalyzer (p.spectrumAnalyzer),
           webView (makeWebViewOptions())
     {
         loadAssets();
-        decayTimeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("decayTime"), decayTimeRelay, nullptr);
+        mixAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("mix"), mixRelay, nullptr);
+        roomSizeAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("roomSize"), roomSizeRelay, nullptr);
         gainAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("gain"), gainRelay, nullptr);
         bypassAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("bypass"), bypassRelay, nullptr);
         widthAttach = std::make_unique<juce::WebSliderParameterAttachment> (*proc.apvts.getParameter ("width"), widthRelay, nullptr);
@@ -78,7 +80,8 @@ public:
         setSize (520, 340);
         setResizeLimits (400, 300, 1200, 900);
         setResizable (true, true);
-        proc.apvts.addParameterListener ("decayTime", this);
+        proc.apvts.addParameterListener ("mix", this);
+        proc.apvts.addParameterListener ("roomSize", this);
         proc.apvts.addParameterListener ("gain", this);
         proc.apvts.addParameterListener ("bypass", this);
         proc.apvts.addParameterListener ("width", this);
@@ -98,7 +101,8 @@ public:
     ~EchoChamberEditor() override
     {
         stopTimer();
-        proc.apvts.removeParameterListener ("decayTime", this);
+        proc.apvts.removeParameterListener ("mix", this);
+        proc.apvts.removeParameterListener ("roomSize", this);
         proc.apvts.removeParameterListener ("gain", this);
         proc.apvts.removeParameterListener ("bypass", this);
         proc.apvts.removeParameterListener ("width", this);
@@ -151,7 +155,8 @@ public:
 
     void pushAllParametersToWebView()
     {
-        parameterChanged ("decayTime", 0.0f);
+        parameterChanged ("mix", 0.0f);
+        parameterChanged ("roomSize", 0.0f);
         parameterChanged ("gain", 0.0f);
         parameterChanged ("bypass", 0.0f);
         parameterChanged ("width", 0.0f);
@@ -205,7 +210,7 @@ public:
         const float meterDb = juce::Decibels::gainToDecibels (juce::jmax (1.0e-6f, rms), -100.0f);
         knobLAF.setLevel (meterDb);
         gainSlider.repaint();
-
+        spectrumAnalyzer.processIfReady();
 
         webView.evaluateJavascript ("window.postMessage({type:'meter',level:" + juce::String (meterDb, 2) + "},'*');");
         webView.evaluateJavascript (
@@ -224,7 +229,7 @@ public:
 
 private:
     EchoChamberProcessor& proc;
-
+    SpectrumAnalyzer& spectrumAnalyzer;
 
     AudioReactiveKnob knobLAF;
     juce::Slider gainSlider;
@@ -233,7 +238,8 @@ private:
     std::unique_ptr<juce::AudioProcessorValueTreeState::SliderAttachment> nativeGainSliderAttach;
     EchoChamberLookAndFeel lnf;
     EchoChamberLookAndFeel::SpriteAtlas bgAtlas;
-    juce::WebSliderRelay decayTimeRelay { "decayTime" };
+    juce::WebSliderRelay mixRelay { "mix" };
+    juce::WebSliderRelay roomSizeRelay { "roomSize" };
     juce::WebSliderRelay gainRelay { "gain" };
     juce::WebSliderRelay bypassRelay { "bypass" };
     juce::WebSliderRelay widthRelay { "width" };
@@ -325,7 +331,8 @@ private:
             .withNativeIntegrationEnabled()
             // Logic / FL hide the editor without destroying it — default unloads to about:blank.
             .withKeepPageLoadedWhenBrowserIsHidden()
-            .withOptionsFrom (decayTimeRelay)
+            .withOptionsFrom (mixRelay)
+            .withOptionsFrom (roomSizeRelay)
             .withOptionsFrom (gainRelay)
             .withOptionsFrom (bypassRelay)
             .withOptionsFrom (widthRelay)
@@ -364,7 +371,8 @@ private:
 
     juce::WebBrowserComponent webView;
 
-    std::unique_ptr<juce::WebSliderParameterAttachment> decayTimeAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> mixAttach;
+    std::unique_ptr<juce::WebSliderParameterAttachment> roomSizeAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> gainAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> bypassAttach;
     std::unique_ptr<juce::WebSliderParameterAttachment> widthAttach;
