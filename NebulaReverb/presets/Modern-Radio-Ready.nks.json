@@ -1,0 +1,41 @@
+{
+  "format": "womanus-nks-nisi-v1",
+  "nisi": {
+    "UUID": "4CC4EF7D-3642-187D-48C3-E4F2349B85D6",
+    "author": "PearlLeashPlugin",
+    "bankchain": [
+      "NebulaReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "comment": "archetype:reverb · family:delay-network",
+    "deviceType": "FX",
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ],
+    "name": "Modern · Radio Ready",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "uuid": "4cc4ef7d-3642-187d-48c3-e4f2349b85d6",
+    "vendor": "PearlLeashPlugin",
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Synthetic"
+    ]
+  },
+  "soundTypes": [
+    "Effect > Reverb"
+  ],
+  "characters": [
+    "Atmospheric",
+    "Wet",
+    "Synthetic"
+  ]
+}
