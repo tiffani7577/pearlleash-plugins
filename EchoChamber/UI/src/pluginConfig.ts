@@ -43,15 +43,26 @@ export const PLUGIN_CONFIG: PluginConfig = {
   "accent": "#00FFAA",
   "params": [
     {
-      "id": "decayTime",
-      "name": "Decay Time",
-      "min": 0.1,
-      "max": 10,
-      "def": 1.8,
-      "unit": "s",
+      "id": "mix",
+      "name": "Mix",
+      "min": 0,
+      "max": 1,
+      "def": 0.35,
+      "unit": "%",
       "type": "knob",
       "skew": 1,
-      "defNormalised": 0.1717171717171717
+      "defNormalised": 0.35
+    },
+    {
+      "id": "roomSize",
+      "name": "Room Size",
+      "min": 0,
+      "max": 1,
+      "def": 0.5,
+      "unit": "",
+      "type": "knob",
+      "skew": 1,
+      "defNormalised": 0.5
     },
     {
       "id": "gain",
@@ -99,7 +110,7 @@ export const PLUGIN_CONFIG: PluginConfig = {
     }
   ],
   "features": {
-    "spectrum": false,
+    "spectrum": true,
     "gainReduction": false,
     "destructive": false,
     "mainParamId": "gain",
