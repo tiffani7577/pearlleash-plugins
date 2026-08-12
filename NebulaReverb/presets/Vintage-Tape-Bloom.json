@@ -1,0 +1,78 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "NebulaReverb",
+  "pluginId": "com.pearlleash.nebulareverb",
+  "name": "Vintage · Tape Bloom",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "NebulaReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Tape Bloom",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "ed24cc10-e782-2019-8a33-5794cb65b35b",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "ED24CC10-E782-2019-8A33-5794CB65B35B",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Tape Bloom",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "ed24cc10-e782-2019-8a33-5794cb65b35b",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "predelayTime": 45,
+    "gain": 0
+  }
+}
