@@ -4,7 +4,7 @@
 #include "BinaryData.h"
 #include "AssetRenderer.h"
 #include "AudioReactiveKnob.h"
-#include "SpectrumAnalyzer.h"
+
 
 
 
@@ -58,7 +58,6 @@ public:
     explicit EtherealReverbEditor (EtherealReverbProcessor& p)
         : juce::AudioProcessorEditor (p),
           proc (p),
-          spectrumAnalyzer (p.spectrumAnalyzer),
           webView (makeWebViewOptions())
     {
         loadAssets();
@@ -206,7 +205,7 @@ public:
         const float meterDb = juce::Decibels::gainToDecibels (juce::jmax (1.0e-6f, rms), -100.0f);
         knobLAF.setLevel (meterDb);
         gainSlider.repaint();
-        spectrumAnalyzer.processIfReady();
+
 
         webView.evaluateJavascript ("window.postMessage({type:'meter',level:" + juce::String (meterDb, 2) + "},'*');");
         webView.evaluateJavascript (
@@ -225,7 +224,7 @@ public:
 
 private:
     EtherealReverbProcessor& proc;
-    SpectrumAnalyzer& spectrumAnalyzer;
+
 
     AudioReactiveKnob knobLAF;
     juce::Slider gainSlider;
