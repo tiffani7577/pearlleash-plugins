@@ -1,0 +1,78 @@
+{
+  "format": "womanus-preset-v1",
+  "plugin": "EtherealReverb",
+  "pluginId": "com.pearlleash.etherealreverb",
+  "name": "Vintage · Vintage Soft",
+  "personality": "vintage",
+  "nks": {
+    "deviceType": "FX",
+    "types": [
+      [
+        "Effect",
+        "Reverb"
+      ]
+    ],
+    "characters": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "modes": [
+      "Atmospheric",
+      "Wet",
+      "Analog",
+      "Warm"
+    ],
+    "soundTypes": [
+      "Effect > Reverb"
+    ],
+    "bankchain": [
+      "EtherealReverb",
+      "Intent · reverb",
+      ""
+    ],
+    "vendor": "PearlLeashPlugin",
+    "author": "PearlLeashPlugin",
+    "name": "Vintage · Vintage Soft",
+    "comment": "archetype:reverb · family:delay-network",
+    "uuid": "336cfb3b-ef15-4b5c-62bd-c56b5fc4a6d2",
+    "physicsMode": null,
+    "nisi": {
+      "UUID": "336CFB3B-EF15-4B5C-62BD-C56B5FC4A6D2",
+      "author": "PearlLeashPlugin",
+      "bankchain": [
+        "EtherealReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "comment": "archetype:reverb · family:delay-network",
+      "deviceType": "FX",
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ],
+      "name": "Vintage · Vintage Soft",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "uuid": "336cfb3b-ef15-4b5c-62bd-c56b5fc4a6d2",
+      "vendor": "PearlLeashPlugin",
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Analog",
+        "Warm"
+      ]
+    }
+  },
+  "values": {
+    "decayTime": 2.08,
+    "gain": 0
+  }
+}
