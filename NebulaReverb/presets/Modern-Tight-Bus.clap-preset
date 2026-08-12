@@ -1,0 +1,123 @@
+{
+  "clap-preset": {
+    "name": "Modern · Tight Bus",
+    "plugin-id": "com.pearlleash.nebulareverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 45
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      },
+      {
+        "id": 6,
+        "value": 0
+      },
+      {
+        "id": 7,
+        "value": 0
+      },
+      {
+        "id": 8,
+        "value": 0
+      },
+      {
+        "id": 9,
+        "value": 0
+      },
+      {
+        "id": 10,
+        "value": 0
+      },
+      {
+        "id": 11,
+        "value": 0
+      },
+      {
+        "id": 12,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Modern · Tight Bus",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "6a08d08d-4b86-fd4d-566d-8e08226ab715",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "6A08D08D-4B86-FD4D-566D-8E08226AB715",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "NebulaReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "name": "Modern · Tight Bus",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "6a08d08d-4b86-fd4d-566d-8e08226ab715",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ]
+      }
+    }
+  }
+}
