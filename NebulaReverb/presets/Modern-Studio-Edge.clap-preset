@@ -1,0 +1,123 @@
+{
+  "clap-preset": {
+    "name": "Modern · Studio Edge",
+    "plugin-id": "com.pearlleash.nebulareverb",
+    "parameters": [
+      {
+        "id": 0,
+        "value": 45
+      },
+      {
+        "id": 1,
+        "value": 0
+      },
+      {
+        "id": 2,
+        "value": 0
+      },
+      {
+        "id": 3,
+        "value": 0
+      },
+      {
+        "id": 4,
+        "value": 0
+      },
+      {
+        "id": 5,
+        "value": 0
+      },
+      {
+        "id": 6,
+        "value": 0
+      },
+      {
+        "id": 7,
+        "value": 0
+      },
+      {
+        "id": 8,
+        "value": 0
+      },
+      {
+        "id": 9,
+        "value": 0
+      },
+      {
+        "id": 10,
+        "value": 0
+      },
+      {
+        "id": 11,
+        "value": 0
+      },
+      {
+        "id": 12,
+        "value": 0
+      }
+    ],
+    "nks": {
+      "deviceType": "FX",
+      "types": [
+        [
+          "Effect",
+          "Reverb"
+        ]
+      ],
+      "characters": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "modes": [
+        "Atmospheric",
+        "Wet",
+        "Synthetic"
+      ],
+      "soundTypes": [
+        "Effect > Reverb"
+      ],
+      "bankchain": [
+        "NebulaReverb",
+        "Intent · reverb",
+        ""
+      ],
+      "vendor": "PearlLeashPlugin",
+      "author": "PearlLeashPlugin",
+      "name": "Modern · Studio Edge",
+      "comment": "archetype:reverb · family:delay-network",
+      "uuid": "ab53da22-58d4-b420-2248-5cd35ce8bd67",
+      "physicsMode": null,
+      "nisi": {
+        "UUID": "AB53DA22-58D4-B420-2248-5CD35CE8BD67",
+        "author": "PearlLeashPlugin",
+        "bankchain": [
+          "NebulaReverb",
+          "Intent · reverb",
+          ""
+        ],
+        "comment": "archetype:reverb · family:delay-network",
+        "deviceType": "FX",
+        "modes": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ],
+        "name": "Modern · Studio Edge",
+        "types": [
+          [
+            "Effect",
+            "Reverb"
+          ]
+        ],
+        "uuid": "ab53da22-58d4-b420-2248-5cd35ce8bd67",
+        "vendor": "PearlLeashPlugin",
+        "characters": [
+          "Atmospheric",
+          "Wet",
+          "Synthetic"
+        ]
+      }
+    }
+  }
+}
